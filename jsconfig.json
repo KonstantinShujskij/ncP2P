@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@core/*": ["core/*"],
+      "@utils/*": ["utils/*"],
+      "@models/*": ["layers/models/*"],
+      "@controllers/*": ["layers/controllers/*"],
+      "@format/*": ["layers/format/*"],
+      "@validate/*": ["layers/validate/*"],
+      "@serialize/*": ["layers/serialize/*"]
+    }
+  }
+}
+  
