@@ -5,6 +5,7 @@ import { useSelector } from "react-redux"
 import * as authSelectors from './redux/selectors/auth.selectors'
 
 import Alert from './components/Alert/Alert'
+import Menu from "./sections/Menu/Menu"
 
 
 function App() {
@@ -15,9 +16,13 @@ function App() {
     <div className="app">
       <Alert />
 
-      <main className="main">
-        {routes}
-      </main>
+      <div className="app-wrap">
+        {isAuth && <Menu />}
+
+        <main className="main">
+          {routes}
+        </main>
+      </div>
     </div>
   )
 }

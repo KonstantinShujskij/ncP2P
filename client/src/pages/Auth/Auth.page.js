@@ -8,6 +8,7 @@ import Input from '../../components/UI/Input'
 import styles from './Auth.module.css'
 import useUserApi from '../../API/user.api'
 
+
 function Auth() {
   const [twoFA, setTwoFA] = useState(false)
 

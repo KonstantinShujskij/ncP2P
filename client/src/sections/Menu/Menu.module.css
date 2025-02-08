@@ -1,0 +1,35 @@
+.main {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    color: #fbffff;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.value {
+    color: #fbffff;
+    color: #7c849b;
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.item:hover .value {
+    color: #fbffff;
+}
+
