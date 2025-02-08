@@ -10,8 +10,7 @@ module.exports = (callback) => {
             next() 
         } 
         catch(exception) {
-            if(!!exception.status) { exception = Exception.unknown }
-            console.log(exception);
+            if(!exception.status) { exception = Exception.unknown }
             
             res.status(exception.status).json(exception.msg) 
         }

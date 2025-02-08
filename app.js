@@ -2,6 +2,7 @@ require('module-alias/register')
 
 const mongoose = require('mongoose')
 const express = require('express')
+const cors = require('cors')
 // const http = require('http')
 // const https = require('https')
 
@@ -14,10 +15,13 @@ const PORT = config.get('port')
 const SLL_PORT = config.get('sslPort')
 const MONGO_URL = config.get('mongoUri')
 
+app.use(cors())
 app.use(express.json({ extended: true }))
+
+app.use('/api/user', require('./routes/User.routes'))
 app.use('/api/payment', require('./routes/Payment.routes'))
 app.use('/api/invoice', require('./routes/Invoice.routes'))
- 
+
 
 async function start() {
     await mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
