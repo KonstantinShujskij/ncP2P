@@ -16,31 +16,31 @@ function Menu() {
             <div className={styles.menu}>
                 <NavLink to={'./statistic'} className={styles.item}>
                     <div className={styles.icon}>
-                        ⚛️ 
+                        <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div className={styles.value}>
                         Dashboard
                     </div>
                 </NavLink>
-                <NavLink to={'./invoices'} className={styles.item}>
-                    <div className={styles.icon}>
-                        ➡️
-                    </div>
-                    <div className={styles.value}>
-                        Pay-in
-                    </div>
-                </NavLink>
                 <NavLink to={'./payments'} className={styles.item}>
                     <div className={styles.icon}>
-                        ⬅️
+                        <i class="fa-solid fa-backward"></i>
                     </div>
                     <div className={styles.value}>
                         Pay-out
                     </div>
                 </NavLink>
+                <NavLink to={'./invoices'} className={styles.item}>
+                    <div className={styles.icon}>
+                        <i class="fa-solid fa-forward"></i>
+                    </div>
+                    <div className={styles.value}>
+                        Pay-in
+                    </div>
+                </NavLink>
                 <NavLink to={'./pool'} className={styles.item}>
                     <div className={styles.icon}>
-                        #️⃣
+                        <i class="fa-solid fa-list-ul"></i>
                     </div>
                     <div className={styles.value}>
                         Pool
@@ -48,7 +48,7 @@ function Menu() {
                 </NavLink>
                 <NavLink to={'./proof'} className={styles.item}>
                     <div className={styles.icon}>
-                        🆘
+                        <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div className={styles.value}>
                         Proof
@@ -58,7 +58,7 @@ function Menu() {
             <div className={styles.logout}>
                 <div className={styles.item} onClick={logout}>
                     <div className={styles.icon}>
-                        ❎
+                        <i class="fa-solid fa-key"></i>
                     </div>
                     <div className={styles.value}>
                         Logout

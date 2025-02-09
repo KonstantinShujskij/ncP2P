@@ -4,6 +4,8 @@ const Const = require('@core/Const')
 const Payment = require('@models/Payment.model')
 const Invoice = require('@models/Invoice.model')
 
+const Filter = require('@filter/Payment.filters')
+
 const { round } = require('@utils/utils')
 
 
@@ -29,7 +31,7 @@ async function invoiceListByPayment(payment) {
 
 // ---------- MAIN ----------
 
-async function create({ card, amount, refId }) {    
+async function create({ card, amount, refId, partnerId }) {    
     const isExist = refId && !!(await Payment.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
@@ -37,7 +39,8 @@ async function create({ card, amount, refId }) {
     const maxLimit = amount > Const.minNcApiLimit? amount - Const.minNcApiLimit : minLimit
     
     const payment = new Payment({ 
-        refId, card, amount,
+        refId, partnerId,
+        card, amount,
         initialAmount: amount,
         currentAmount: amount,
         minLimit, maxLimit,
@@ -66,7 +69,7 @@ async function refresh(id) {
     payment.isWait = isWait
 
     if(!isWait && currentAmount <= 0) { 
-        payment.status = Const.payment.statusList.SECCESS
+        payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
         return await save(payment)
@@ -186,6 +189,23 @@ async function choiceBest(amount, step=0) {
     }
 }
 
+// ---------- LIST ----------
+
+async function list(options, page, limit) {   
+    console.log('opt', options);
+    
+    // const options = {...Filter.admin(filter)}
+    const sort = { createdAt: -1 }
+    const skip = (page - 1) * limit
+
+    const List = await getList(options, sort, skip, limit)
+
+    return { 
+        list: List?.list || [], 
+        count: List?.count || 0
+    }
+}
+
 // ---------- DEFAULT ----------
 
 async function save(payment) {
@@ -207,6 +227,18 @@ async function softGet(_id) {
     return payment
 }
 
+async function getList(options={}, sort={}, skip=0, limit=50) {   
+    try { 
+        const list = await Payment.find(options).sort(sort).skip(skip).limit(limit)  
+        const count = await Payment.countDocuments(options)
+
+        return { list, count }
+    }
+    catch(err) { 
+        return null
+    }
+}
+
 
 module.exports = { 
     create,
@@ -214,6 +246,8 @@ module.exports = {
     getMaxAvailable,
 
     choiceBest,
+
+    list,
 
     get,
     softGet

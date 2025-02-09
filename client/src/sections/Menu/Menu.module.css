@@ -1,14 +1,14 @@
 .main {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     flex-shrink: 0;
-    flex-direction: column;
     gap: 20px;
 }
 
 .menu {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 32px;
 }
 
 .title {
@@ -19,17 +19,16 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 12px;
-}
+    flex-direction: column;
+    gap: 6px;
 
-.value {
-    color: #fbffff;
     color: #7c849b;
-    cursor: pointer;
     transition: 0.4s ease;
+    cursor: pointer;
+
+    min-width: 56px;
 }
 
-.item:hover .value {
+.item:hover {
     color: #fbffff;
 }
-

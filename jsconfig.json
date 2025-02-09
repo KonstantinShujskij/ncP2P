@@ -6,6 +6,7 @@
       "@utils/*": ["utils/*"],
       "@models/*": ["layers/models/*"],
       "@controllers/*": ["layers/controllers/*"],
+      "@filter/*": ["layers/filters/*"],
       "@format/*": ["layers/format/*"],
       "@validate/*": ["layers/validate/*"],
       "@serialize/*": ["layers/serialize/*"]

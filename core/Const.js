@@ -8,7 +8,7 @@ module.exports = {
     smallLim: 1500,
     
     payment: {
-        statusList: { ACTIVE: 'ACTIVE', BLOCKED: 'BLOCEKED', SECCESS: 'SECCESS', REJECT: 'REJECT' },
+        statusList: { ACTIVE: 'ACTIVE', BLOCKED: 'BLOCKED', SUCCESS: 'SUCCESS', REJECT: 'REJECT' },
         minLimit: {
             default: 500,
             customLimit: 5000,

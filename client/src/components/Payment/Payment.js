@@ -1,0 +1,54 @@
+import React from 'react'
+import usePaymentApi from '../../API/payment.api'
+
+import styles from './Payment.module.css'
+import Copy from '../UI/copy'
+
+
+function formatCardNumber(number) {
+    if(!number) { return "0000 0000 0000 0000" }
+    return number.replace(/\D/g, "").replace(/(\d{4})/g, "$1 ").trim();
+}
+
+function formatTime(milliseconds) {
+    if(!milliseconds) return null
+
+    return (new Date(parseInt(milliseconds))).toLocaleString("uk-UA", {timeZone: "Europe/Kiev"}).replace(',', '')
+}
+
+
+function Payment({payment}) {
+  const paymentApi = usePaymentApi()
+
+  return (
+    <div className={styles.main}>
+        <div className={styles.excel}>
+            <div className={styles.amount}>
+                <Copy value={payment?.initialAmount} label={payment?.initialAmount || 0} />
+                <Copy value={payment?.amount} label={payment?.amount || 0} />
+                <Copy value={payment?.currentAmount} label={payment?.currentAmount || 0} />
+            </div>
+        </div>
+        <div className={styles.excel}>
+            <div className={styles.card}>
+                <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
+            </div>
+        </div>
+        <div className={styles.excel}>
+            <div className={styles.id}>
+                <Copy value={payment?.id} label={payment?.id? payment.id : 'SystemId'} />
+                <Copy value={payment?.refId} label={payment?.refId? payment.refId : 'ReferenceId'} />
+                <Copy value={payment?.partnerId} label={payment?.partnerId? payment.partnerId : 'PartnerId'} />
+            </div>
+        </div>
+        <div className={styles.excel}>
+            <div className={styles.status} data-status={payment?.status}>{payment?.status}</div>
+        </div>
+        <div className={styles.excel}>
+            <div className={styles.time}>{formatTime(payment?.createdAt)}</div>
+        </div>
+    </div>
+  )
+}
+
+export default Payment

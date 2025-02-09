@@ -4,6 +4,7 @@ const Const = require('../../core/Const')
 
 const schema = new Schema({
     refId: { type: String, default: '' },
+    partnerId: { type: String, default: '' },
     tailId: { type: String, default: null },
     
     card: { type: String },
