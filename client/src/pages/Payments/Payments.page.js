@@ -16,9 +16,7 @@ function Payments() {
   const pagination = usePage(30)
   const page = pagination.page
 
-  // const triger = useSelector(filterSelectors.paymentTriger)
-  // const isPaymentActive = useSelector(userSelectors.paymentActive)
-  // const isIbanActive = useSelector(userSelectors.ibanActive)
+  const triger = useSelector(filterSelectors.paymentTriger)
 
   const [payments, setPayments] = useState([])
 
@@ -34,7 +32,7 @@ function Payments() {
     load(page)
 
     return () => { clearInterval(timer) }
-  }, [page]) // , triger
+  }, [page, triger])
 
 
   return (
@@ -42,15 +40,6 @@ function Payments() {
           <div className={styles.top}>
             <PaymentFilter />
           </div>
-
-          {/* <div className={styles.info}>
-              <div>Amount</div>
-              <div>Card/Iban</div>
-              <div>ID</div>
-              <div className={styles.status}>Status</div>
-              <div className={styles.status}>Action</div>
-              <div className={styles.date}>Created</div>
-          </div> */}
 
           <div className={styles.table}>
               {payments.map((payment) => <Payment payment={payment} refresh={() => load(page)} key={payment.id} />)}

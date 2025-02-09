@@ -4,8 +4,11 @@ function get(filterData, forse={}) {
     let options = {}
 
     if(filter?.id) { options = {...options, _id: filter.id} }
+    if(filter?.refId) { options = {...options, refId: filter.refId} }
+    if(filter?.partnerId) { options = {...options, partnerId: filter.partnerId} }
+
     if(filter?.status) { options = {...options, status: filter.status} }
-    // if(filter?.card) { options = {...options, card: filter.card} }
+    if(filter?.card) { options = {...options, card: filter.card} }
     if(filter?.amount?.min || filter?.amount?.max) { 
         let amountOption = {}
 
@@ -13,6 +16,22 @@ function get(filterData, forse={}) {
         if(filter?.amount?.max) { amountOption = {...amountOption, $lt: filter.amount.max} }
 
         options = {...options, amount: amountOption} 
+    }
+    if(filter?.initialAmount?.min || filter?.initialAmount?.max) { 
+        let amountOption = {}
+
+        if(filter?.initialAmount?.min) { amountOption = {...amountOption, $gt: filter.initialAmount.min} }
+        if(filter?.initialAmount?.max) { amountOption = {...amountOption, $lt: filter.initialAmount.max} }
+
+        options = {...options, initialAmount: amountOption} 
+    }
+    if(filter?.currentAmount?.min || filter?.currentAmount?.max) { 
+        let amountOption = {}
+
+        if(filter?.currentAmount?.min) { amountOption = {...amountOption, $gt: filter.currentAmount.min} }
+        if(filter?.currentAmount?.max) { amountOption = {...amountOption, $lt: filter.currentAmount.max} }
+
+        options = {...options, currentAmount: amountOption} 
     }
 
     return options

@@ -31,6 +31,8 @@ router.post('/list', Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body
 
+        console.log(filter);
+
         const {list, count} = await Payment.list(filter, page, limit)        
 
         res.status(200).json({ list: list.map((payment) => Format.admin(payment)), count })

@@ -1,36 +1,56 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import * as filterSelectors from '../../redux/selectors/filter.selectors'
 
-import styles from './PaymentFilter.module.css'
 import Input from '../UI/Input'
 import useInput from '../../hooks/input.hook'
+import useFilter from '../../hooks/filter.hook'
+
+import styles from './PaymentFilter.module.css'
 
 
 function PaymentFilter() {
-    const initialAmountMin = useInput()
-    const initialAmountMax = useInput()
-    const amountMax = useInput()
-    const amountMin = useInput()
-    const currentAmountMax = useInput()
-    const currentAmountMin = useInput()
-    const cardNumber = useInput()
-    const systemId = useInput()
-    const referenceId = useInput()
-    const partnerId = useInput()
-    const [statusList, setStatusList] = useState([])
+    const { setPaymentsFilter } = useFilter()
+    const filter = useSelector(filterSelectors.payment)
+
+    const [statusList, setStatusList] = useState(filter?.status)
+    const cardNumber = useInput(filter?.card, (card) => setPaymentsFilter({ card }))
+
+    const initialAmountMin = useInput(filter?.initialAmount?.min, (min) => setPaymentsFilter({ initialAmount: { min, max: initialAmountMax.value } }))
+    const initialAmountMax = useInput(filter?.initialAmount?.max, (max) => setPaymentsFilter({ initialAmount: { min: initialAmountMin.value, max } }))
+
+    const amountMin = useInput(filter?.amount?.min, (min) => setPaymentsFilter({ amount: { min, max: amountMax.value } }))
+    const amountMax = useInput(filter?.amount?.max, (max) => setPaymentsFilter({ amount: { min: amountMin.value, max } }))
+
+    const currentAmountMin = useInput(filter?.currentAmount?.min, (min) => setPaymentsFilter({ currentAmount: { min, max: currentAmountMax.value } }))  
+    const currentAmountMax = useInput(filter?.currentAmount?.max, (max) => setPaymentsFilter({ currentAmount: { min: currentAmountMin.value, max } }))
+
+    const systemId = useInput(filter?.id, (id) => setPaymentsFilter({ id }))
+    const referenceId = useInput(filter?.refId, (refId) => setPaymentsFilter({ refId }))
+    const partnerId = useInput(filter?.partnerId, (partnerId) => setPaymentsFilter({ partnerId }))
+
 
     const addStatusHandler = (status='ALL') => {
-        if(status === 'ALL') { return setStatusList([]) }
+        if(status === 'ALL') { 
+            setPaymentsFilter({ status: null })
+            return setStatusList(null) 
+        }
 
         setStatusList((prew) => {
-            const newValue = prew.filter((item) => (item !== status))
-            if(newValue.length === prew.length) { newValue.push(status) }
-            return newValue
+            const oldValue = prew || []
+
+            const newValue = oldValue.filter((item) => (item !== status))
+            if(newValue.length === oldValue.length) { newValue.push(status) }
+
+            setPaymentsFilter({ status: newValue.length? newValue : null })
+
+            return newValue.length? newValue : null
         })
     }
 
     const StatisItem = ({status}) => (
         <div 
-            className={`${styles.statusItem} ${statusList.includes(status)? styles.active : null}`} 
+            className={`${styles.statusItem} ${statusList?.includes(status)? styles.active : null}`} 
             onClick={() => addStatusHandler(status)}
             data-status={status} 
         >
@@ -38,7 +58,7 @@ function PaymentFilter() {
         </div>
     ) 
 
-    
+
     return (
         <div className={styles.main}>
             <div className={styles.excel}>
@@ -80,7 +100,7 @@ function PaymentFilter() {
             <div className={styles.excel}>
                 <div className={styles.status}>
                     <div 
-                        className={`${styles.statusItem} ${!statusList.length? styles.active : null}`} 
+                        className={`${styles.statusItem} ${!statusList?.length? styles.active : null}`} 
                         onClick={() => addStatusHandler('ALL')}
                         data-status="ALL" 
                     >

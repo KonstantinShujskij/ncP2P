@@ -5,10 +5,14 @@ import { SET_PAYMENTS, CLEAR_PAYMENTS } from './types/filter.types'
 const initialState = {
     payments: {
         id: '',
+        refId: '',
+        partnerId: '',
+
+        card: '',
         status: null,
-        card: [],
-        worker: null,
-        partner: null,
+
+        initialAmount: { min: '', max: '' },
+        currentAmount: { min: '', max: '' },
         amount: { min: '', max: '' },
     },
     invoices: {
