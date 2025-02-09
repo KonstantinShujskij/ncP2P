@@ -45,14 +45,14 @@ function Payments() {
               {payments.map((payment) => <Payment payment={payment} refresh={() => load(page)} key={payment.id} />)}
           </div>
 
-          {/* <div className={styles.bottom}>
+          <div className={styles.bottom}>
               <button onClick={pagination.back}>
                   Previos
               </button>
               <button onClick={pagination.next}>
                   Next
               </button>
-          </div> */}
+          </div>
     </div>
   )
 }

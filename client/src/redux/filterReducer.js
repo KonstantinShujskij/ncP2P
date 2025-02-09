@@ -1,5 +1,6 @@
 import { SET_INVOICES, CLEAR_INVOICES } from './types/filter.types'
 import { SET_PAYMENTS, CLEAR_PAYMENTS } from './types/filter.types'
+import { SET_POOL, CLEAR_POOL } from './types/filter.types'
 
 
 const initialState = {
@@ -17,16 +18,32 @@ const initialState = {
     },
     invoices: {
         id: '',
+        refId: '',
+        partnerId: '',
+
         status: null,
-        card: [],
-        worker: null,
-        partner: null,
-        clientId: null,
+        card: '',
+        payment: '',
+
         amount: { min: '', max: '' },
+        initialAmount: { min: '', max: '' },
+    },
+    pool: {
+        id: '',
+        refId: '',
+        partnerId: '',
+
+        status: null,
+        card: '',
+        payment: '',
+
+        amount: { min: '', max: '' },
+        initialAmount: { min: '', max: '' },
     },
 
     paymentTriger: false,
-    invoiceTriger: false
+    invoiceTriger: false,
+    poolTriger: false
 }
 
 export default function filterReducer(state=initialState, action) {
@@ -35,11 +52,16 @@ export default function filterReducer(state=initialState, action) {
         return {...state, payments: {...state.payments, ...action.payload}, paymentTriger: !state.paymentTriger}
     case SET_INVOICES:
         return {...state, invoices: {...state.invoices, ...action.payload}, invoiceTriger: !state.invoiceTriger}
+    case SET_POOL:
+        return {...state, pool: {...state.pool, ...action.payload}, invoiceTriger: !state.poolTriger}
 
     case CLEAR_PAYMENTS:
         return {...state, payments: {...initialState.payments}, paymentTriger: !state.paymentTriger}
     case CLEAR_INVOICES:
         return {...state, invoices: {...initialState.invoices}, invoiceTriger: !state.invoiceTriger}
+    case CLEAR_POOL:
+        return {...state, pool: {...initialState.pool}, invoiceTriger: !state.poolTriger}
+    
     default:
         return state
     }

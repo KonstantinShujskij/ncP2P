@@ -10,8 +10,10 @@ const schema = new Schema({
     availableAmount: { type: Number },
     amount: { type: Number },
 
-    payment: { type: Types.ObjectId, ref: 'Payment' },
     status: { type: String, default: Const.invoice.statusList.WAIT }, 
+    payment: { type: Types.ObjectId, ref: 'Payment' },
+    card: { type: String },
+
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },
 

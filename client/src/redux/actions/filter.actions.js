@@ -1,5 +1,6 @@
 import { SET_INVOICES, CLEAR_INVOICES } from '../types/filter.types'
 import { SET_PAYMENTS, CLEAR_PAYMENTS } from '../types/filter.types'
+import { SET_POOL, CLEAR_POOL } from '../types/filter.types'
 
 
 export function setPayments(filter) {
@@ -25,5 +26,18 @@ export function setInvouces(filter) {
 export function clearInvoices() {
     return {
         type: CLEAR_INVOICES
+    }
+}
+
+export function setPool(filter) {
+    return {
+        type: SET_POOL,
+        payload: filter
+    }
+}
+
+export function clearPool() {
+    return {
+        type: CLEAR_POOL
     }
 }

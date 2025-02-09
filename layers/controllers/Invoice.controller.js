@@ -7,11 +7,6 @@ const Payment = require('@controllers/Payment.controller')
 
 // ---------- SUPPORT FUNCTION ----------
 
-async function waitCountByPayment(payment) {
-    const list = await Invoice.find({ payment, status: { $in: Const.invoice.activeStatusList } })
-
-    return list.length
-}
 
 // ---------- MAIN ----------
 
@@ -25,7 +20,8 @@ async function create({ amount, refId }) {
     const invoice = new Invoice({ 
         refId, amount,
         initialAmount: amount,
-        payment: payment._id
+        payment: payment._id,
+        card: payment.card
     })
 
     await save(invoice)
@@ -97,6 +93,17 @@ async function approve({id, kvitNumber, kvitFile}) {
 
 // ---------- LISTS ----------
 
+async function list(options, page, limit) {       
+    const sort = { createdAt: -1 }
+    const skip = (page - 1) * limit
+
+    const List = await getList(options, sort, skip, limit)
+
+    return { 
+        list: List?.list || [], 
+        count: List?.count || 0
+    }
+}
 
 // ---------- DEFAULT ----------
 
@@ -123,6 +130,18 @@ async function getActive(_id) {
     return invoice
 }
 
+async function getList(options={}, sort={}, skip=0, limit=50) {   
+    try { 
+        const list = await Invoice.find(options).sort(sort).skip(skip).limit(limit)  
+        const count = await Invoice.countDocuments(options)
+
+        return { list, count }
+    }
+    catch(err) { 
+        return null
+    }
+}
+
 
 module.exports = { 
     create,
@@ -131,5 +150,7 @@ module.exports = {
     changeAmount,
     close,
     approve,
+
     get,
+    list
 }
