@@ -27,5 +27,5 @@ module.exports = {
     },
 
     maxSaveRecursion: 10,
-    bankList: { MONO: 'MONO' }
+    bankList: { MONO: 'mono' }
 }

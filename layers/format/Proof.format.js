@@ -2,6 +2,8 @@
 const admin = (proof) => ({
     id: proof._id,
     invoice: proof.invoice,
+    status: proof.status,
+
     bank: proof.bank,
     amount: proof.amount,
     kvitNumber: proof.kvitNumber,
@@ -12,6 +14,8 @@ const admin = (proof) => ({
 const partner = (proof) => ({
     id: proof._id,
     invoice: proof.invoice,
+    status: proof.status,
+
     bank: proof.bank,
     amount: proof.amount,
     kvitNumber: proof.kvitNumber,
@@ -22,6 +26,8 @@ const partner = (proof) => ({
 const client = (proof) => ({
     id: proof._id,
     invoice: proof.invoice,
+    status: proof.status,
+
     bank: proof.bank,
     amount: proof.amount,
     kvitNumber: proof.kvitNumber,

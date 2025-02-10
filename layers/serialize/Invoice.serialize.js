@@ -9,13 +9,14 @@ const create = (req, _, next) => {
         amount: req.body.amount,
         refId: req.body.refId || '',
         partnerId: req.body.partnerId || '',
-        bank: req.body.partnerId || null
+        bank: req.body.bank || null
     }
 
     next()
 }
 
 const confirm = async (req, _, next) => {   
+    
     const number = req.file?.filename?  await getKvitNumber(req.file?.filename) : req.body.kvitNumber
 
     req.body = { 

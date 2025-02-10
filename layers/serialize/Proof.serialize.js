@@ -1,12 +1,9 @@
 const Filter = require('@filter/Proof.filters')
 
-const { getKvitNumber } = require('@utils/pdf.utils')
 const { toObjectId } = require('@utils/utils')
 
 
 const create = (req, _, next) => {   
-    // const number = req.file?.filename?  await getKvitNumber(req.file?.filename) : req.body.kvitNumber
-
     req.body = { 
         invoiceId: toObjectId(req.body.invoice),
         kvitFile: req.file?.filename || null,

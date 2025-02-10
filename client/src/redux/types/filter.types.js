@@ -6,3 +6,6 @@ export const CLEAR_INVOICES = 'FILTER:INVOICES:CLEAR'
 
 export const SET_POOL = 'FILTER:POOL:SET'
 export const CLEAR_POOL = 'FILTER:POOL:CLEAR'
+
+export const SET_PROOF = 'FILTER:PROOF:SET'
+export const CLEAR_PROOF = 'FILTER:PROOF:CLEAR'

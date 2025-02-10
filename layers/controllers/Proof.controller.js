@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const telegram = require('@utils/telegram.utils')
+const { getKvitNumber } = require('@utils/pdf.utils')
 
 const Proof = require('@models/Proof.model')
 const Invoice = require('@controllers/Invoice.controller')
@@ -18,12 +19,13 @@ async function checkGov(number) {
     }
 }
 
-async function getNumberByKvit(file, bank) {
+async function getNumberByKvit(file, bank) {    
     if(!file) { return null }
-
+    
     if(bank === Const.bankList.MONO) { 
-        // Mono parser
-        return 'Mono Kvit Number'
+        console.log(bank, file);
+        
+        return await getKvitNumber(file)
     }
 
     return null
@@ -32,9 +34,9 @@ async function getNumberByKvit(file, bank) {
 // ----- MIAI -----
 
 async function create({invoiceId, kvitNumber, kvitFile}) {
-    const invoice = await Invoice.get(invoiceId) 
+    const invoice = await Invoice.get(invoiceId)     
 
-    const numberInFile = await getNumberByKvit(kvitFile, invoice.bank)
+    const numberInFile = await getNumberByKvit(kvitFile, invoice.bank)    
     const number = numberInFile? numberInFile : kvitNumber
 
     const candidat = await Proof.findOne({ number })

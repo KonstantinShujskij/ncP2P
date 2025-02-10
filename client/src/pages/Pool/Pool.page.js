@@ -18,7 +18,7 @@ function Pool() {
   const pagination = usePage(30)
   const page = pagination.page
 
-  const triger = useSelector(filterSelectors.invoiceTriger)
+  const triger = useSelector(filterSelectors.poolTriger)
 
   const [invoices, setInvoices] = useState([])
 

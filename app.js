@@ -3,6 +3,8 @@ require('module-alias/register')
 const mongoose = require('mongoose')
 const express = require('express')
 const cors = require('cors')
+const path = require('path')
+
 // const http = require('http')
 // const https = require('https')
 
@@ -23,6 +25,7 @@ app.use('/api/payment', require('./routes/Payment.routes'))
 app.use('/api/invoice', require('./routes/Invoice.routes'))
 app.use('/api/proof', require('./routes/Proof.routes'))
 
+app.get('/kvits/:path', (req, res) => { res.sendFile(path.resolve(__dirname, 'static', 'kvits', `${req.params.path}`)) })
 
 async function start() {
     await mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })

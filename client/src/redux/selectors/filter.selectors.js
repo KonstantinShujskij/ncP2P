@@ -6,3 +6,6 @@ export const invoiceTriger = (state) => state.filter.invoiceTriger
 
 export const pool = (state) => state.filter.pool
 export const poolTriger = (state) => state.filter.poolTriger
+
+export const proof = (state) => state.filter.proof
+export const proofTriger = (state) => state.filter.proofTriger
