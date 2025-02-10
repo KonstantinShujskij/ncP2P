@@ -3,6 +3,8 @@ module.exports = {
     invalidCard: { status: 415, msg: 'Incorrect Card Number' },
     invalidAmount: { status: 415, msg: 'Incorrect Amount' },
     invalidRefId: { status: 415, msg: 'Incorrect Reference Id' },
+    invalidPartnerId: { status: 415, msg: 'Incorrect Partner Id' },
+    invalidBank: { status: 415, msg: 'Incorrect Bank' },
     
     isExist: { status: 409, msg: 'Already Exists' },
     notFind: { status: 404, msg: 'Not Find' },

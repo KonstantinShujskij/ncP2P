@@ -21,6 +21,7 @@ app.use(express.json({ extended: true }))
 app.use('/api/user', require('./routes/User.routes'))
 app.use('/api/payment', require('./routes/Payment.routes'))
 app.use('/api/invoice', require('./routes/Invoice.routes'))
+app.use('/api/proof', require('./routes/Proof.routes'))
 
 
 async function start() {

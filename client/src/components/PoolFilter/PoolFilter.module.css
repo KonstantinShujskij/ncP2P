@@ -4,11 +4,6 @@
     height: 100%;
     min-width: 976px;
 
-    /* display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px; */
-
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 15% 20% 25% 20% 10%;
@@ -47,7 +42,9 @@
 }
 
 .card {
-
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .id {
@@ -80,7 +77,6 @@
     color: #7c849b;
 
     cursor: pointer;
-    /* transition: 0.4s ease; */
 }
 
 .statusItem:hover {
@@ -92,12 +88,12 @@
     color: #d8a6ff; 
 }
 
-.active.statusItem[data-status="ACTIVE"] {
+.active.statusItem[data-status="WAIT"] {
     background-color: #5a4c43;
     color: #f6a740;
 }
 
-.active.statusItem[data-status="SUCCESS"]{
+.active.statusItem[data-status="CONFIRM"]{
     background-color: #2f6149;
     color: #4bef81;
 }
@@ -107,7 +103,7 @@
     color: #ff6b6b; 
 }
 
-.active.statusItem[data-status="BLOCKED"] {
+.active.statusItem[data-status="VALID"] {
     background-color: #2e3e74; 
     color: #6b9bff; 
 }

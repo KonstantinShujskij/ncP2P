@@ -22,5 +22,10 @@ module.exports = {
         finaleStatusList: [ 'CONFIRM', 'REJECT' ]
     },
 
-    maxSaveRecursion: 10
+    proof: {
+        statusList: { WAIT: "WAIT", CONFIRM: 'CONFIRM', REJECT: 'REJECT' }
+    },
+
+    maxSaveRecursion: 10,
+    bankList: { MONO: 'MONO' }
 }

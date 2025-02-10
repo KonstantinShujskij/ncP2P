@@ -7,7 +7,9 @@ const { toObjectId } = require('@utils/utils')
 const create = (req, _, next) => {   
     req.body = { 
         amount: req.body.amount,
-        refId: req.body.refId || ''
+        refId: req.body.refId || '',
+        partnerId: req.body.partnerId || '',
+        bank: req.body.partnerId || null
     }
 
     next()

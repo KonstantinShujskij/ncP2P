@@ -5,6 +5,8 @@ const Const = require('../../core/Const')
 const create = [
     check('amount', 'invalidAmount').notEmpty().isFloat({ min: Const.minInvoiceLimit, max: Const.maxInvoiceLimit }),
     check('refId', 'invalidRefId').optional().isString(),
+    check('partnerfId', 'invalidPartnerId').optional().isString(),
+    check('bank', 'invalidBank').optional().isString(),
 ]
 
 const confirm = [

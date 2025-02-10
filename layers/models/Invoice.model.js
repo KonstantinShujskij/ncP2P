@@ -13,6 +13,7 @@ const schema = new Schema({
     status: { type: String, default: Const.invoice.statusList.WAIT }, 
     payment: { type: Types.ObjectId, ref: 'Payment' },
     card: { type: String },
+    bank: { type: String, default: null },
 
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },

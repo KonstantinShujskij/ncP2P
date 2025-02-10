@@ -22,20 +22,20 @@ function Menu() {
                         Dashboard
                     </div>
                 </NavLink>
-                <NavLink to={'./payments'} className={styles.item}>
-                    <div className={styles.icon}>
-                        <i class="fa-solid fa-backward"></i>
-                    </div>
-                    <div className={styles.value}>
-                        Pay-out
-                    </div>
-                </NavLink>
                 <NavLink to={'./invoices'} className={styles.item}>
                     <div className={styles.icon}>
                         <i class="fa-solid fa-forward"></i>
                     </div>
                     <div className={styles.value}>
                         Pay-in
+                    </div>
+                </NavLink>
+                <NavLink to={'./payments'} className={styles.item}>
+                    <div className={styles.icon}>
+                        <i class="fa-solid fa-backward"></i>
+                    </div>
+                    <div className={styles.value}>
+                        Pay-out
                     </div>
                 </NavLink>
                 <NavLink to={'./pool'} className={styles.item}>
@@ -52,6 +52,14 @@ function Menu() {
                     </div>
                     <div className={styles.value}>
                         Proof
+                    </div>
+                </NavLink>
+                <NavLink to={'./logs'} className={styles.item}>
+                    <div className={styles.icon}>
+                        <i class="fa-solid fa-code"></i>                    
+                    </div>
+                    <div className={styles.value}>
+                        Logs
                     </div>
                 </NavLink>
             </div>

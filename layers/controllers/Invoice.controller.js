@@ -10,7 +10,7 @@ const Payment = require('@controllers/Payment.controller')
 
 // ---------- MAIN ----------
 
-async function create({ amount, refId }) {    
+async function create({ amount, bank, refId, partnerId }) {    
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
@@ -18,8 +18,10 @@ async function create({ amount, refId }) {
     if(!payment) { throw Exception.notFind }
 
     const invoice = new Invoice({ 
-        refId, amount,
+        refId, partnerId,
         initialAmount: amount,
+        amount,
+        bank, 
         payment: payment._id,
         card: payment.card
     })

@@ -82,7 +82,7 @@
     color: #7c849b;
 
     cursor: pointer;
-    transition: 0.4s ease;
+    /* transition: 0.4s ease; */
 }
 
 .statusItem:hover {

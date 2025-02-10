@@ -33,7 +33,7 @@ const initialState = {
         refId: '',
         partnerId: '',
 
-        status: null,
+        status: ['WAIT', 'VALID'],
         card: '',
         payment: '',
 
