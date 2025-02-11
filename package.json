@@ -31,6 +31,7 @@
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
     "fs": "^0.0.1-security",
+    "generate-key": "^0.0.6",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "mongoose": "^8.8.1",

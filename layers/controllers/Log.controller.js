@@ -4,10 +4,7 @@ const Exception = require('@core/Exception')
 
 
 async function create(data={}) {
-    const log = new Log(data)
-
-    console.log('LOG:', log);
-    
+    const log = new Log(data)    
     
     return await save(log) 
 }

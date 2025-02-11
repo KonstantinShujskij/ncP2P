@@ -7,5 +7,7 @@
 
     "mongoUri": "mongodb+srv://root:hdfsdaekwwuid@cluster0.nof58.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     "authSecret": "wqetsfdwlkosoaildisldolqe",
+    "jwtSecret": "NHrmJipPAavz6Juw",
+    "apiSecret": "NZqofqXRLmzC0q9f",
     "botToken": "7732482149:AAGy674QRsQ0Gdf15CqUUncQmzkY11MUU2w"
 }

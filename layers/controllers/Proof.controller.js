@@ -99,12 +99,8 @@ async function decline(id) {
     return await save(proof)
 }
 
-async function approve({id, amount, kvitNumber}) {
-    console.log('START');
-    
+async function approve({id, amount, kvitNumber}) {    
     const proof = await get(id)
-
-    console.log(proof);
 
     if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
 

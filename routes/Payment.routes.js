@@ -10,17 +10,16 @@ const Format = require('@format/Payment.format')
 const Payment = require('@controllers/Payment.controller')
 const BlackList = require('@controllers/BlackList.controller')
 const { Auth } = require('@middleware/auth.middleware')
+const { access, partnerAccess, adminAccess } = require('@middleware/access.middleware')
 
 
 const router = Router()
 
 
-router.post('/create', Validate.create, Serialise.create, 
+router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const isBlocked = !!(await BlackList.find(req.body.card))
         if(isBlocked) { throw Exception.cardBlocked }
-
-        //await BlackList.create(req.body.card)
 
         const payment = await Payment.create(req.body)
 
@@ -28,7 +27,7 @@ router.post('/create', Validate.create, Serialise.create,
     })
 )
 
-router.post('/block', Validate.block, Serialise.block, 
+router.post('/block', Auth, Validate.block, Serialise.block, 
     Interceptor(async (req, res) => {
         await BlackList.create(req.body.card)
 
@@ -36,7 +35,7 @@ router.post('/block', Validate.block, Serialise.block,
     })
 )
 
-router.post('/callback', //Validate.tail, Serialise.tail, 
+router.post('/callback', access, adminAccess, //Validate.tail, Serialise.tail, 
     Interceptor(async (req, res) => {
         const payment = await Payment.closeTail(req.body.tailId, req.body.amount)
 

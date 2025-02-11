@@ -27,5 +27,7 @@ module.exports = {
     },
 
     maxSaveRecursion: 10,
-    bankList: { MONO: 'mono' }
+    bankList: { MONO: 'mono' },
+    access: { PARTNER: 'PARTNER', ADMIN: 'ADMIN' },
+    
 }

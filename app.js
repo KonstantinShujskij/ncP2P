@@ -25,6 +25,8 @@ app.use('/api/user', require('./routes/User.routes'))
 app.use('/api/payment', require('./routes/Payment.routes'))
 app.use('/api/invoice', require('./routes/Invoice.routes'))
 app.use('/api/proof', require('./routes/Proof.routes'))
+app.use('/api/admin', require('./routes/Admin.route'))
+
 
 app.get('/kvits/:path', (req, res) => { res.sendFile(path.resolve(__dirname, 'static', 'kvits', `${req.params.path}`)) })
 

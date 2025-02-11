@@ -9,12 +9,13 @@ const Format = require('@format/Invoice.format')
 
 const file = require('@middleware/file.middleware')
 const { Auth } = require('@middleware/auth.middleware')
+const { access, partnerAccess } = require('@middleware/access.middleware')
 
 
 const router = Router()
 
 
-router.post('/create', Validate.create, Serialise.create, 
+router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const invoice = await Invoice.create(req.body)
 
@@ -22,7 +23,7 @@ router.post('/create', Validate.create, Serialise.create,
     })
 )
 
-router.post('/pay', Validate.pay, Serialise.pay,
+router.post('/pay', access, partnerAccess, Validate.pay, Serialise.pay,
     Interceptor(async (req, res) => {
         const invoice = await Invoice.pay(req.body.id)
 
