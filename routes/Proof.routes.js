@@ -8,6 +8,7 @@ const Proof = require('@controllers/Proof.controller')
 const Format = require('@format/Proof.format')
 
 const file = require('@middleware/file.middleware')
+const { Auth } = require('@middleware/auth.middleware')
 
 
 const router = Router()
@@ -21,7 +22,7 @@ router.post('/create', file.single('kvit'), Validate.create, Serialise.create,
     })
 )
 
-router.post('/decline', Validate.decline, Serialise.decline, 
+router.post('/decline', Auth, Validate.decline, Serialise.decline, 
     Interceptor(async (req, res) => {
         const proof = await Proof.decline(req.body.id)
 
@@ -29,7 +30,7 @@ router.post('/decline', Validate.decline, Serialise.decline,
     })
 )
 
-router.post('/accept', Validate.approve, Serialise.approve,
+router.post('/accept', Auth, Validate.approve, Serialise.approve,
     Interceptor(async (req, res) => {
         const proof = await Proof.approve(req.body)        
 
@@ -37,7 +38,7 @@ router.post('/accept', Validate.approve, Serialise.approve,
     })
 )
 
-router.post('/list', Validate.list, Serialise.list,
+router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body             
 

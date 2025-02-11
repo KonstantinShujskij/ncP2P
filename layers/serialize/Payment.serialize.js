@@ -12,6 +12,14 @@ const create = (req, _, next) => {
     next()
 }
 
+const block = (req, _, next) => {   
+    req.body = { 
+        card: req.body.card, 
+    }
+
+    next()
+}
+
 const list = (req, _, next) => {   
     req.body = { 
         filter: Filter.admin(req.body.filter), 
@@ -25,5 +33,6 @@ const list = (req, _, next) => {
 
 module.exports = {
     create,
+    block,
     list
 }

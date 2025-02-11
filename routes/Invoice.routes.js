@@ -8,6 +8,7 @@ const Invoice = require('@controllers/Invoice.controller')
 const Format = require('@format/Invoice.format')
 
 const file = require('@middleware/file.middleware')
+const { Auth } = require('@middleware/auth.middleware')
 
 
 const router = Router()
@@ -29,7 +30,7 @@ router.post('/pay', Validate.pay, Serialise.pay,
     })
 )
 
-router.post('/list', Validate.list, Serialise.list,
+router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body        
 

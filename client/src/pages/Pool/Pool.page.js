@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import useInvoiceApi from '../../API/invoice.api'
 import usePage from '../../hooks/page.hook'
 
 import * as filterSelectors from '../../redux/selectors/filter.selectors'
 
-import Invoice from '../../components/Invoice/Invoice'
 import PoolFilter from '../../components/PoolFilter/PoolFilter'
 
 import styles from './Pool.module.css'
+import usePaymentApi from '../../API/payment.api'
+import Payment from '../../components/Payment/Payment'
 
 
 function Pool() {
-  const invoiceApi = useInvoiceApi()
+  const paymentApi = usePaymentApi()
 
   const pagination = usePage(30)
   const page = pagination.page
 
   const triger = useSelector(filterSelectors.poolTriger)
 
-  const [invoices, setInvoices] = useState([])
+  const [payments, setPayments] = useState([])
 
   const load = async (page) => {
-    const {list, count} = await invoiceApi.list(page, pagination.limit)
+    const {list, count} = await paymentApi.pool(page, pagination.limit)
 
     pagination.setCount(count)
-    setInvoices(list)
+    setPayments(list)
   }
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function Pool() {
         </div>
 
         <div className={styles.table}>
-            {invoices.map((invoice) => <Invoice invoice={invoice} refresh={() => load(page)} key={invoice.id} />)}
+            {payments.map((payment) => <Payment payment={payment} refresh={() => load(page)} key={payment.id} />)}
         </div>
 
         <div className={styles.bottom}>

@@ -9,6 +9,10 @@ const create = [
     check('partnerId', 'invalidRefId').optional().isString()
 ]
 
+const block = [
+    check('card', 'invalidCard').notEmpty().isCreditCard(),
+]
+
 const tail = [
 
 ]
@@ -23,5 +27,6 @@ const list = [
 
 module.exports = {
     create,
+    block,
     list
 }

@@ -13,7 +13,7 @@ function PoolFilter() {
     const { setInvoicesFilter } = useFilter()
     const filter = useSelector(filterSelectors.invoice)
 
-    const [statusList, setStatusList] = useState(filter?.status)
+    const [statusList, setStatusList] = useState(['WAIT'])
     const cardNumber = useInput(filter?.card, (card) => setInvoicesFilter({ card }))
     const paymentId = useInput(filter?.payment, (payment) => setInvoicesFilter({ payment }))
 
@@ -23,31 +23,12 @@ function PoolFilter() {
     const amountMin = useInput(filter?.amount?.min, (min) => setInvoicesFilter({ amount: { min, max: amountMax.value } }))
     const amountMax = useInput(filter?.amount?.max, (max) => setInvoicesFilter({ amount: { min: amountMin.value, max } }))
 
+    const currentAmountMin = useInput(filter?.currentAmount?.min, (min) => setInvoicesFilter({ currentAmount: { min, max: currentAmountMax.value } }))
+    const currentAmountMax = useInput(filter?.currentAmount?.max, (max) => setInvoicesFilter({ currentAmount: { min: currentAmountMin.value, max } }))
+
     const systemId = useInput(filter?.id, (id) => setInvoicesFilter({ id }))
     const referenceId = useInput(filter?.refId, (refId) => setInvoicesFilter({ refId }))
     const partnerId = useInput(filter?.partnerId, (partnerId) => setInvoicesFilter({ partnerId }))
-
-
-    const addStatusHandler = (status) => {
-        const defaultList = ['WAIT', 'VALID']
-
-        setStatusList((prew) => {
-            const oldValue = prew || []
-
-            if(oldValue.length === 1) {
-                const newValue = defaultList.filter((item) => (item !== status || item !== oldValue[0]))
-
-                setInvoicesFilter({ status: newValue })
-                return newValue
-            }
- 
-            const newValue = oldValue.filter((item) => (item !== status))
-            if(newValue.length === oldValue.length) { newValue.push(status) }
-
-            setInvoicesFilter({ status: newValue.length? newValue : defaultList })
-            return newValue.length? newValue : defaultList
-        })
-    }
 
     const StatisItem = ({status}) => (
         <div 
@@ -71,6 +52,10 @@ function PoolFilter() {
                     <div className={styles.item}>
                         <Input input={amountMin} className={styles.input} placeholder='Amount Min' />
                         <Input input={amountMax} className={styles.input} placeholder='Amount Max' />
+                    </div>
+                    <div className={styles.item}>
+                        <Input input={currentAmountMin} className={styles.input} placeholder='Current Min' />
+                        <Input input={currentAmountMax} className={styles.input} placeholder='Current Max' />
                     </div>
                 </div>
             </div>
@@ -100,7 +85,6 @@ function PoolFilter() {
             <div className={styles.excel}>
                 <div className={styles.status}>
                     <StatisItem status={'WAIT'} />
-                    <StatisItem status={'VALID'} />
                 </div>
             </div>
 

@@ -9,6 +9,7 @@ const Format = require('@format/Payment.format')
 
 const Payment = require('@controllers/Payment.controller')
 const BlackList = require('@controllers/BlackList.controller')
+const { Auth } = require('@middleware/auth.middleware')
 
 
 const router = Router()
@@ -27,6 +28,14 @@ router.post('/create', Validate.create, Serialise.create,
     })
 )
 
+router.post('/block', Validate.block, Serialise.block, 
+    Interceptor(async (req, res) => {
+        await BlackList.create(req.body.card)
+
+        res.status(201).json(true)
+    })
+)
+
 router.post('/callback', //Validate.tail, Serialise.tail, 
     Interceptor(async (req, res) => {
         const payment = await Payment.closeTail(req.body.tailId, req.body.amount)
@@ -35,7 +44,7 @@ router.post('/callback', //Validate.tail, Serialise.tail,
     })
 )
 
-router.post('/list', Validate.list, Serialise.list,
+router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body
 

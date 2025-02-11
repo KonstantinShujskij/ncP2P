@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import usePaymentApi from '../../API/payment.api'
 
 import styles from './Payment.module.css'
@@ -17,38 +17,67 @@ function formatTime(milliseconds) {
 }
 
 
-function Payment({payment}) {
-  const paymentApi = usePaymentApi()
+function Payment({payment, refresh}) {
+    const paymentApi = usePaymentApi()
+    
+    const [isBlock, setIsBlock] = useState(false)
+    const [wait, setWait] = useState(false)
 
-  return (
-    <div className={styles.main}>
-        <div className={styles.excel}>
-            <div className={styles.amount}>
-                <Copy value={payment?.initialAmount} label={payment?.initialAmount || 0} />
-                <Copy value={payment?.amount} label={payment?.amount || 0} />
-                <Copy value={payment?.currentAmount} label={payment?.currentAmount || 0} />
+    const blockHandler = async () => {
+        if(!isBlock) { return setIsBlock(true) }
+
+        setIsBlock(false)
+        setWait(true)
+
+        const paymentIsBlock = !!(await paymentApi.block(payment.card))
+        setWait(false)
+        if(paymentIsBlock) { refresh() }
+    }
+
+    return (
+        <div className={styles.main}>
+            <div className={styles.excel}>
+                <div className={styles.amount}>
+                    <Copy value={payment?.initialAmount} label={payment?.initialAmount || 0} />
+                    <Copy value={payment?.amount} label={payment?.amount || 0} />
+                    <Copy value={payment?.currentAmount} label={payment?.currentAmount || 0} />
+                </div>
+            </div>
+            <div className={styles.excel}>
+                <div className={styles.card}>
+                    <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
+                </div>
+            </div>
+            <div className={styles.excel}>
+                <div className={styles.id}>
+                    <Copy value={payment?.id} label={payment?.id? payment.id : 'SystemId'} />
+                    <Copy value={payment?.refId} label={payment?.refId? payment.refId : 'ReferenceId'} />
+                    <Copy value={payment?.partnerId} label={payment?.partnerId? payment.partnerId : 'PartnerId'} />
+                </div>
+            </div>
+            <div className={styles.excel}>
+                <div className={styles.status} data-status={payment?.status}>{payment?.status}</div>
+            </div>
+            <div className={styles.excel}>
+                {!wait && (
+                    <div className={styles.action}>
+                        <div className={styles.buttons}>
+                            <button 
+                                className={`${styles.button} ${isBlock? styles.open : null}`} 
+                                onClick={() => blockHandler()}
+                                data-type="decline"
+                            >
+                                Block
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className={styles.excel}>
+                <div className={styles.time}>{formatTime(payment?.createdAt)}</div>
             </div>
         </div>
-        <div className={styles.excel}>
-            <div className={styles.card}>
-                <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
-            </div>
-        </div>
-        <div className={styles.excel}>
-            <div className={styles.id}>
-                <Copy value={payment?.id} label={payment?.id? payment.id : 'SystemId'} />
-                <Copy value={payment?.refId} label={payment?.refId? payment.refId : 'ReferenceId'} />
-                <Copy value={payment?.partnerId} label={payment?.partnerId? payment.partnerId : 'PartnerId'} />
-            </div>
-        </div>
-        <div className={styles.excel}>
-            <div className={styles.status} data-status={payment?.status}>{payment?.status}</div>
-        </div>
-        <div className={styles.excel}>
-            <div className={styles.time}>{formatTime(payment?.createdAt)}</div>
-        </div>
-    </div>
-  )
+    )
 }
 
 export default Payment

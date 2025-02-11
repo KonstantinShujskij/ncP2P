@@ -130,3 +130,7 @@ a {
 .copy.active {
     color: #4bef81;
 }
+
+a.active {
+    color: #fbffff;
+}

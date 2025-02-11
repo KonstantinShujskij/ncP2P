@@ -29,6 +29,10 @@
     min-width: 56px;
 }
 
+.item.active {
+    color: green;
+}
+
 .item:hover {
     color: #fbffff;
 }
