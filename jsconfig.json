@@ -4,6 +4,7 @@
     "paths": {
       "@core/*": ["core/*"],
       "@utils/*": ["utils/*"],
+      "@middleware/*": ["middleware/*"],
       "@models/*": ["layers/models/*"],
       "@controllers/*": ["layers/controllers/*"],
       "@filter/*": ["layers/filters/*"],

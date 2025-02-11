@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt')
-const telegram = require('@utils/telegram.utils')
 const { getKvitNumber } = require('@utils/pdf.utils')
 
 const Proof = require('@models/Proof.model')
@@ -16,6 +14,7 @@ const Const = require('@core/Const')
 async function checkGov(number) {
     return {
         amount: 1000,
+        kvitNumber: 'KVIT-009'
     }
 }
 
@@ -34,16 +33,21 @@ async function getNumberByKvit(file, bank) {
 // ----- MIAI -----
 
 async function create({invoiceId, kvitNumber, kvitFile}) {
-    const invoice = await Invoice.get(invoiceId)     
+    const invoice = await Invoice.get(invoiceId)   
+    
+    if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
 
     const numberInFile = await getNumberByKvit(kvitFile, invoice.bank)    
     const number = numberInFile? numberInFile : kvitNumber
+
+    if(!number) { throw Exception.invalidValue }
 
     const candidat = await Proof.findOne({ number })
     if(candidat) { throw Exception.isExist }
 
     const proof = new Proof({
         invoice: invoiceId,
+        payment: invoice.payment,
         kvitNumber: number,
         kvitFile
     })
@@ -67,14 +71,44 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
+    console.log('COMPLITE');
+
+    proof.kvitNumber = transaction.kvitNumber
     proof.amount = transaction.amount
-    proof.status = Const.proof.statusList.CONFIRM
+    proof.status = Const.proof.statusList.CONFIRM    
 
     const saveProof = await save(proof)
 
+    console.log('TO INVOICE');
+
     // Invoice logic
+    await Invoice.close(proof.invoice, proof.amount)
 
     return saveProof
+}
+
+// ---------- SUPPORT ------------
+
+async function decline(id) {
+    const proof = await get(id)
+
+    if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
+
+    proof.status = Const.proof.statusList.REJECT
+
+    return await save(proof)
+}
+
+async function approve({id, amount, kvitNumber}) {
+    console.log('START');
+    
+    const proof = await get(id)
+
+    console.log(proof);
+
+    if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
+
+    return await complite(proof, { amount, kvitNumber })
 }
 
 // ---------- LISTS ------------
@@ -122,6 +156,9 @@ async function getList(options={}, sort={}, skip=0, limit=50) {
 module.exports = { 
     create,
     verify,
+
+    decline,
+    approve,
 
     get,
     list

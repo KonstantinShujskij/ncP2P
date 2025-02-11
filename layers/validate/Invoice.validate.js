@@ -9,9 +9,8 @@ const create = [
     check('bank', 'invalidBank').optional().isString(),
 ]
 
-const confirm = [
+const pay = [
     check('id', 'invalidId').notEmpty().isMongoId(),
-    check('kvit', 'invalidValue').optional().isString(),
 ]
 
 const list = [
@@ -23,6 +22,6 @@ const list = [
 
 module.exports = {
     create,
-    confirm,
+    pay,
     list
 }

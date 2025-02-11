@@ -102,7 +102,7 @@ async function refresh(id) {
 
     //NCAPI
 
-    payment.status = Const.statusList.BLOCKED
+    payment.status = Const.payment.statusList.BLOCKED
     payment.isWait = true
 
     // in integration
@@ -111,6 +111,18 @@ async function refresh(id) {
     payment.tailAmount = 0
 
     return payment
+}
+
+async function closeTail(tailId, amount) {        
+    const payment = await Payment.findOne({ tailId })
+    if(!payment) { throw Exception.notFind }
+
+    payment.status = Const.payment.statusList.SUCCESS
+    payment.tailAmount = amount
+
+    await save(payment)
+
+    return await refresh(payment._id)
 }
 
 async function getMaxAvailable(id) {        
@@ -128,9 +140,7 @@ async function getMaxAvailable(id) {
 
 // ---------- GET BEST ----------
 
-async function getBestByEqual(amount) {    
-    console.log('BEST EQ:', amount);
-    
+async function getBestByEqual(amount) {        
     const list = await Payment.find({ 
         status: Const.payment.statusList.ACTIVE, 
         currentAmount: amount, 
@@ -158,9 +168,7 @@ async function getBestByLimits(amount) {
 }
 
 async function getBest(amount) {    
-    const equalBest = await getBestByEqual(amount)
-    console.log('equils', equalBest);
-    
+    const equalBest = await getBestByEqual(amount)    
     if(equalBest) { return await softGet(equalBest._id) }
 
     const limitBest = await getBestByLimits(amount)
@@ -246,6 +254,7 @@ module.exports = {
     getMaxAvailable,
 
     choiceBest,
+    closeTail,
 
     list,
 

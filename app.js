@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
-
+const logger = require('@middleware/logger.middleware')
 // const http = require('http')
 // const https = require('https')
 
@@ -19,6 +19,7 @@ const MONGO_URL = config.get('mongoUri')
 
 app.use(cors())
 app.use(express.json({ extended: true }))
+app.use(logger)
 
 app.use('/api/user', require('./routes/User.routes'))
 app.use('/api/payment', require('./routes/Payment.routes'))

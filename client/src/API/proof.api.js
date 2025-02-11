@@ -9,7 +9,7 @@ export default function useProofApi() {
     const filter = useSelector(filterSelectors.proof)
 
     const approve = async (id, amount, kvitNumber) => {       
-        try { return await protectedRequest('api/proof/approve', {id, amount, kvitNumber}) }
+        try { return await protectedRequest('api/proof/accept', {id, amount, kvitNumber}) }
         catch(error) { return false } 
     }
 

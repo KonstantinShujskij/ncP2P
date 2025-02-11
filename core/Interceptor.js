@@ -13,6 +13,8 @@ const Interceptor = (handler) => {
             await handler(req, res)
         } 
         catch(exception) {
+            res.skipLog = false
+
             if(!exception.status) {
                 console.log('Unknow Exception:');
                 console.log(exception);

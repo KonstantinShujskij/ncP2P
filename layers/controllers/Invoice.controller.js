@@ -47,6 +47,8 @@ async function reject(id) { return await finalize(id, Const.invoice.statusList.R
 async function confirm(id) { return await finalize(id, Const.invoice.statusList.CONFIRM) }
 
 async function changeAmount(id, amount) {
+    console.log('CHANGE AMOUNT', amount);
+    
     const invoice = await getActive(id)
 
     invoice.amount = amount
@@ -55,8 +57,12 @@ async function changeAmount(id, amount) {
 }
 
 async function close(id, amount) {
-    const invoice = await getActive(id)
+    console.log('CLOSE INVOICE', amount);
+    
+    const invoice = await get(id)
 
+    if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
+    
     if(invoice.amount === amount) { return await confirm(id) }
 
     const delta = amount - invoice.initialAmount
@@ -71,25 +77,17 @@ async function close(id, amount) {
     // custom callback to NcPay by Intigration
 
     await changeAmount(id, amount)
+    console.log('FINISH');
+    
     return await confirm(id) 
 }
 
-async function approve({id, kvitNumber, kvitFile}) {
+async function pay(id) {
     const invoice = await getActive(id)
 
-    //check gov
-    const isValid = true
-    const amount = invoice.amount + 500
-    //-----
+    invoice.status = Const.invoice.statusList.VALID
 
-    if(!isValid) { invoice.status = Const.invoice.statusList.VALID }
-
-    invoice.kvitFile = kvitFile
-    invoice.kvitNumber = kvitNumber
-
-    await save(invoice)
-
-    return await close(id, amount)
+    return await save(invoice)
 }
 
 
@@ -122,12 +120,8 @@ async function get(_id) {
 }
 
 async function getActive(_id) {
-    const invoice = await Invoice.findOne({ _id })
+    const invoice = await Invoice.findOne({ _id, status: {$in: Const.invoice.activeStatusList} })
     if(!invoice) { throw Exception.notFind }
-
-    if(!Const.invoice.activeStatusList.includes(invoice.status)) { 
-        throw Exception.cantConfirmInvoice 
-    }
 
     return invoice
 }
@@ -151,7 +145,7 @@ module.exports = {
     confirm,
     changeAmount,
     close,
-    approve,
+    pay,
 
     get,
     list

@@ -7,6 +7,16 @@ const create = [
     check('kvitNumber', 'invalidValue').optional().isString(),
 ]
 
+const decline = [
+    check('id', 'invalidValue').notEmpty().isMongoId(),
+]
+
+const approve = [
+    // check('id', 'invalidValue').notEmpty().isMongoId(),
+    check('amount', 'invalidValue').notEmpty().isInt({ min: 0 }),
+    check('kvitNumber', 'invalidValue').notEmpty().isString(),
+]
+
 const list = [
     check('filter', 'invalidValue').optional().isObject(),
     check('page', 'invalidValue').notEmpty().isInt({ min: 0 }),
@@ -16,5 +26,7 @@ const list = [
 
 module.exports = {
     create,
+    decline,
+    approve,
     list
 }

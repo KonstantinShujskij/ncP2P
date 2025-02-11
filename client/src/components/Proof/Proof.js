@@ -14,25 +14,34 @@ function Proof({proof, refresh}) {
     const proofApi = useProofApi()
 
     const number = useInput(proof?.kvitNumber)
+    const amount = useInput(proof?.amount || 0)
 
     const [isDecline, setIsDecline] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
+    const [wait, setWait] = useState(false)
 
     const declineHandler = async () => {
         if(!isDecline) { return setIsDecline(true) }
 
         setIsDecline(false)
+        setIsApprove(false)
+        setWait(true)
 
-        const isDecline = !!(await proofApi.decline(proof.id))
-        if(isDecline) { refresh() }
+        const proofIsDecline = !!(await proofApi.decline(proof.id))
+        setWait(false)
+        if(proofIsDecline) { refresh() }
     } 
+
     const acceptHandler = async () => {
         if(!isApprove) { return setIsApprove(true) }
 
+        setIsDecline(false)
         setIsApprove(false)
+        setWait(true)
 
-        const isDecline = !!(await proofApi.approve(proof.id))
-        if(isDecline) { refresh() }
+        const proofIsApprove = !!(await proofApi.approve(proof.id, amount.value, number.value))
+        setWait(false)
+        if(proofIsApprove) { refresh() }
     } 
 
     return (
@@ -44,9 +53,11 @@ function Proof({proof, refresh}) {
             </div>
             <div className={styles.excel}>
                 <div className={styles.card}>
-                    <Copy value={proof?.invoice} label={proof?.invoice} />
-                    <Copy value={proof?.kvitNumber} label={proof?.kvitNumber} />
-                    <a className={styles.link} href={`${BASE_URL}/kvits/${proof.kvitFile}`} target='_blanck' >{proof.kvitFile? 'Check File' : 'Have not File'}</a>
+                    <div className={styles.item}>
+                        <Copy value={proof?.invoice} label={proof?.invoice} />
+                        <Copy value={proof?.kvitNumber} label={proof?.kvitNumber} />
+                        <a className={styles.link} href={`${BASE_URL}/kvits/${proof.kvitFile}`} target='_blanck' >{proof.kvitFile? 'Check File' : 'Have not File'}</a>
+                    </div>
                 </div>
             </div>
             <div className={styles.excel}>
@@ -58,27 +69,30 @@ function Proof({proof, refresh}) {
                 <div className={styles.status} data-status={proof?.status}>{proof?.status}</div>
             </div>
             <div className={styles.excel}>
-                <div className={styles.action}>
-                    <div className={styles.item}>
-                        <Input input={number} className={styles.input} placeholder="Kvit Number" />
+                {(proof.status === 'WAIT') && !wait && (
+                    <div className={styles.action}>
+                        <div className={styles.item}>
+                            <Input input={amount} className={styles.input} placeholder="Kvit Number" />
+                            <Input input={number} className={styles.input} placeholder="Kvit Number" />
+                        </div>
+                        <div className={styles.buttons}>
+                            <button 
+                                className={`${styles.button} ${isDecline? styles.open : null}`} 
+                                onClick={() => declineHandler()}
+                                data-type="decline"
+                            >
+                                Decline
+                            </button>
+                            <button 
+                                className={`${styles.button} ${isApprove? styles.open : null}`} 
+                                onClick={() => acceptHandler()}
+                                data-type="accept"
+                            >
+                                Approve
+                            </button>
+                        </div>
                     </div>
-                    <div className={styles.buttons}>
-                        <button 
-                            className={`${styles.button} ${isDecline? styles.open : null}`} 
-                            onClick={() => declineHandler()}
-                            data-type="decline"
-                        >
-                            Decline
-                        </button>
-                        <button 
-                            className={`${styles.button} ${isApprove? styles.open : null}`} 
-                            onClick={() => acceptHandler()}
-                            data-type="accept"
-                        >
-                            Approve
-                        </button>
-                    </div>
-                </div>
+                )}
             </div>
             <div className={styles.excel}>
                 <div className={styles.time}>{formatTime(proof?.createdAt)}</div>

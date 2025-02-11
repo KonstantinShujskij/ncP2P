@@ -15,7 +15,7 @@ function ProofFilter() {
 
     const [statusList, setStatusList] = useState(filter?.status)
     const invoiceId = useInput(filter?.invoice, (invoice) => setProofFilter({ invoice }))
-    const kvit = useInput(filter?.invoice, (kvit) => setProofFilter({ kvit }))
+    const kvit = useInput(filter?.kvit, (kvit) => setProofFilter({ kvit }))
     
     const amountMin = useInput(filter?.amount?.min, (min) => setProofFilter({ amount: { min, max: amountMax.value } }))
     const amountMax = useInput(filter?.amount?.max, (max) => setProofFilter({ amount: { min: amountMin.value, max } }))

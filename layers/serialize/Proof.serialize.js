@@ -13,6 +13,31 @@ const create = (req, _, next) => {
     next()
 }
 
+const decline = (req, _, next) => {   
+    req.body = { 
+        id: toObjectId(req.body.id)
+    }
+
+    next()
+}
+
+const approve = (req, _, next) => {   
+    try {
+        req.body = { 
+            id: toObjectId(req.body.id),
+            kvitNumber: req.body.kvitNumber,
+            amount: req.body.amount,
+        }
+    }
+    catch(error) {
+        console.log(error)
+    }
+
+    console.log('EBD APPROVE');
+    
+    next()
+}
+
 const list = (req, _, next) => {   
     req.body = { 
         filter: Filter.admin(req.body.filter), 
@@ -26,5 +51,7 @@ const list = (req, _, next) => {
 
 module.exports = {
     create,
+    decline,
+    approve,
     list
 }

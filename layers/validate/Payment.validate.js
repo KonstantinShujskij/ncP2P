@@ -9,6 +9,10 @@ const create = [
     check('partnerId', 'invalidRefId').optional().isString()
 ]
 
+const tail = [
+
+]
+
 const list = [
     check('filter', 'invalidValue').optional().isObject(),
     check('page', 'invalidValue').notEmpty().isInt({ min: 0 }),

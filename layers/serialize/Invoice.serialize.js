@@ -15,14 +15,9 @@ const create = (req, _, next) => {
     next()
 }
 
-const confirm = async (req, _, next) => {   
-    
-    const number = req.file?.filename?  await getKvitNumber(req.file?.filename) : req.body.kvitNumber
-
+const pay = async (req, _, next) => {   
     req.body = { 
         id: toObjectId(req.body.id),
-        kvitFile: req.file?.filename || null,
-        kvitNumber: number || null,
     }
 
     next()
@@ -41,6 +36,6 @@ const list = (req, _, next) => {
 
 module.exports = {
     create,
-    confirm,
+    pay,
     list
 }

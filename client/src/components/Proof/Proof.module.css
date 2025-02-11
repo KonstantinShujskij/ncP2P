@@ -124,3 +124,9 @@
 .action {
     min-width: 180px;
 }
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}

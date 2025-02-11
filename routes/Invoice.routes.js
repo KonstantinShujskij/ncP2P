@@ -21,9 +21,9 @@ router.post('/create', Validate.create, Serialise.create,
     })
 )
 
-router.post('/approve', file.single('kvit'), Validate.confirm, Serialise.confirm,
+router.post('/pay', Validate.pay, Serialise.pay,
     Interceptor(async (req, res) => {
-        const invoice = await Invoice.approve(req.body)
+        const invoice = await Invoice.pay(req.body.id)
 
         res.status(200).json(Format.parnter(invoice))
     })
@@ -35,6 +35,7 @@ router.post('/list', Validate.list, Serialise.list,
 
         const {list, count} = await Invoice.list(filter, page, limit)        
 
+        req.skipLog = true
         res.status(200).json({ list: list.map((payment) => Format.admin(payment)), count })
     })
 )
