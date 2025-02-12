@@ -7,6 +7,12 @@ const create = [
     check('kvitNumber', 'invalidValue').optional().isString(),
 ]
 
+
+const client = [
+    check('hash', 'invalidId').notEmpty().isString(),
+    check('kvitNumber', 'invalidValue').optional().isString(),
+]
+
 const decline = [
     check('id', 'invalidValue').notEmpty().isMongoId(),
 ]
@@ -26,6 +32,7 @@ const list = [
 
 module.exports = {
     create,
+    client,
     decline,
     approve,
     list

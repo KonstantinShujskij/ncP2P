@@ -35,9 +35,9 @@ router.post('/block', Auth, Validate.block, Serialise.block,
     })
 )
 
-router.post('/callback', access, adminAccess, //Validate.tail, Serialise.tail, 
+router.post('/callback',  
     Interceptor(async (req, res) => {
-        const payment = await Payment.closeTail(req.body.tailId, req.body.amount)
+        const payment = await Payment.closeTail(req.body._id, req.body.amount)
 
         res.status(201).json(Format.admin(payment))
     })

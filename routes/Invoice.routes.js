@@ -7,10 +7,10 @@ const Serialise = require('@serialize/Invoice.serialize')
 const Invoice = require('@controllers/Invoice.controller')
 const Format = require('@format/Invoice.format')
 
-const file = require('@middleware/file.middleware')
 const { Auth } = require('@middleware/auth.middleware')
 const { access, partnerAccess } = require('@middleware/access.middleware')
-
+const Jwt = require('@utils/Jwt.utils')
+const config = require('config')
 
 const router = Router()
 
@@ -18,16 +18,30 @@ const router = Router()
 router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const invoice = await Invoice.create(req.body)
+        const hash = Jwt.generateLinkJwt(invoice._id)
 
-        res.status(201).json(Format.parnter(invoice))
+        const payPageUrl = config.get('payPageUrl')
+        res.status(201).json({...Format.parnter(invoice), link: `${payPageUrl}?hash=${hash}`})
     })
 )
 
-router.post('/pay', access, partnerAccess, Validate.pay, Serialise.pay,
+router.post('/pay', Validate.get, Serialise.get,
     Interceptor(async (req, res) => {
-        const invoice = await Invoice.pay(req.body.id)
+        const id = Jwt.validateLinkJwt(req.body.hash)
+
+        const invoice = await Invoice.pay(id)
 
         res.status(200).json(Format.parnter(invoice))
+    })
+)
+
+router.post('/get', Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {
+        const id = Jwt.validateLinkJwt(req.body.hash)
+
+        const invoice = await Invoice.get(id)        
+
+        res.status(200).json(Format.client(invoice))
     })
 )
 

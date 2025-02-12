@@ -13,6 +13,10 @@ const pay = [
     check('id', 'invalidId').notEmpty().isMongoId(),
 ]
 
+const get = [
+    check('hash', 'invalidId').notEmpty().isString(),
+]
+
 const list = [
     check('filter', 'invalidValue').optional().isObject(),
     check('page', 'invalidValue').notEmpty().isInt({ min: 0 }),
@@ -23,5 +27,6 @@ const list = [
 module.exports = {
     create,
     pay,
+    get,
     list
 }

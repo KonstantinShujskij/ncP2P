@@ -45,6 +45,7 @@ const initialState = {
         id: '',
 
         invoice: '',
+        payment: '',
         status: ['WAIT', 'VALID'],
         bank: '',
         kvit: '',

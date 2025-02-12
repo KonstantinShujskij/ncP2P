@@ -7,6 +7,7 @@ function get(filterData, forse={}) {
 
     if(filter?.status) { options = {...options, status: filter.status} }
     if(filter?.invoice) { options = {...options, invoice: filter.invoice} }
+    if(filter?.payment) { options = {...options, payment: filter.payment} }
     if(filter?.bank) { options = {...options, bank: filter.bank} }
     if(filter?.kvit) { options = {...options, kvitNumber: filter.kvit} }
 

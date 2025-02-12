@@ -28,9 +28,24 @@ const admin = (invoice) => ({
     createdAt: invoice.createdAt,
 })
 
+const client = (invoice) => ({
+    id: invoice._id,
+    refId: invoice.refId || '',
+    partnerId: invoice.partnerId || '',
+
+    amount: invoice.amount,
+    initialAmount: invoice.initialAmount,
+
+    status: invoice.status,
+    card: invoice.card,
+
+    createdAt: invoice.createdAt,
+})
+
 
 module.exports = {
     all: (user) => user,
+    client,
     parnter,
     admin
 }

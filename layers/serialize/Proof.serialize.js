@@ -13,6 +13,16 @@ const create = (req, _, next) => {
     next()
 }
 
+const client = (req, _, next) => {   
+    req.body = { 
+        hash: req.body.hash,
+        kvitFile: req.file?.filename || null,
+        kvitNumber: req.body.kvitNumber || null,
+    }
+
+    next()
+}
+
 const decline = (req, _, next) => {   
     req.body = { 
         id: toObjectId(req.body.id)
@@ -32,9 +42,7 @@ const approve = (req, _, next) => {
     catch(error) {
         console.log(error)
     }
-
-    console.log('EBD APPROVE');
-    
+        
     next()
 }
 
@@ -51,6 +59,7 @@ const list = (req, _, next) => {
 
 module.exports = {
     create,
+    client,
     decline,
     approve,
     list

@@ -6,6 +6,7 @@ const Validate = require('@validate/Proof.validate')
 const Serialise = require('@serialize/Proof.serialize')
 const Proof = require('@controllers/Proof.controller')
 const Format = require('@format/Proof.format')
+const Jwt = require('@utils/Jwt.utils')
 
 const file = require('@middleware/file.middleware')
 const { Auth } = require('@middleware/auth.middleware')
@@ -16,6 +17,16 @@ const router = Router()
 
 router.post('/create', file.single('kvit'), Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
+        const proof = await Proof.create(req.body)
+
+        res.status(201).json(Format.client(proof))
+    })
+)
+
+router.post('/create-client', file.single('kvit'), Validate.client, Serialise.client, 
+    Interceptor(async (req, res) => {        
+        req.body.invoiceId = Jwt.validateLinkJwt(req.body.hash)
+        
         const proof = await Proof.create(req.body)
 
         res.status(201).json(Format.client(proof))

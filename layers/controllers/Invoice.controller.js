@@ -38,6 +38,9 @@ async function finalize(id, status=Const.invoice.statusList.REJECT) {
     invoice.status = status
 
     await save(invoice)
+
+    // callback
+    
     await Payment.refresh(invoice.payment)
 
     return invoice
@@ -46,9 +49,7 @@ async function finalize(id, status=Const.invoice.statusList.REJECT) {
 async function reject(id) { return await finalize(id, Const.invoice.statusList.REJECT) }
 async function confirm(id) { return await finalize(id, Const.invoice.statusList.CONFIRM) }
 
-async function changeAmount(id, amount) {
-    console.log('CHANGE AMOUNT', amount);
-    
+async function changeAmount(id, amount) {    
     const invoice = await getActive(id)
 
     invoice.amount = amount
@@ -56,9 +57,7 @@ async function changeAmount(id, amount) {
     return await save(invoice)
 }
 
-async function close(id, amount) {
-    console.log('CLOSE INVOICE', amount);
-    
+async function close(id, amount) {    
     const invoice = await get(id)
 
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
@@ -76,9 +75,7 @@ async function close(id, amount) {
     // call support
     // custom callback to NcPay by Intigration
 
-    await changeAmount(id, amount)
-    console.log('FINISH');
-    
+    await changeAmount(id, amount)    
     return await confirm(id) 
 }
 

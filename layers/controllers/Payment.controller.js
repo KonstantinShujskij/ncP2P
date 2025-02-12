@@ -72,6 +72,8 @@ async function refresh(id) {
         payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
+        // callback
+
         return await save(payment)
     }
     
@@ -105,7 +107,7 @@ async function refresh(id) {
     payment.status = Const.payment.statusList.BLOCKED
     payment.isWait = true
 
-    // in integration
+    // get in integration ncApi
     payment.isTail = true
     payment.tailId = 'NCAPI'
     payment.tailAmount = 0

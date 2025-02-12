@@ -1,6 +1,5 @@
 const Filter = require('@filter/Invoice.filters')
 
-const { getKvitNumber } = require('@utils/pdf.utils')
 const { toObjectId } = require('@utils/utils')
 
 
@@ -23,6 +22,14 @@ const pay = async (req, _, next) => {
     next()
 }
 
+const get = async (req, _, next) => {   
+    req.body = { 
+        hash: req.body.hash,
+    }
+
+    next()
+}
+
 const list = (req, _, next) => {   
     req.body = { 
         filter: Filter.admin(req.body.filter), 
@@ -37,5 +44,6 @@ const list = (req, _, next) => {
 module.exports = {
     create,
     pay,
+    get,
     list
 }

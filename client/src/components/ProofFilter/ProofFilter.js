@@ -14,6 +14,7 @@ function ProofFilter() {
     const filter = useSelector(filterSelectors.proof)
 
     const [statusList, setStatusList] = useState(filter?.status)
+    const paymentId = useInput(filter?.payment, (payment) => setProofFilter({ payment }))
     const invoiceId = useInput(filter?.invoice, (invoice) => setProofFilter({ invoice }))
     const kvit = useInput(filter?.kvit, (kvit) => setProofFilter({ kvit }))
     
@@ -66,6 +67,9 @@ function ProofFilter() {
             </div>
             <div className={styles.excel}>
                 <div className={styles.card}>
+                    <div className={styles.item}>
+                        <Input input={paymentId} className={styles.input} placeholder='Payment Id' />
+                    </div>
                     <div className={styles.item}>
                         <Input input={invoiceId} className={styles.input} placeholder='Invoice Id' />
                     </div>

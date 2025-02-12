@@ -34,21 +34,26 @@ async function getNumberByKvit(file, bank) {
 
 async function create({invoiceId, kvitNumber, kvitFile}) {
     const invoice = await Invoice.get(invoiceId)   
+
+    console.log('--- INVOICE ---')
+    console.log(invoice)
     
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
 
     const numberInFile = await getNumberByKvit(kvitFile, invoice.bank)    
     const number = numberInFile? numberInFile : kvitNumber
 
+    console.log(number)
+
     if(!number) { throw Exception.invalidValue }
 
-    const candidat = await Proof.findOne({ number })
+    const candidat = await Proof.findOne({ kvitNumber: number.toUpperCase() })
     if(candidat) { throw Exception.isExist }
 
     const proof = new Proof({
         invoice: invoiceId,
         payment: invoice.payment,
-        kvitNumber: number,
+        kvitNumber: number.toUpperCase(),
         kvitFile
     })
 
