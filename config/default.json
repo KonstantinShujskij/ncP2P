@@ -10,5 +10,12 @@
     "jwtSecret": "NHrmJipPAavz6Juw",
     "apiSecret": "NZqofqXRLmzC0q9f",
     "botToken": "7732482149:AAGy674QRsQ0Gdf15CqUUncQmzkY11MUU2w",
-    "payPageUrl": "http://127.0.0.1:5500/index.html"
+    "payPageUrl": "http://127.0.0.1:5500/index.html",
+
+    "NcApiUrl": "",
+    "accessToken": "",
+    "privateToken": "",
+    "maker": "",
+
+    "NcPayUrl": ""
 }

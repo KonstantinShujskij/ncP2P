@@ -5,6 +5,8 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const logger = require('@middleware/logger.middleware')
+const Task = require('@controllers/Task.controller')
+
 // const http = require('http')
 // const https = require('https')
 
@@ -32,6 +34,7 @@ app.get('/kvits/:path', (req, res) => { res.sendFile(path.resolve(__dirname, 'st
 
 async function start() {
     await mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    Task.query().then()
 
     if(process.env.NODE_ENV !== 'production') { 
         return app.listen(PORT, () => console.log(`Dev-App has been started on port ${PORT}`))

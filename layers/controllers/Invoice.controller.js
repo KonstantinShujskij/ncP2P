@@ -3,6 +3,7 @@ const Const = require('@core/Const')
 
 const Invoice = require('@models/Invoice.model')
 const Payment = require('@controllers/Payment.controller')
+const NcPay = require('@utils/NcPay')
 
 
 // ---------- SUPPORT FUNCTION ----------
@@ -37,7 +38,9 @@ async function finalize(id, status=Const.invoice.statusList.REJECT) {
 
     invoice.status = status
 
-    await save(invoice)
+    const newInvoice = await save(invoice)
+
+    NcPay.callback(newInvoice)
 
     // callback
     
@@ -74,6 +77,7 @@ async function close(id, amount) {
 
     // call support
     // custom callback to NcPay by Intigration
+    NcPay.callback({...invoice, amount: invoice.amount + available })
 
     await changeAmount(id, amount)    
     return await confirm(id) 

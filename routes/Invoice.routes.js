@@ -9,8 +9,12 @@ const Format = require('@format/Invoice.format')
 
 const { Auth } = require('@middleware/auth.middleware')
 const { access, partnerAccess } = require('@middleware/access.middleware')
+
+const Task = require('@controllers/Task.controller')
+
 const Jwt = require('@utils/Jwt.utils')
 const config = require('config')
+const Const = require('@core/Const')
 
 const router = Router()
 
@@ -19,8 +23,10 @@ router.post('/create', access, partnerAccess, Validate.create, Serialise.create,
     Interceptor(async (req, res) => {
         const invoice = await Invoice.create(req.body)
         const hash = Jwt.generateLinkJwt(invoice._id)
-
         const payPageUrl = config.get('payPageUrl')
+
+        Task.push({ timestamp: Date.now() + Const.expire * 60 * 1000, type: 'CLOSE', payload: { invoice: invoice._id }})
+
         res.status(201).json({...Format.parnter(invoice), link: `${payPageUrl}?hash=${hash}`})
     })
 )

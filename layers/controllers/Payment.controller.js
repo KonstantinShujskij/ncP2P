@@ -7,6 +7,8 @@ const Invoice = require('@models/Invoice.model')
 const Filter = require('@filter/Payment.filters')
 
 const { round } = require('@utils/utils')
+const { makeOrder } = require('@utils/NcApi')
+const { callback } = require('@utils/NcPay')
 
 
 // ---------- SUPPORT FUNCTION ----------
@@ -72,7 +74,7 @@ async function refresh(id) {
         payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
-        // callback
+        // callback()
 
         return await save(payment)
     }
@@ -107,12 +109,21 @@ async function refresh(id) {
     payment.status = Const.payment.statusList.BLOCKED
     payment.isWait = true
 
-    // get in integration ncApi
-    payment.isTail = true
-    payment.tailId = 'NCAPI'
-    payment.tailAmount = 0
+    const savePayment = await save(payment)
 
-    return payment
+    // get in integration ncApi
+
+    makeOrder(payment.card, payment.currentAmount, payment._id, async (invoice) => {
+        const payment = await get(payment._id)
+
+        payment.isTail = true
+        payment.tailId = invoice._id
+        payment.tailAmount = invoice.amount
+
+        await save(payment)
+    })
+
+    return savePayment
 }
 
 async function closeTail(tailId, amount) {        
