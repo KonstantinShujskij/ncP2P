@@ -8,6 +8,11 @@ export default function usePaymentApi() {
 
     const filter = useSelector(filterSelectors.payment)
 
+    const create = async (card, amount, refId='', partnerId='') => {       
+        try { return await protectedRequest('api/payment/create-admin', {card, amount, refId, partnerId}) }
+        catch(error) { return null } 
+    }
+
     const list = async (page=1, limit=20) => {       
         try { return await protectedRequest('api/payment/list', {filter, page, limit}) }
         catch(error) { return {list: [], count: 0} } 
@@ -25,6 +30,7 @@ export default function usePaymentApi() {
     }
 
     return { 
+        create,
         list,
         pool,
         block

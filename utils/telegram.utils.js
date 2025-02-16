@@ -40,10 +40,40 @@ function verify(token, telegram, code) {
     if(decoded.telegram !== telegram.toString()) { throw Exception.notAuth }
 }
 
+function cantNcApiMake(payment, telegram=config.get('adminGroupe')) {
+    const text = `Cant make payment in NcApi. id: ${payment}`
+    sendMessage(telegram, text)
+}
+
+function cantSendCallback(invoice, telegram=config.get('adminGroupe')) {
+    const text = `Cant send payment callback to NcPay. id: ${invoice}`
+    sendMessage(telegram, text)
+}
+
+function moreAmount(invoice, amount, telegram=config.get('adminGroupe')) {
+    const text = `Invoice - ${invoice._id} with amount - ${invoice.amount}, will be closed - ${amount}`
+    sendMessage(telegram, text)
+}
+
+function sendCode(telegram) {
+    const code = 100000 + parseInt(Math.random() * 900000)
+
+    sendMessage(telegram, `<code>${code}</code>`)
+
+    const secret = config.get('authSecret')
+    const token = jwt.sign({ telegram, code }, secret, { expiresIn: '5m' })
+
+    return token
+}
+
 
 module.exports = { 
     sendMessage,
     sendAuth,
     sendCode,
     verify,
+
+    cantNcApiMake,
+    cantSendCallback,
+    moreAmount
 }

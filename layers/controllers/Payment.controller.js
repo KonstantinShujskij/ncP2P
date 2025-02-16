@@ -52,6 +52,8 @@ async function create({ card, amount, refId, partnerId }) {
 }
 
 async function refresh(id) {        
+    console.log('Refresh');
+    
     const payment = await get(id)
 
     if(payment.status === Const.payment.statusList.REJECT) { throw Exception.cantRefreshPayment }
@@ -70,7 +72,11 @@ async function refresh(id) {
     payment.isRefresh = true
     payment.isWait = isWait
 
+    console.log('current', currentAmount, isWait);
+    
     if(!isWait && currentAmount <= 0) { 
+        console.log('Success');
+
         payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
@@ -79,7 +85,9 @@ async function refresh(id) {
         return await save(payment)
     }
     
-    if(maxLimit >= minLimit && maxLimit >= Const.minInvoiceLimit) {        
+    if(maxLimit >= minLimit && maxLimit >= Const.minInvoiceLimit) {      
+        console.log('Active');
+  
         payment.status = Const.payment.statusList.ACTIVE
         payment.maxLimit = maxLimit
         
@@ -87,6 +95,8 @@ async function refresh(id) {
     }    
 
     if(isWait) {
+        console.log('Blocked');
+
         payment.status = Const.payment.statusList.BLOCKED
         payment.maxLimit = Math.max(maxLimit, minLimit)
 
@@ -97,6 +107,8 @@ async function refresh(id) {
     const isSmall = currentAmount < Const.smallLim
 
     if(isRound && isSmall) {
+        console.log('Round');
+
         payment.status = Const.payment.statusList.ACTIVE
         payment.minLimit = currentAmount
         payment.maxLimit = currentAmount
@@ -111,27 +123,34 @@ async function refresh(id) {
 
     const savePayment = await save(payment)
 
+    console.log('Go to NcApi');
+    console.log(savePayment);
+    
     // get in integration ncApi
 
     makeOrder(payment.card, payment.currentAmount, payment._id, async (invoice) => {
-        const payment = await get(payment._id)
-
-        payment.isTail = true
-        payment.tailId = invoice._id
-        payment.tailAmount = invoice.amount
-
-        await save(payment)
+        const newPayment = await get(payment.id)
+        
+        newPayment.isTail = true
+        newPayment.tailId = invoice.body.id
+        newPayment.tailAmount = payment.currentAmount
+        
+        await save(newPayment)
     })
 
     return savePayment
 }
 
-async function closeTail(tailId, amount) {        
-    const payment = await Payment.findOne({ tailId })
+async function closeTail(invoice) {   
+    console.log(invoice);
+
+    if(invoice.status !== 'CONFIRM') { return }    
+         
+    const payment = await Payment.findOne({ tailId: invoice.id })
     if(!payment) { throw Exception.notFind }
 
     payment.status = Const.payment.statusList.SUCCESS
-    payment.tailAmount = amount
+    payment.isTail = false
 
     await save(payment)
 

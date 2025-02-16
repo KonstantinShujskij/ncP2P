@@ -54,6 +54,14 @@ function Menu() {
                         Proof
                     </div>
                 </NavLink>
+                <NavLink to={'./make'} className={styles.item}>
+                    <div className={styles.icon}>
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div className={styles.value}>
+                        Make
+                    </div>
+                </NavLink>
                 <NavLink to={'./logs'} className={styles.item}>
                     <div className={styles.icon}>
                         <i class="fa-solid fa-code"></i>                    

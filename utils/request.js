@@ -10,9 +10,9 @@ const generateSignature = (body, privateToken) => {
     return hash
 }
 
-const protectedRecuest = (url, body, handler=()=>{}) => {
-    const accessToken = config.get('paymentAPIAccess')
-    const privateToken = config.get('paymentAPISecret')
+const protectedRecuest = (url, body, handler=()=>{}) => {    
+    const accessToken = config.get('accessToken')
+    const privateToken = config.get('privateToken')
 
     body = {accessToken, ...body}
     body.signature = generateSignature(body, privateToken)

@@ -27,6 +27,17 @@ router.post('/create', access, partnerAccess, Validate.create, Serialise.create,
     })
 )
 
+router.post('/create-admin', Auth, Validate.create, Serialise.create, 
+    Interceptor(async (req, res) => {
+        const isBlocked = !!(await BlackList.find(req.body.card))
+        if(isBlocked) { throw Exception.cardBlocked }
+
+        const payment = await Payment.create(req.body)
+
+        res.status(201).json(Format.parnter(payment))
+    })
+)
+
 router.post('/block', Auth, Validate.block, Serialise.block, 
     Interceptor(async (req, res) => {
         await BlackList.create(req.body.card)
@@ -37,7 +48,7 @@ router.post('/block', Auth, Validate.block, Serialise.block,
 
 router.post('/callback',  
     Interceptor(async (req, res) => {
-        const payment = await Payment.closeTail(req.body._id, req.body.amount)
+        const payment = await Payment.closeTail(req.body)
 
         res.status(201).json(Format.admin(payment))
     })
