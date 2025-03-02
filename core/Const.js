@@ -1,7 +1,7 @@
 module.exports = {
     payTime: 15 * 60 * 1000,
     minPaymentLimit: 500,
-    maxPaymentLimit: 30000,
+    maxPaymentLimit: 100000,
     minInvoiceLimit: 500,
     maxInvoiceLimit: 30000,
     minNcApiLimit: 500,
@@ -11,8 +11,8 @@ module.exports = {
         statusList: { ACTIVE: 'ACTIVE', BLOCKED: 'BLOCKED', SUCCESS: 'SUCCESS', REJECT: 'REJECT' },
         minLimit: {
             default: 500,
-            customLimit: 5000,
-            persent: 0.1
+            customLimit: 10000,
+            persent: 0.05
         }
     },
 

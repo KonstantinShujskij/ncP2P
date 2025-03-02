@@ -70,6 +70,7 @@ async function toValid(id) {
 async function toValidOk(id) {
     const invoice = await getActive(id)
     invoice.validOk = !invoice.validOk
+    invoice.status = Const.invoice.statusList.VALID
 
     const newInvoice = await save(invoice)
     await Payment.refresh(invoice.payment)

@@ -260,7 +260,7 @@ async function getBestByLimits(amount) {
     const list = await Payment.aggregate([
         {$match: options},
         {$addFields: { delta: { $subtract: ["$maxLimit", amount] }}},
-        {$sort: { delta: 1, createdAt: 1 }}
+        {$sort: { createdAt: 1 }}
     ])
 
     return list.length? list[0] : null

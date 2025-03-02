@@ -21,6 +21,7 @@ function Payment({payment, refresh}) {
     const paymentApi = usePaymentApi()
     
     const [isBlock, setIsBlock] = useState(false)
+    const [isWaitFreeze, setIsWaitFreeze] = useState(false)
     const [wait, setWait] = useState(false)
 
     const blockHandler = async () => {
@@ -35,9 +36,12 @@ function Payment({payment, refresh}) {
     }
 
     const freezeHandler = async () => {
+        if(!isWaitFreeze) { return setIsWaitFreeze(true) }
+
         if(payment.isFreeze) { await paymentApi.unfreeze(payment.id) }
         else { await paymentApi.freeze(payment.id) }
 
+        setIsWaitFreeze(true)
         refresh()
     }
 

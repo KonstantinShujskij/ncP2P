@@ -9,19 +9,32 @@ import useInvoiceApi from '../../API/invoice.api'
 
 function Invoice({invoice, refresh}) {
     const invoiceApi = useInvoiceApi()
+
+    const [isRejectWait, setIsRejectWait] = useState(false)
+    const [isValidWait, setIsValidWait] = useState(false)
+    const [isValidOkWait, setIsValidOkWait] = useState(false)
     
     const rejectHandler = async () => {
+        if(!isRejectWait) { return setIsRejectWait(true) }
+
         await invoiceApi.reject(invoice.id)
+        setIsRejectWait(false) 
         refresh()
     }
 
     const validHandler = async () => {
+        if(!isValidWait) { return setIsValidWait(true) }
+
         await invoiceApi.valid(invoice.id)
+        setIsValidWait(false)
         refresh()
     }
 
     const validOkHandler = async () => {
+        if(!isValidOkWait) { return setIsValidOkWait(true) }
+
         await invoiceApi.validOk(invoice.id)
+        setIsValidOkWait(true)
         refresh()
     }
 
@@ -48,7 +61,7 @@ function Invoice({invoice, refresh}) {
                 </div>
             </div>
             <div className={styles.excel}>
-                {invoice.validOk? 
+                {(invoice.validOk && invoice?.status !== 'CONFIRM' && invoice?.status !== 'REJECT')? 
                     <>
                         <div className={styles.status} data-status="VALID-OK">VALID-OK</div>
                     </> : 

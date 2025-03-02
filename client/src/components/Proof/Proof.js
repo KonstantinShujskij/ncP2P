@@ -14,7 +14,7 @@ function Proof({proof, refresh}) {
     const proofApi = useProofApi()
 
     const number = useInput(proof?.gpt?.number || proof?.kvitNumber)
-    const amount = useInput(proof?.gpt?.amount || proof?.invoiceAmount || 0)
+    const amount = useInput(proof?.invoiceAmount || 0)
 
     const [isDecline, setIsDecline] = useState(false)
     const [isApprove, setIsApprove] = useState(false)

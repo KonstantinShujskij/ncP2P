@@ -32,8 +32,8 @@ function CreatePayment() {
           <h3 className={styles.title}>Make Payment</h3>
           <Input input={card} type='text' placeholder='card' />
           <Input input={amount} type='text' placeholder='0' />
-          <Input input={refId} type='text' placeholder='Ref Id' />
           <Input input={course} type='text' placeholder='Course' />
+          <Input input={refId} type='text' placeholder='Ref Id' />
           <button onClick={createHandler}>Create</button>
         </div>
     </div>
