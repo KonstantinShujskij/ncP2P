@@ -17,8 +17,14 @@ function get(filterData, forse={}) {
     if(filter?.status) { options = {...options, status: filter.status} }
 
     if(filter?.payment) { 
-        const orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
-        if(Types.ObjectId.isValid(filter.payment)) { orOptions.push({payment: filter.payment}) }
+        let orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
+        if(Types.ObjectId.isValid(filter.payment)) { 
+            orOptions = [
+                { payment: filter.payment },
+                { paymentRefId: filter.payment }, 
+                { paymentPartnerId: filter.payment }
+            ]
+        }
         options = {...options,  $or: orOptions} 
     }
 

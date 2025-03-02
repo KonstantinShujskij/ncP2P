@@ -10,18 +10,28 @@ function get(filterData, forse={}) {
     if(filter?.status) { options = {...options, status: filter.status} }
 
     if(filter?.invoice) { 
-        const orOptions = [{ invoiceRefId: filter.invoice }, { invoicePartnerId: filter.invoice }]
-        if(Types.ObjectId.isValid(filter.invoice)) { orOptions.push({invoice: filter.invoice}) }
+        let orOptions = [{ invoiceRefId: filter.invoice }, { invoicePartnerId: filter.invoice }]
+        if(Types.ObjectId.isValid(filter.invoice)) {
+            orOptions = [
+                { invoice: filter.invoice },
+                { invoiceRefId: filter.invoice }, 
+                { invoicePartnerId: filter.invoice }
+            ]
+        }
         options = {...options,  $or: orOptions} 
     }
 
     if(filter?.payment) { 
-        const orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
-        if(Types.ObjectId.isValid(filter.payment)) { orOptions.push({payment: filter.payment}) }
+        let orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
+        if(Types.ObjectId.isValid(filter.payment)) { 
+            orOptions = [
+                { payment: filter.payment }, 
+                { paymentRefId: filter.payment }, 
+                { paymentPartnerId: filter.payment }
+            ]
+        }
         options = {...options,  $or: orOptions} 
     }
-
-    console.log(options)
 
     if(filter?.bank) { options = {...options, bank: filter.bank} }
     if(filter?.kvit) { options = {...options, kvitNumber: filter.kvit} }
