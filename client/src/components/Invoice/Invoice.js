@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { formatCardNumber, formatTime } from '../../utils'
 
 import Copy from '../UI/copy'
