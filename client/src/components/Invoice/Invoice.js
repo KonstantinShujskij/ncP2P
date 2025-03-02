@@ -48,7 +48,15 @@ function Invoice({invoice, refresh}) {
                 </div>
             </div>
             <div className={styles.excel}>
-                <div className={styles.status} data-status={invoice?.status}>{invoice?.status}</div>
+                {invoice.validOk? 
+                    <>
+                        <div className={styles.status} data-status="VALID-OK">VALID-OK</div>
+                    </> : 
+                    <>
+                        <div className={styles.status} data-status={invoice?.status}>{invoice?.status}</div>
+                    </>
+                }
+                
             </div>
             <div className={styles.excel}>  
                 <div className={styles.action}>
@@ -79,7 +87,7 @@ function Invoice({invoice, refresh}) {
                                 onClick={() => validOkHandler()}
                                 data-type="accept"
                             >
-                                Valid OK
+                                {invoice.validOk? "To Valid" : "To Valid Ok"}
                             </button>
                         </>}
                     </div>

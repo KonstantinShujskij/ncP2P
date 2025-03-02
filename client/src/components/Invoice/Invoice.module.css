@@ -72,6 +72,11 @@
     color: #6b9bff; /* Ярко-синий */
 }
 
+.status[data-status="VALID-OK"] {
+    background-color: #2e7474;
+    color: #6bffeb;
+}
+
 .time {
     max-width: 80px;
     margin-left: auto;

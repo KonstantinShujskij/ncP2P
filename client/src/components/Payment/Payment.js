@@ -87,7 +87,7 @@ function Payment({payment, refresh}) {
             </div>
             <div className={styles.col}>
                 <div className={styles.status} data-status={payment?.status}>{payment?.status}</div>
-                <div className={styles.status} data-status={subStatus}>{subStatus}</div>
+                <div className={styles.substatus} data-status={subStatus}>{subStatus}</div>
             </div>
             <div className={styles.excel}>
                 {!wait && (
