@@ -24,9 +24,11 @@ async function create({ amount, bank, refId, partnerId }) {
     const invoice = new Invoice({ 
         refId, partnerId,
         initialAmount: amount,
-        amount,
+        amount, 
         bank, 
         payment: payment._id,
+        paymentRefId: payment.refId,
+        paymentPartnerId: payment.partnerId,
         card: payment.card
     })
 
@@ -51,6 +53,28 @@ async function finalize(id, status=Const.invoice.statusList.REJECT, stopCallback
     await Payment.refresh(invoice.payment)
 
     return invoice
+}
+
+async function toValid(id) {
+    const invoice = await get(id)
+    if(invoice.status !== Const.invoice.statusList.REJECT) { throw Exception.notFind }
+
+    invoice.status = Const.invoice.statusList.VALID
+
+    const newInvoice = await save(invoice)
+    await Payment.refresh(invoice.payment)
+
+    return newInvoice
+}
+
+async function toValidOk(id) {
+    const invoice = await getActive(id)
+    invoice.validOk = true
+
+    const newInvoice = await save(invoice)
+    await Payment.refresh(invoice.payment)
+
+    return newInvoice
 }
 
 async function reject(id) { return await finalize(id, Const.invoice.statusList.REJECT) }
@@ -224,6 +248,8 @@ module.exports = {
     close,
     pay,
 
+    toValid,
+    toValidOk,
     getStatistics,
 
     get,

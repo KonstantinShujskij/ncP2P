@@ -61,6 +61,26 @@ router.post('/reject', Auth, Validate.get, Serialise.get,
     })
 )
 
+router.post('/valid', Auth, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {        
+        const { id } = req.body
+
+        const invoice = await Invoice.toValid(id)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
+router.post('/validOk', Auth, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {        
+        const { id } = req.body
+
+        const invoice = await Invoice.toValidOk(id)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
 router.post('/statistic', Auth, 
     Interceptor(async (req, res) => {
         const { start, stop } = req.body

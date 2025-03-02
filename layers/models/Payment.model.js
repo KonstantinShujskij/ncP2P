@@ -20,6 +20,10 @@ const schema = new Schema({
 
     status: { type: String, default: Const.payment.statusList.ACTIVE }, // ACTIVE / BLOCKED / SUCCESS
 
+    isOneWait: { type: Boolean, default: false },
+    isOneValid: { type: Boolean, default: false },
+    isAllValidOk: { type: Boolean, default: false },
+
     isWait: { type: Boolean, default: false },
     isRefresh: { type: Boolean, default: true },
     isTail: { type: Boolean, default: false },

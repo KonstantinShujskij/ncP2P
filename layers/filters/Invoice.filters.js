@@ -14,9 +14,13 @@ function get(filterData, forse={}) {
 
     if(filter?.refId) { options = {...options, refId: filter.refId} }
     if(filter?.partnerId) { options = {...options, partnerId: filter.partnerId} }
-
     if(filter?.status) { options = {...options, status: filter.status} }
-    if(filter?.payment) { options = {...options, payment: filter.payment} }
+
+    if(filter?.payment) { 
+        const orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
+        if(Types.ObjectId.isValid(filter.payment)) { orOptions.push({payment: filter.payment}) }
+        options = {...options,  $or: orOptions} 
+    }
 
     if(filter?.card) { options = {...options, card: filter.card} }
     if(filter?.amount?.min || filter?.amount?.max) { 

@@ -23,6 +23,15 @@
     align-items: center;
 }
 
+.col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .amount {
     min-width: 80px;
     max-width: 140px;
@@ -46,10 +55,10 @@
     border-radius: 4px;
 
     min-width: 80px;
-    display: flex;
     align-items: center;
     justify-content: center;
     height: fit-content;
+    text-align: center;
 }
 
 .status[data-status="ACTIVE"] {
@@ -70,6 +79,32 @@
 .status[data-status="BLOCKED"] {
     background-color: #2e3e74; /* Тёмно-синий */
     color: #6b9bff; /* Ярко-синий */
+}
+
+
+.status[data-status="WAIT"] {
+    background-color: #5a4c43;
+    color: #f6a740;
+}
+
+.status[data-status="VALID"] {
+    background-color: #2e3e74; /* Тёмно-синий */
+    color: #6b9bff; /* Ярко-синий */
+}
+
+.status[data-status="VALID-OK"] {
+    background-color: #2e7474;
+    color: #6bffeb;
+}
+
+.status[data-status="TAIL"] {
+    background-color: #2f6149;
+    color: #4bef81;
+}
+
+.status[data-status="TAIL-VALID"] {
+    background-color: #5a2a6d;
+    color: #d8a6ff; 
 }
 
 .time {

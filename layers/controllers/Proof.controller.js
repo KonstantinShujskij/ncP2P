@@ -37,12 +37,20 @@ async function createByNumber(invoiceId, kvitNumber) {
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
 
+    const payment = await Payment.softGet(invoice.payment)
+
     const proof = new Proof({
         invoice: invoiceId,
+        invoiceRefId: invoice.refId,
+        invoicePartnerId: invoice.partnerId,
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+
         payment: invoice.payment,
+        paymentRefId: payment.refId,
+        paymentPartnerId: payment.partnerId,
+
         kvitNumber: number,
         kvitFile: ''
     })
@@ -65,12 +73,21 @@ async function createByFile(invoiceId, kvitFile='') {
     const candidat = await Proof.findOne({ kvitNumber: number })
     if(candidat && number) { throw Exception.isExist }
 
+    const payment = await Payment.softGet(invoice.payment)
+
     const proof = new Proof({
         invoice: invoiceId,
+        invoiceRefId: invoice.refId,
+        invoicePartnerId: invoice.partnerId,
+
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+
         payment: invoice.payment,
+        paymentRefId: payment.refId,
+        paymentPartnerId: payment.partnerId,
+
         kvitNumber: number,
         kvitFile
     })

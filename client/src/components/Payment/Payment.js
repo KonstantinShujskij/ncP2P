@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import usePaymentApi from '../../API/payment.api'
 
 import styles from './Payment.module.css'
@@ -51,6 +51,19 @@ function Payment({payment, refresh}) {
         refresh()
     }
 
+    const [subStatus, setSubStatus] = useState('')
+
+    useEffect(() => {        
+        if(payment?.isAllValidOk) { setSubStatus('VALID-OK') }
+        if(payment?.isOneValid) { setSubStatus('VALID') }
+        if(payment?.isOneWait) { setSubStatus('WAIT') }
+    
+        if(payment?.isTail) { 
+            if(!subStatus) { setSubStatus('TAIL') }
+            else {  setSubStatus('TAIL-VALID') }
+        }
+    }, [])
+
     return (
         <div className={styles.main}>
             <div className={styles.excel}>
@@ -72,8 +85,9 @@ function Payment({payment, refresh}) {
                     <Copy value={payment?.partnerId} label={payment?.partnerId? payment.partnerId : 'PartnerId'} />
                 </div>
             </div>
-            <div className={styles.excel}>
+            <div className={styles.col}>
                 <div className={styles.status} data-status={payment?.status}>{payment?.status}</div>
+                <div className={styles.status} data-status={subStatus}>{subStatus}</div>
             </div>
             <div className={styles.excel}>
                 {!wait && (

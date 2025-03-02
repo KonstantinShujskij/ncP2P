@@ -16,6 +16,7 @@ const admin = (payment) => ({
     refId: payment.refId || '',
     partnerId: payment.partnerId || '',
     isFreeze: payment.isFreeze,
+    isTail: payment.isTail,
 
     card: payment.card,
     amount: payment.amount,
@@ -23,6 +24,10 @@ const admin = (payment) => ({
     currentAmount: payment.currentAmount,
 
     status: payment.status,
+
+    isOneWait: payment.isOneWait,
+    isOneValid: payment.isOneValid,
+    isAllValidOk: payment.isAllValidOk,
     
     createdAt: payment.createdAt
 })

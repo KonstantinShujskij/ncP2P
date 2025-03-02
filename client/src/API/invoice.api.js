@@ -13,6 +13,16 @@ export default function useInvoiceApi() {
         catch(error) { return null } 
     }
 
+    const valid = async (id) => {       
+        try { return await protectedRequest('api/invoice/valid', {id}) }
+        catch(error) { return null } 
+    }
+
+    const validOk = async (id) => {       
+        try { return await protectedRequest('api/invoice/validOk', {id}) }
+        catch(error) { return null } 
+    }
+
     const getStatistics = async (start, stop) => {       
         try { return await protectedRequest('api/invoice/statistic', {start, stop}) }
         catch(error) { return null } 
@@ -25,6 +35,8 @@ export default function useInvoiceApi() {
 
     return { 
         reject,
+        valid,
+        validOk,
         list,
 
         getStatistics

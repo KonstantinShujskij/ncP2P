@@ -1,3 +1,5 @@
+const { Types } = require("mongoose")
+
 function get(filterData, forse={}) {
     const filter = {...filterData, ...forse}    
 
@@ -6,8 +8,21 @@ function get(filterData, forse={}) {
     if(filter?.id) { options = {...options, _id: filter.id} }
 
     if(filter?.status) { options = {...options, status: filter.status} }
-    if(filter?.invoice) { options = {...options, invoice: filter.invoice} }
-    if(filter?.payment) { options = {...options, payment: filter.payment} }
+
+    if(filter?.invoice) { 
+        const orOptions = [{ invoiceRefId: filter.invoice }, { invoicePartnerId: filter.invoice }]
+        if(Types.ObjectId.isValid(filter.invoice)) { orOptions.push({invoice: filter.invoice}) }
+        options = {...options,  $or: orOptions} 
+    }
+
+    if(filter?.payment) { 
+        const orOptions = [{ paymentRefId: filter.payment }, { paymentPartnerId: filter.payment }]
+        if(Types.ObjectId.isValid(filter.payment)) { orOptions.push({payment: filter.payment}) }
+        options = {...options,  $or: orOptions} 
+    }
+
+    console.log(options)
+
     if(filter?.bank) { options = {...options, bank: filter.bank} }
     if(filter?.kvit) { options = {...options, kvitNumber: filter.kvit} }
 

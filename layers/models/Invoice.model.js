@@ -11,7 +11,11 @@ const schema = new Schema({
     amount: { type: Number },
 
     status: { type: String, default: Const.invoice.statusList.WAIT }, 
+    validOk: { type: Boolean, default: false }, 
     payment: { type: Types.ObjectId, ref: 'Payment' },
+    paymentRefId: { type: String, default: null },
+    paymentPartnerId: { type: String, default: null },
+    
     card: { type: String },
     bank: { type: String, default: null },
 

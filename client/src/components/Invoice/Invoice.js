@@ -15,6 +15,16 @@ function Invoice({invoice, refresh}) {
         refresh()
     }
 
+    const validHandler = async () => {
+        await invoiceApi.valid(invoice.id)
+        refresh()
+    }
+
+    const validOkHandler = async () => {
+        await invoiceApi.validOk(invoice.id)
+        refresh()
+    }
+
     return (
         <div className={styles.main}>
             <div className={styles.excel}>
@@ -43,13 +53,33 @@ function Invoice({invoice, refresh}) {
             <div className={styles.excel}>  
                 <div className={styles.action}>
                     <div className={styles.buttons}>
-                        {(invoice.status === "ACTIVE" || invoice.status === "VALID") && <>
+                        {(invoice.status === "VALID") && <>
                             <button 
                                 className={styles.button} 
                                 onClick={() => rejectHandler()}
                                 data-type="decline"
                             >
                                 Reject
+                            </button>
+                        </>}
+
+                        {(invoice.status === "REJECT") && <>
+                            <button 
+                                className={styles.button} 
+                                onClick={() => validHandler()}
+                                data-type="accept"
+                            >
+                                Valid
+                            </button>
+                        </>}
+
+                        {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
+                            <button 
+                                className={styles.button} 
+                                onClick={() => validOkHandler()}
+                                data-type="accept"
+                            >
+                                Valid OK
                             </button>
                         </>}
                     </div>

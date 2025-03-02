@@ -55,6 +55,26 @@ async function refresh(id) {
 
     const invoiceList = await invoiceListByPayment(id)
 
+    let isOneWait = false
+    let isOneValid = false
+    let isAllValidOk = true
+
+    invoiceList.active.forEach((invoice) => { 
+        if(invoice.status === Const.invoice.statusList.WAIT) { isOneWait = true } 
+        if(invoice.status === Const.invoice.statusList.VALID) { 
+            if(!invoice.validOk) { 
+                isOneValid = true
+                isAllValidOk = false 
+            }
+        } 
+    })
+
+    if(!invoiceList.active.length) { isAllValidOk = false }
+
+    payment.isOneWait = isOneWait
+    payment.isOneValid = isOneValid
+    payment.isAllValidOk = isAllValidOk
+
     const finaleAmount = invoiceList.finale.reduce((amount, invoice) => (amount + invoice.amount), 0)
     const waitAmount = invoiceList.active.reduce((amount, invoice) => (amount + invoice.amount), 0)
     const isWait = !!invoiceList.active.length || payment.isTail
@@ -149,10 +169,11 @@ async function pushTail(id) {
     const payment = await get(id)
 
     const invoiceList = await invoiceListByPayment(id)
-    const isWait = !!invoiceList.active.length || payment.isTail
 
-    if(!isWait) { sendToNcApi(payment) }
-    else { throw Exception.cantPushTail }
+    if(payment.isTail) { throw Exception.cantPushTail }
+    if(!!invoiceList.active.length && !payment.isAllValidOk) { throw Exception.cantPushTail }
+
+    sendToNcApi(payment) 
 }
 
 async function closeTail(tailId, status) {       

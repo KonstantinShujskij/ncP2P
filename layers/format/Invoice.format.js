@@ -19,6 +19,7 @@ const admin = (invoice) => ({
     initialAmount: invoice.initialAmount,
 
     status: invoice.status,
+    validOk: invoice.validOk,
     card: invoice.card,
     payment: invoice.payment,
 
