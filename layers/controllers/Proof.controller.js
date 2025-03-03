@@ -69,7 +69,7 @@ async function createByFile(invoiceId, kvitFile='') {
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
     
     let number = await getNumberByKvit(kvitFile, invoice.bank) 
-    // number = number.toUpperCase()
+    if(number) { number = number.toUpperCase() }
 
     // const candidat = await Proof.findOne({ kvitNumber: number })
     // if(candidat && number) { throw Exception.isExist }
