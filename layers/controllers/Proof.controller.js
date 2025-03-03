@@ -108,6 +108,17 @@ async function verify(id) {
         const transaction = await CheckGov.check(proof.kvitNumber)
         console.log('--- Check gov say:', transaction);
 
+        const findKvit = transaction?.kvitNumber?.toUpperCase()
+        if(!findKvit) { return }
+    
+        const candidat = await Proof.findOne({ 
+            _id: { $ne: proof._id },
+            kvitNumber: findKvit, 
+            status: Const.proof.statusList.CONFIRM
+        })
+
+        if(candidat) { return }
+
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
                        
@@ -121,15 +132,6 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
-    // const candidat = await Proof.findOne({ kvitNumber: transaction?.kvitNumber?.toLowerCase() })
-    // const candidat = await Proof.findOne({ 
-    //     kvitNumber: transaction?.kvitNumber?.toLowerCase(), 
-    //     _id: { $ne: proof._id }
-    // })
-    
-    // console.log('Proof candidate', candidat, transaction)
-    // if(candidat && transaction?.kvitNumber) { throw Exception.isExist }
-
     proof.kvitNumber = transaction.kvitNumber
     proof.amount = transaction.amount
     proof.status = Const.proof.statusList.CONFIRM  
@@ -186,6 +188,17 @@ async function decline(id) {
 async function approve({id, amount, kvitNumber}) {    
     const proof = await get(id)
     if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
+
+    const findKvit = kvitNumber?.toUpperCase()
+    if(!findKvit) { throw Exception.invalidValue }
+
+    const candidat = await Proof.findOne({ 
+        _id: { $ne: proof._id },
+        kvitNumber: findKvit, 
+        status: Const.proof.statusList.CONFIRM
+    })
+    
+    if(candidat) { throw Exception.isExist }
 
     return await complite(proof, { amount, kvitNumber })
 }
