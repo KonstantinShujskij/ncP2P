@@ -107,7 +107,7 @@ async function verify(id) {
         
         const transaction = await CheckGov.check(proof.kvitNumber)
         console.log('--- Check gov say:', transaction);
-        
+
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
                        
@@ -121,7 +121,13 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
-    const candidat = await Proof.findOne({ kvitNumber: transaction?.kvitNumber })
+    // const candidat = await Proof.findOne({ kvitNumber: transaction?.kvitNumber?.toLowerCase() })
+    const candidat = await Proof.findOne({ 
+        kvitNumber: transaction?.kvitNumber?.toLowerCase(), 
+        _id: { $ne: proof._id }
+    })
+    
+    console.log('Proof candidate', candidat, transaction)
     if(candidat && transaction?.kvitNumber) { throw Exception.isExist }
 
     proof.kvitNumber = transaction.kvitNumber
