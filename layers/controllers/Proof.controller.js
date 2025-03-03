@@ -133,7 +133,7 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
-    proof.kvitNumber = transaction.kvitNumber
+    proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
     proof.status = Const.proof.statusList.CONFIRM  
 
@@ -207,7 +207,7 @@ async function approve({id, amount, kvitNumber}) {
     
     if(candidat) { throw Exception.isExist }
 
-    return await complite(proof, { amount, kvitNumber })
+    return await complite(proof, { amount, kvitNumber: findKvit })
 }
 
 // ---------- LISTS ------------
