@@ -31,8 +31,8 @@ async function createByNumber(invoiceId, kvitNumber) {
     
     const number = kvitNumber.toUpperCase()
 
-    const candidat = await Proof.findOne({ kvitNumber: number })
-    if(candidat) { throw Exception.isExist }
+    // const candidat = await Proof.findOne({ kvitNumber: number })
+    // if(candidat) { throw Exception.isExist }
 
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
@@ -70,8 +70,8 @@ async function createByFile(invoiceId, kvitFile='') {
     
     const number = await getNumberByKvit(kvitFile, invoice.bank) 
 
-    const candidat = await Proof.findOne({ kvitNumber: number })
-    if(candidat && number) { throw Exception.isExist }
+    // const candidat = await Proof.findOne({ kvitNumber: number })
+    // if(candidat && number) { throw Exception.isExist }
 
     const payment = await Payment.softGet(invoice.payment)
 
@@ -122,13 +122,13 @@ async function verify(id) {
 
 async function complite(proof, transaction) {
     // const candidat = await Proof.findOne({ kvitNumber: transaction?.kvitNumber?.toLowerCase() })
-    const candidat = await Proof.findOne({ 
-        kvitNumber: transaction?.kvitNumber?.toLowerCase(), 
-        _id: { $ne: proof._id }
-    })
+    // const candidat = await Proof.findOne({ 
+    //     kvitNumber: transaction?.kvitNumber?.toLowerCase(), 
+    //     _id: { $ne: proof._id }
+    // })
     
-    console.log('Proof candidate', candidat, transaction)
-    if(candidat && transaction?.kvitNumber) { throw Exception.isExist }
+    // console.log('Proof candidate', candidat, transaction)
+    // if(candidat && transaction?.kvitNumber) { throw Exception.isExist }
 
     proof.kvitNumber = transaction.kvitNumber
     proof.amount = transaction.amount
