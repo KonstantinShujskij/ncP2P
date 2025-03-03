@@ -28,6 +28,7 @@ const admin = (payment) => ({
     isOneWait: payment.isOneWait,
     isOneValid: payment.isOneValid,
     isAllValidOk: payment.isAllValidOk,
+    priority: payment.priority,
     
     createdAt: payment.createdAt
 })

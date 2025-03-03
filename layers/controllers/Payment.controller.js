@@ -224,6 +224,14 @@ async function unfreeze(id) {
     return await refresh(payment._id)
 }
 
+async function togglePriority(id) {   
+    const payment = await get(id)
+
+    payment.priority = !payment.priority
+
+    return await save(payment)
+}
+
 async function getMaxAvailable(id, invoice) {        
     const payment = await get(id)
     const invoiceList = await invoiceListByPayment(id)
@@ -260,7 +268,7 @@ async function getBestByLimits(amount) {
     const list = await Payment.aggregate([
         {$match: options},
         {$addFields: { delta: { $subtract: ["$maxLimit", amount] }}},
-        {$sort: { createdAt: 1 }}
+        {$sort: { priority: -1, createdAt: 1 }}
     ])
 
     return list.length? list[0] : null
@@ -429,6 +437,7 @@ module.exports = {
     reject,
     freeze,
     unfreeze, 
+    togglePriority,
 
     getStatistics
 }

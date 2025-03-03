@@ -28,6 +28,7 @@ const schema = new Schema({
     isRefresh: { type: Boolean, default: true },
     isTail: { type: Boolean, default: false },
     isFreeze: { type: Boolean, default: false },
+    priority: { type: Boolean, default: false },
 
     createdAt: { type: Number },
     updatedAt: { type: Number }

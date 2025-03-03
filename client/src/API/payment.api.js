@@ -43,6 +43,11 @@ export default function usePaymentApi() {
         catch(error) { return null } 
     }
 
+    const togglePriority = async (id) => {       
+        try { return await protectedRequest('api/payment/toggle-priority', {id}) }
+        catch(error) { return null } 
+    }
+
     const push = async (id) => {       
         try { return await protectedRequest('api/payment/push', {id}) }
         catch(error) { return null } 
@@ -63,6 +68,7 @@ export default function usePaymentApi() {
         unfreeze,
         push,
 
+        togglePriority,
         getStatistics
     }
 }

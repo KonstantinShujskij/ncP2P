@@ -55,6 +55,11 @@ function Payment({payment, refresh}) {
         refresh()
     }
 
+    const priorityHandler = async () => {
+        await paymentApi.togglePriority(payment.id)
+        refresh()
+    }
+
     const [subStatus, setSubStatus] = useState('')
 
     useEffect(() => {        
@@ -103,6 +108,14 @@ function Payment({payment, refresh}) {
                                 data-type="decline"
                             >
                                 Block
+                            </button>
+
+                            <button 
+                                className={`${styles.button} ${styles.priority} ${isBlock? styles.open : null}`} 
+                                onClick={() => priorityHandler()}
+                                data-type={`${payment.priority? "decline" : "accept"}`}
+                            >
+                                {payment.priority? "Priority OFF" : "Priority ON"}
                             </button>
 
                             {payment.status === "ACTIVE" && <>

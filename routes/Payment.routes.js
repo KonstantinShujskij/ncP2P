@@ -89,6 +89,14 @@ router.post('/unfreeze', Auth, Validate.get, Serialise.get,
     })
 )
 
+router.post('/toggle-priority', Auth, Validate.get, Serialise.get, 
+    Interceptor(async (req, res) => {
+        await Payment.togglePriority(req.body.id)
+
+        res.status(200).json(true)
+    })
+)
+
 router.post('/statistic', Auth, 
     Interceptor(async (req, res) => {
         const { start, stop } = req.body
