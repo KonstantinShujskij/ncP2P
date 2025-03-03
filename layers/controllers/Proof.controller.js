@@ -68,7 +68,8 @@ async function createByFile(invoiceId, kvitFile='') {
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
     
-    const number = await getNumberByKvit(kvitFile, invoice.bank) 
+    let number = await getNumberByKvit(kvitFile, invoice.bank) 
+    number = number.toUpperCase()
 
     // const candidat = await Proof.findOne({ kvitNumber: number })
     // if(candidat && number) { throw Exception.isExist }
@@ -185,12 +186,18 @@ async function decline(id) {
     return await save(proof)
 }
 
-async function approve({id, amount, kvitNumber}) {    
+async function approve({id, amount, kvitNumber}) {  
+    console.log('approve');
+      
     const proof = await get(id)
     if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
 
+    console.log('Proof in wait');
+
     const findKvit = kvitNumber?.toUpperCase()
     if(!findKvit) { throw Exception.invalidValue }
+
+    console.log('kvit find number');
 
     const candidat = await Proof.findOne({ 
         _id: { $ne: proof._id },
