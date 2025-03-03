@@ -99,14 +99,18 @@ async function createByFile(invoiceId, kvitFile='') {
 async function verify(id) {
     const proof = await get(id)
 
+    console.log('--- verify proof: ', id)
+    console.log('--- bank: ', proof.bank)
+    
     if(proof.bank === Const.bankList.MONO) {        
         if(!proof.kvitNumber) { return }
         
         const transaction = await CheckGov.check(proof.kvitNumber)
+        console.log('--- Check gov say:', transaction);
+        
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
-            console.log('Check gov say yes:', kvitNumber, card, amount);
-            
+                       
             gpt(id).then()
             return await complite(proof, { kvitNumber, card, amount }) 
         }
@@ -117,6 +121,9 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
+    const candidat = await Proof.findOne({ kvitNumber: transaction?.kvitNumber })
+    if(candidat && transaction?.kvitNumber) { throw Exception.isExist }
+
     proof.kvitNumber = transaction.kvitNumber
     proof.amount = transaction.amount
     proof.status = Const.proof.statusList.CONFIRM  
