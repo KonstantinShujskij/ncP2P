@@ -111,7 +111,7 @@
     color: #ff6b6b; 
 }
 
-.active.statusItem[data-status="VALID"] {
+.active.statusItem[data-status="MANUAL"] {
     background-color: #2e3e74; 
     color: #6b9bff; 
 }

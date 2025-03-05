@@ -92,15 +92,16 @@ function ProofFilter() {
             
             <div className={styles.excel}>
                 <div className={styles.status}>
+                    <div 
+                        className={`${styles.statusItem} ${!statusList?.length? styles.active : null}`} 
+                        onClick={() => addStatusHandler('ALL')}
+                        data-status="ALL" 
+                    >
+                        ALL
+                    </div>
                     <div className={styles.item}>
-                        <div 
-                            className={`${styles.statusItem} ${!statusList?.length? styles.active : null}`} 
-                            onClick={() => addStatusHandler('ALL')}
-                            data-status="ALL" 
-                        >
-                            ALL
-                        </div>
                         <StatisItem status={'WAIT'} />
+                        <StatisItem status={'MANUAL'} />
                     </div>
                     <div className={styles.item}>
                         <StatisItem status={'CONFIRM'} />

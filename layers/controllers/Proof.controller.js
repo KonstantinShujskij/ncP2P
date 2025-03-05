@@ -26,13 +26,10 @@ async function getNumberByKvit(file, bank) {
 async function createByNumber(invoiceId, kvitNumber) {
     if(!kvitNumber) { throw Exception.invalidValue }
 
-    const list = await Proof.find({ invoice: invoiceId, status: Const.proof.statusList.WAIT })
+    const list = await Proof.find({ invoice: invoiceId, status: {$in: Const.proof.activeStatusList} })
     if(list.length >= 2) { throw Exception.manyProofs }
     
     const number = kvitNumber.toUpperCase()
-
-    // const candidat = await Proof.findOne({ kvitNumber: number })
-    // if(candidat) { throw Exception.isExist }
 
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
@@ -62,7 +59,7 @@ async function createByNumber(invoiceId, kvitNumber) {
 async function createByFile(invoiceId, kvitFile='') {
     if(!kvitFile) { throw Exception.invalidValue }
 
-    const list = await Proof.find({ invoice: invoiceId, status: Const.proof.statusList.WAIT })
+    const list = await Proof.find({ invoice: invoiceId, status: {$in: Const.proof.activeStatusList} })
     if(list.length >= 2) { throw Exception.manyProofs }
 
     const invoice = await Invoice.get(invoiceId)   
@@ -70,9 +67,6 @@ async function createByFile(invoiceId, kvitFile='') {
     
     let number = await getNumberByKvit(kvitFile, invoice.bank) 
     if(number) { number = number.toUpperCase() }
-
-    // const candidat = await Proof.findOne({ kvitNumber: number })
-    // if(candidat && number) { throw Exception.isExist }
 
     const payment = await Payment.softGet(invoice.payment)
 
@@ -105,7 +99,8 @@ async function verify(id) {
     
     if(proof.bank === Const.bankList.MONO) {        
         if(!proof.kvitNumber) { return }
-        
+        console.log('--- number: ', proof.kvitNumber)
+
         const transaction = await CheckGov.check(proof.kvitNumber)
         console.log('--- Check gov say:', transaction);
 
@@ -154,7 +149,7 @@ async function gpt(id) {
     const fileName = proof.kvitFile
     
     const arr = fileName.split('.')
-    if(!arr.length) { return }
+    if(!arr.length) { return false }
 
     const exts = ['png', 'jpg']
     const ext = arr[arr.length - 1]    
@@ -179,25 +174,31 @@ async function gpt(id) {
 
 async function decline(id) {
     const proof = await get(id)
-    if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
+    if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
     proof.status = Const.proof.statusList.REJECT
 
     return await save(proof)
 }
 
-async function approve({id, amount, kvitNumber}) {  
-    console.log('approve');
-      
+async function manual(id) {
+    console.log(id);
+    
     const proof = await get(id)
-    if(proof.status !== Const.proof.statusList.WAIT) { throw Exception.notFind }
+    if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
-    console.log('Proof in wait');
+    if(proof.status === Const.proof.statusList.MANUAL) { proof.status = Const.proof.statusList.WAIT }
+    else if(proof.status === Const.proof.statusList.WAIT) { proof.status = Const.proof.statusList.MANUAL }
+
+    return await save(proof)
+}
+
+async function approve({id, amount, kvitNumber}) {        
+    const proof = await get(id)
+    if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
     const findKvit = kvitNumber?.toUpperCase()
     if(!findKvit) { throw Exception.invalidValue }
-
-    console.log('kvit find number');
 
     const candidat = await Proof.findOne({ 
         _id: { $ne: proof._id },
@@ -259,6 +260,7 @@ module.exports = {
 
     decline,
     approve,
+    manual,
 
     get,
     list,

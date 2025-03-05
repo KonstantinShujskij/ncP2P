@@ -23,7 +23,8 @@ module.exports = {
     },
 
     proof: {
-        statusList: { WAIT: "WAIT", CONFIRM: 'CONFIRM', REJECT: 'REJECT' }
+        statusList: { WAIT: "WAIT", MANUAL: 'MANUAL', CONFIRM: 'CONFIRM', REJECT: 'REJECT' },
+        activeStatusList: [ 'WAIT', 'MANUAL' ],
     },
 
     maxSaveRecursion: 10,

@@ -18,6 +18,11 @@ export default function useProofApi() {
         catch(error) { return false } 
     }
 
+    const manual = async (id) => {       
+        try { return await protectedRequest('api/proof/manual', {id}) }
+        catch(error) { return false } 
+    }
+
     const list = async (page=1, limit=20) => {       
         try { return await protectedRequest('api/proof/list', {filter, page, limit}) }
         catch(error) { return {list: [], count: 0} } 
@@ -26,6 +31,7 @@ export default function useProofApi() {
     return { 
         approve,
         decline,
+        manual,
         list
     }
 }

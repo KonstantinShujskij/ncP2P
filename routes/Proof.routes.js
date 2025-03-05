@@ -66,6 +66,16 @@ router.post('/accept', Auth, Validate.approve, Serialise.approve,
     })
 )
 
+router.post('/manual', Auth, Validate.decline, Serialise.decline,
+    Interceptor(async (req, res) => {
+        console.log('manual');
+        
+        const proof = await Proof.manual(req.body.id)        
+
+        res.status(200).json(Format.admin(proof))
+    })
+)
+
 router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body             

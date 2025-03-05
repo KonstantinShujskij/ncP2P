@@ -18,11 +18,14 @@ function Proof({proof, refresh}) {
 
     const [isDecline, setIsDecline] = useState(false)
     const [isApprove, setIsApprove] = useState(false)
+    const [isManual, setIsManual] = useState(false)
+
     const [wait, setWait] = useState(false)
 
     const declineHandler = async () => {
         if(!isDecline) { return setIsDecline(true) }
 
+        setIsManual(false)
         setIsDecline(false)
         setIsApprove(false)
         setWait(true)
@@ -32,9 +35,23 @@ function Proof({proof, refresh}) {
         if(proofIsDecline) { refresh() }
     } 
 
+    const manualHandler = async () => {
+        if(!isManual) { return setIsManual(true) }
+
+        setIsManual(false)
+        setIsDecline(false)
+        setIsApprove(false)
+        setWait(true)
+
+        const proofIsManual = !!(await proofApi.manual(proof.id))
+        setWait(false)
+        if(proofIsManual) { refresh() }
+    } 
+
     const acceptHandler = async () => {
         if(!isApprove) { return setIsApprove(true) }
 
+        setIsManual(false)
         setIsDecline(false)
         setIsApprove(false)
         setWait(true)
@@ -82,7 +99,7 @@ function Proof({proof, refresh}) {
                 <div className={styles.status} data-status={proof?.status}>{proof?.status}</div>
             </div>
             <div className={styles.excel}>
-                {(proof.status === 'WAIT') && !wait && (
+                {(proof.status === 'WAIT' || proof.status === 'MANUAL') && !wait && (
                     <div className={styles.action}>
                         <div className={styles.item}>
                             <Input input={amount} className={styles.input} placeholder="Kvit Number" />
@@ -95,6 +112,13 @@ function Proof({proof, refresh}) {
                                 data-type="accept"
                             >
                                 Approve
+                            </button>
+                            <button 
+                                className={`${styles.button} ${isManual? styles.open : null}`} 
+                                onClick={() => manualHandler()}
+                                data-type="manual"
+                            >
+                                {proof.status === 'MANUAL'? 'Unmanual' : 'Manual'}
                             </button>
                             <button 
                                 className={`${styles.button} ${isDecline? styles.open : null}`} 
