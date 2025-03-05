@@ -6,7 +6,7 @@
 
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 12% 20% 20% 20% 5.5% 10%;
+    grid-template-columns: 12% 20% 20% 18% 7.5% 10%;
     gap: 2.5%;
     user-select: none;
 
@@ -85,10 +85,11 @@
 
 
 .buttons {
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: center; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 6px;
 }
 
@@ -96,6 +97,7 @@
     padding: 6px 8px;
     font-size: 12px;
     font-weight: 600;
+    min-width: 64px;
     color: #7c849b;
     width: fit-content;
 }
@@ -110,4 +112,5 @@
 
 .button.open {
     width: 100%;
+    min-width: 80px;
 }

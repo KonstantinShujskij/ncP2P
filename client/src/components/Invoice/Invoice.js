@@ -15,7 +15,12 @@ function Invoice({invoice, refresh}) {
     const [isValidOkWait, setIsValidOkWait] = useState(false)
     
     const rejectHandler = async () => {
-        if(!isRejectWait) { return setIsRejectWait(true) }
+        if(!isRejectWait) { 
+            setIsValidWait(false)
+            setIsValidOkWait(false)
+
+            return setIsRejectWait(true) 
+        }
 
         await invoiceApi.reject(invoice.id)
         setIsRejectWait(false) 
@@ -23,7 +28,12 @@ function Invoice({invoice, refresh}) {
     }
 
     const validHandler = async () => {
-        if(!isValidWait) { return setIsValidWait(true) }
+        if(!isValidWait) { 
+            setIsValidOkWait(false)
+            setIsRejectWait(false) 
+
+            return setIsValidWait(true) 
+        }
 
         await invoiceApi.valid(invoice.id)
         setIsValidWait(false)
@@ -31,10 +41,15 @@ function Invoice({invoice, refresh}) {
     }
 
     const validOkHandler = async () => {
-        if(!isValidOkWait) { return setIsValidOkWait(true) }
+        if(!isValidOkWait) { 
+            setIsValidWait(false)
+            setIsRejectWait(false) 
+
+            return setIsValidOkWait(true) 
+        }
 
         await invoiceApi.validOk(invoice.id)
-        setIsValidOkWait(true)
+        setIsValidOkWait(false)
         refresh()
     }
 
@@ -76,7 +91,7 @@ function Invoice({invoice, refresh}) {
                     <div className={styles.buttons}>
                         {(invoice.status === "VALID") && <>
                             <button 
-                                className={styles.button} 
+                                className={`${styles.button} ${isRejectWait? styles.open : null}`} 
                                 onClick={() => rejectHandler()}
                                 data-type="decline"
                             >
@@ -86,7 +101,7 @@ function Invoice({invoice, refresh}) {
 
                         {(invoice.status === "REJECT") && <>
                             <button 
-                                className={styles.button} 
+                                className={`${styles.button} ${isValidWait? styles.open : null}`} 
                                 onClick={() => validHandler()}
                                 data-type="accept"
                             >
@@ -96,7 +111,7 @@ function Invoice({invoice, refresh}) {
 
                         {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
                             <button 
-                                className={styles.button} 
+                                className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
                                 onClick={() => validOkHandler()}
                                 data-type="accept"
                             >
