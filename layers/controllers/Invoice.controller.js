@@ -3,6 +3,7 @@ const NcPay = require('@utils/NcPay')
 
 const Invoice = require('@models/Invoice.model')
 const Payment = require('@controllers/Payment.controller')
+const Proof = require('@models/Proof.model')
 const Jwt = require('@utils/Jwt.utils')
 
 const Exception = require('@core/Exception')
@@ -33,6 +34,30 @@ async function getConv(client, timestart=0, timestop=Infinity) {
         confirm: Conv.countConfirm,
         count: Conv.count,
         conv
+    }
+}
+
+async function setSubstatus(invoice) {    
+    if(!invoice || !invoice._id) { return }
+    
+    try {
+        let substatus = null
+
+        if(invoice.status !== Const.invoice.statusList.VALID) { substatus = invoice.status }
+        else { substatus = invoice.validOk? 'VALID-OK' : Const.invoice.statusList.VALID }
+        
+        const list = await Proof.find({ status: { $in: Const.proof.activeStatusList }, invoice })
+
+        for(let i = 0; i < list.length; i++) {
+            const proof = list[i]
+            proof.invoiceSubstatus = substatus
+    
+            await proof.save()
+        }
+    }
+    catch(err) {
+        console.log('### ------- refresh payment')
+        console.log(err)
     }
 }
 
@@ -236,8 +261,12 @@ async function list(options, page, limit) {
 
 // ---------- DEFAULT ----------
 
-async function save(invoice) {
-    try { return await invoice.save() }
+async function save(invoice) {    
+    try { 
+        setSubstatus(invoice).then()
+
+        return await invoice.save() 
+    }
     catch(e) { throw Exception.notCanSaveModel }
 }
 

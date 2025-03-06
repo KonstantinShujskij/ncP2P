@@ -36,6 +36,15 @@ async function createByNumber(invoiceId, kvitNumber) {
 
     const payment = await Payment.softGet(invoice.payment)
 
+    let invoiceSubstatus
+
+    if(invoice.status === Const.invoice.statusList.VALID) {
+        invoiceSubstatus = invoice.validOk? 'VALID-OK' : Const.invoice.statusList.VALID
+    }
+    else {
+        invoiceSubstatus = invoice.status
+    }
+
     const proof = new Proof({
         invoice: invoiceId,
         invoiceRefId: invoice.refId,
@@ -43,6 +52,8 @@ async function createByNumber(invoiceId, kvitNumber) {
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+
+        invoiceSubstatus,
 
         payment: invoice.payment,
         paymentRefId: payment.refId,
@@ -70,6 +81,15 @@ async function createByFile(invoiceId, kvitFile='') {
 
     const payment = await Payment.softGet(invoice.payment)
 
+    let invoiceSubstatus
+
+    if(invoice.status === Const.invoice.statusList.VALID) {
+        invoiceSubstatus = invoice.validOk? 'VALID-OK' : Const.invoice.statusList.VALID
+    }
+    else {
+        invoiceSubstatus = invoice.status
+    }
+
     const proof = new Proof({
         invoice: invoiceId,
         invoiceRefId: invoice.refId,
@@ -78,6 +98,8 @@ async function createByFile(invoiceId, kvitFile='') {
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+
+        invoiceSubstatus,
 
         payment: invoice.payment,
         paymentRefId: payment.refId,
@@ -169,6 +191,7 @@ async function gpt(id) {
     await save(proof)
     return true
 }
+
 
 // ---------- SUPPORT ------------
 

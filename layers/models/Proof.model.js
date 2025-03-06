@@ -18,6 +18,8 @@ const schema = new Schema({
     invoiceCard: { type: Number, default: '' },
     invoiceDate: { type: Number, default: 0 },
 
+    invoiceSubstatus: { type: String, default: null },
+
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },
 

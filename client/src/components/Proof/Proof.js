@@ -95,8 +95,11 @@ function Proof({proof, refresh}) {
                     <div>{proof?.gpt?.date}</div>
                 </div>
             </div>
-            <div className={styles.excel}>
+            <div className={styles.col}>
                 <div className={styles.status} data-status={proof?.status}>{proof?.status}</div>
+                {(proof?.status === 'MANUAL' || proof?.status === 'WAIT') && 
+                    <div className={styles.substatus} data-status={proof?.invoiceSubstatus}>{proof?.invoiceSubstatus}</div>
+                }
             </div>
             <div className={styles.excel}>
                 {(proof.status === 'WAIT' || proof.status === 'MANUAL') && !wait && (
