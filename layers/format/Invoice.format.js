@@ -18,6 +18,10 @@ const admin = (invoice) => ({
     amount: invoice.amount,
     initialAmount: invoice.initialAmount,
 
+    client: invoice.client,
+    confirm: invoice.confirm,
+    conv: invoice.conv,
+
     status: invoice.status,
     validOk: invoice.validOk,
     card: invoice.card,

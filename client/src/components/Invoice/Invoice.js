@@ -84,18 +84,17 @@ function Invoice({invoice, refresh}) {
                         <div className={styles.status} data-status={invoice?.status}>{invoice?.status}</div>
                     </>
                 }
-                
             </div>
             <div className={styles.excel}>  
                 <div className={styles.action}>
                     <div className={styles.buttons}>
-                        {(invoice.status === "VALID") && <>
+                        {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
                             <button 
-                                className={`${styles.button} ${isRejectWait? styles.open : null}`} 
-                                onClick={() => rejectHandler()}
-                                data-type="decline"
+                                className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
+                                onClick={() => validOkHandler()}
+                                data-type="accept"
                             >
-                                Reject
+                                {invoice.validOk? "To Valid" : "To Valid Ok"}
                             </button>
                         </>}
 
@@ -109,17 +108,25 @@ function Invoice({invoice, refresh}) {
                             </button>
                         </>}
 
-                        {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
+                        {(invoice.status === "VALID") && <>
                             <button 
-                                className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
-                                onClick={() => validOkHandler()}
-                                data-type="accept"
+                                className={`${styles.button} ${isRejectWait? styles.open : null}`} 
+                                onClick={() => rejectHandler()}
+                                data-type="decline"
                             >
-                                {invoice.validOk? "To Valid" : "To Valid Ok"}
+                                Reject
                             </button>
                         </>}
                     </div>
                 </div> 
+            </div>
+            <div className={styles.excel}>
+                <div className={styles.client}>
+                    <Copy value={invoice?.client? invoice?.client : ""} label={invoice?.client? invoice?.client : "Unknow Client"} />
+                    {!!invoice?.client && invoice?.conv !== -1 && 
+                        <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
+                    }
+                </div>
             </div>
             <div className={styles.excel}>
                 <div className={styles.time}>{formatTime(invoice?.createdAt)}</div>

@@ -20,38 +20,48 @@ function formatTime(milliseconds) {
 function Payment({payment, refresh}) {
     const paymentApi = usePaymentApi()
     
-    const [isBlock, setIsBlock] = useState(false)
     const [isWaitFreeze, setIsWaitFreeze] = useState(false)
-    const [wait, setWait] = useState(false)
-
-    const blockHandler = async () => {
-        if(!isBlock) { return setIsBlock(true) }
-
-        setIsBlock(false)
-        setWait(true)
-
-        const paymentIsBlock = !!(await paymentApi.block(payment.card))
-        setWait(false)
-        if(paymentIsBlock) { refresh() }
-    }
+    const [isRejectWait, setIsRejectWait] = useState(false)
+    const [isTailWait, setIsTailWait] = useState(false)
 
     const freezeHandler = async () => {
-        if(!isWaitFreeze) { return setIsWaitFreeze(true) }
+        if(!isWaitFreeze) { 
+            setIsTailWait(false)
+            setIsRejectWait(false)
+
+            return setIsWaitFreeze(true) 
+        }
 
         if(payment.isFreeze) { await paymentApi.unfreeze(payment.id) }
         else { await paymentApi.freeze(payment.id) }
 
-        setIsWaitFreeze(true)
+        setIsWaitFreeze(false)
         refresh()
     }
-
+        
     const rejectHandler = async () => {
+        if(!isRejectWait) { 
+            setIsTailWait(false)
+            setIsWaitFreeze(false)
+
+            return setIsRejectWait(true) 
+        }
+
         await paymentApi.reject(payment.id)
+        setIsRejectWait(false) 
         refresh()
     }
 
     const tailHandler = async () => {
+        if(!isTailWait) { 
+            setIsRejectWait(false) 
+            setIsWaitFreeze(false)
+
+            return setIsTailWait(true)
+        }
+
         await paymentApi.push(payment.id)
+        setIsTailWait(false) 
         refresh()
     }
 
@@ -99,57 +109,47 @@ function Payment({payment, refresh}) {
                 <div className={styles.substatus} data-status={subStatus}>{subStatus}</div>
             </div>
             <div className={styles.excel}>
-                {!wait && (
-                    <div className={styles.action}>
-                        <div className={styles.buttons}>
+                <div className={styles.action}>
+                    <div className={styles.buttons}>
+                        {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
                             <button 
-                                className={`${styles.button} ${isBlock? styles.open : null}`} 
-                                onClick={() => blockHandler()}
+                                className={`${styles.button} ${isWaitFreeze? styles.open : null}`} 
+
+                                onClick={() => freezeHandler()}
                                 data-type="decline"
                             >
-                                Block
+                                {payment?.isFreeze? "Unfreeze" : "Freeze" }
                             </button>
+                        </>}
 
+                        <button 
+                            className={`${styles.priority} ${payment?.priority? styles.open : null}`} 
+                            onClick={() => priorityHandler()}
+                        >
+                            <i className="fa-solid fa-star"></i>
+                        </button>
+
+                        {payment?.isFreeze && <>
                             <button 
-                                className={`${styles.button} ${styles.priority} ${isBlock? styles.open : null}`} 
-                                onClick={() => priorityHandler()}
-                                data-type={`${payment.priority? "decline" : "accept"}`}
+                                className={`${styles.button} ${isTailWait? styles.open : null}`} 
+                                onClick={() => tailHandler()}
+                                data-type="accept"
                             >
-                                {payment.priority? "Priority OFF" : "Priority ON"}
+                                PTail
                             </button>
+                        </>}
 
-                            {payment.status === "ACTIVE" && <>
-                                <button 
-                                    className={styles.button} 
-                                    onClick={() => rejectHandler()}
-                                    data-type="decline"
-                                >
-                                    Reject
-                                </button>
-                            </>}
-
-                            {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
-                                <button 
-                                    className={styles.button} 
-                                    onClick={() => freezeHandler()}
-                                    data-type="decline"
-                                >
-                                    {payment?.isFreeze? "Unfreeze" : "Freeze" }
-                                </button>
-                            </>}
-
-                            {payment?.isFreeze && <>
-                                <button 
-                                    className={styles.button} 
-                                    onClick={() => tailHandler()}
-                                    data-type="accept"
-                                >
-                                    Push Tail
-                                </button>
-                            </>}
-                        </div>
+                        {payment.status === "ACTIVE" && <>
+                            <button 
+                                className={`${styles.button} ${isRejectWait? styles.open : null}`} 
+                                onClick={() => rejectHandler()}
+                                data-type="decline"
+                            >
+                                Reject
+                            </button>
+                        </>}
                     </div>
-                )}
+                </div>
             </div>
             <div className={styles.excel}>
                 <div className={styles.time}>{formatTime(payment?.createdAt)}</div>

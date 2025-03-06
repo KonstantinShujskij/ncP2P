@@ -21,6 +21,7 @@ const router = Router()
 router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const invoice = await Invoice.create(req.body)
+        
         const hash = Jwt.generateLinkJwt(invoice._id)
         const payPageUrl = config.get('payPageUrl')
 

@@ -18,6 +18,9 @@ const schema = new Schema({
     
     card: { type: String },
     bank: { type: String, default: null },
+    client: { type: String, default: null },
+    conv: { type: Number, default: -1 },
+    confirm: { type: Number, default: -1 },
 
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },

@@ -11,25 +11,52 @@ const config = require('config')
 
 // ---------- SUPPORT FUNCTION ----------
 
+async function getConv(client, timestart=0, timestop=Infinity) {
+    let options = {client, createdAt: { $gt: timestart, $lt: timestop }}
+
+    const data = await Invoice.aggregate([
+        { $match: options },
+        { $group: {
+            _id: 1,
+            countConfirm: { $sum: { $cond: { if: { $eq: ['$status', "CONFIRM"] }, then: 1, else: 0 }}},
+            countReject: { $sum: { $cond: { if: { $eq: ['$status', "REJECT"] }, then: 1, else: 0 }}},
+            count: { $sum: 1 },
+        }}
+    ]) 
+    
+    const Conv = data[0]    
+    if(!Conv) { return { conv: -1, confirm: -1, count: -1 } }
+
+    const conv = Conv.countConfirm / (Conv.count || 1) 
+
+    return {
+        confirm: Conv.countConfirm,
+        count: Conv.count,
+        conv
+    }
+}
 
 // ---------- MAIN ----------
 
-async function create({ amount, bank, refId, partnerId }) {    
+async function create({ amount, bank, refId, partnerId, client }) {    
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
     const payment = await Payment.choiceBest(amount)
     if(!payment) { throw Exception.notFind }
 
+    const { conv, confirm } = await getConv(client)
+    
     const invoice = new Invoice({ 
         refId, partnerId,
         initialAmount: amount,
         amount, 
-        bank, 
+        bank, client,
         payment: payment._id,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
-        card: payment.card
+        card: payment.card,
+        conv, confirm
     })
 
     const hash = Jwt.generateLinkJwt(invoice._id)

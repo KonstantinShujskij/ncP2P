@@ -7,6 +7,7 @@ const create = [
     check('refId', 'invalidRefId').optional().isString(),
     check('partnerfId', 'invalidPartnerId').optional().isString(),
     check('bank', 'invalidBank').optional().isString(),
+    check('client', 'invalidBank').optional().isString(),
 ]
 
 const pay = [
