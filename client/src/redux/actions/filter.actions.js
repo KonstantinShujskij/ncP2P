@@ -2,6 +2,7 @@ import { SET_INVOICES, CLEAR_INVOICES } from '../types/filter.types'
 import { SET_PAYMENTS, CLEAR_PAYMENTS } from '../types/filter.types'
 import { SET_POOL, CLEAR_POOL } from '../types/filter.types'
 import { SET_PROOF, CLEAR_PROOF } from '../types/filter.types'
+import { AUTO_PROOF } from '../types/filter.types'
 
 
 export function setPayments(filter) {
@@ -54,5 +55,11 @@ export function setProof(filter) {
 export function clearProof() {
     return {
         type: CLEAR_PROOF
+    }
+}
+
+export function autoProof() {
+    return {
+        type: AUTO_PROOF
     }
 }

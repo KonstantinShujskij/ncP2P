@@ -9,3 +9,5 @@ export const CLEAR_POOL = 'FILTER:POOL:CLEAR'
 
 export const SET_PROOF = 'FILTER:PROOF:SET'
 export const CLEAR_PROOF = 'FILTER:PROOF:CLEAR'
+
+export const AUTO_PROOF = 'PROOF:AUTO'

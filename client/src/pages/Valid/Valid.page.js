@@ -11,14 +11,20 @@ import ProofFilter from '../../components/ProofFilter/ProofFilter'
 
 import styles from './Valid.module.css'
 
+import { useDispatch } from 'react-redux'
+import * as filterActions from '../../redux/actions/filter.actions'
+
 
 function Valid() {
+  const dispatch = useDispatch()
+
   const proofApi = useProofApi()
 
   const pagination = usePage(30)
   const page = pagination.page
 
   const triger = useSelector(filterSelectors.proofTriger)
+  const auto = useSelector(filterSelectors.proofAuto)
 
   const [proofs, setProofs] = useState([])
 
@@ -29,17 +35,26 @@ function Valid() {
     setProofs(list)
   }
 
+  const autoHandler = () => dispatch(filterActions.autoProof())
+
   useEffect(() => {
-    const timer = setInterval(() => load(page), 10000)
     load(page)
 
-    return () => { clearInterval(timer) }
-  }, [page, triger])
+    if(auto) { 
+      const timer = setInterval(() => load(page), 10000) 
+
+      return () => { clearInterval(timer) }
+    }
+
+  }, [page, triger, auto])
 
 
   return (
     <div className={styles.main}>
         <div className={styles.top}>
+          <div>
+            <div className={`${styles.auto} ${auto? styles.open : null}`} onClick={autoHandler}>Auto</div>
+          </div>
           <ProofFilter />
         </div>
 

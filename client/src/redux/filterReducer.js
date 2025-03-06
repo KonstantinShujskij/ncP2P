@@ -2,6 +2,7 @@ import { SET_INVOICES, CLEAR_INVOICES } from './types/filter.types'
 import { SET_PAYMENTS, CLEAR_PAYMENTS } from './types/filter.types'
 import { SET_POOL, CLEAR_POOL } from './types/filter.types'
 import { SET_PROOF, CLEAR_PROOF } from './types/filter.types'
+import { AUTO_PROOF } from './types/filter.types'
 
 
 const initialState = {
@@ -56,7 +57,9 @@ const initialState = {
     paymentTriger: false,
     invoiceTriger: false,
     poolTriger: false,
-    proofTriger: false
+    proofTriger: false,
+
+    proofAuto: false
 }
 
 export default function filterReducer(state=initialState, action) {
@@ -69,6 +72,9 @@ export default function filterReducer(state=initialState, action) {
         return {...state, pool: {...state.pool, ...action.payload}, poolTriger: !state.poolTriger}
     case SET_PROOF:
         return {...state, proof: {...state.proof, ...action.payload}, proofTriger: !state.proofTriger}
+
+    case AUTO_PROOF:
+        return {...state, proof: {...state.proof, ...action.payload}, proofAuto: !state.proofAuto}
 
     case CLEAR_PAYMENTS:
         return {...state, payments: {...initialState.payments}, paymentTriger: !state.paymentTriger}

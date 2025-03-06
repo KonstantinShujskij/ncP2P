@@ -9,3 +9,5 @@ export const poolTriger = (state) => state.filter.poolTriger
 
 export const proof = (state) => state.filter.proof
 export const proofTriger = (state) => state.filter.proofTriger
+
+export const proofAuto = (state) => state.filter.proofAuto

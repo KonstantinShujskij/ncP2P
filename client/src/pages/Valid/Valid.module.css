@@ -33,3 +33,24 @@
 .bottom button {
     width: fit-content;
 }
+
+.auto {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    background-color: #333742;
+    border-radius: 6px;
+    width: fit-content;
+    margin-left: auto;
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.auto:hover {
+    background-color: #66cc66;
+    color: #f2f2f2;
+}
+
+.auto.open {
+    background-color: #66cc66;
+    color: #f2f2f2;
+}
