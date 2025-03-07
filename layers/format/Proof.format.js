@@ -8,6 +8,10 @@ const admin = (proof) => ({
     
     invoiceSubstatus: proof.invoiceSubstatus,
 
+    client: proof.client,
+    confirm: proof.confirm,
+    conv: proof.conv,
+
     bank: proof.bank,
     amount: proof.amount,
     invoiceAmount: proof.invoiceAmount,

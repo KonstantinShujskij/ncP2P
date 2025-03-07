@@ -135,6 +135,14 @@ function Proof({proof, refresh}) {
                 )}
             </div>
             <div className={styles.excel}>
+                <div className={styles.client}>
+                    <Copy value={proof?.client? proof?.client : ""} label={proof?.client? proof?.client : "Unknow Client"} />
+                    {!!proof?.client && proof?.conv !== -1 && 
+                        <div className={styles.conv}>{ (proof?.conv).toFixed(2) } / <span className={styles.green}>{ proof?.confirm }</span></div>
+                    }
+                </div>
+            </div>
+            <div className={styles.excel}>
                 <div className={styles.time}>{formatTime(proof?.createdAt)}</div>
             </div>
         </div>

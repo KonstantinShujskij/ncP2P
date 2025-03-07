@@ -6,7 +6,7 @@
 
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 5% 18% 18% 12% 12% 10% 10%;
+    grid-template-columns: 4% 17% 17% 10% 10% 10% 7.5% 6%;
     gap: 2.5%;
     user-select: none;
 
@@ -122,7 +122,7 @@
 }
 
 .action {
-    min-width: 220px;
+    min-width: 160px;
 }
 
 .item {
@@ -178,4 +178,22 @@
     gap: 6px;
     justify-content: center;
     align-items: center;
+}
+
+.green {
+    color: #66cc66;
+}
+
+.client {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.conv {
+    margin-right: 16px;
+    font-size: 14px;
 }
