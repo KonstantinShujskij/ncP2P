@@ -128,6 +128,8 @@ async function createByFile(invoiceId, kvitFile='') {
 async function verify(id) {
     const proof = await get(id)
 
+    gpt(id).then()
+
     console.log('--- verify proof: ', id)
     console.log('--- bank: ', proof.bank)
     
@@ -151,8 +153,6 @@ async function verify(id) {
 
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
-                       
-            gpt(id).then()
             return await complite(proof, { kvitNumber, card, amount }) 
         }
     }
