@@ -168,7 +168,10 @@ async function complite(proof, transaction) {
 
     if(transaction.card) {
         const payment = await Payment.get(proof.payment)
+        const len = payment.card.length
+
         if(payment.card.substring(0, 6) !== transaction.card.substring(0, 6)) { return }
+        if(payment.card.substring(len-4, len) !== transaction.card.substring(len-4, len)) { return }
     }
     
     const saveProof = await save(proof)
