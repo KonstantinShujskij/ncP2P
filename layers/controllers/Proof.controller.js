@@ -68,7 +68,9 @@ async function createByNumber(invoiceId, kvitNumber) {
     })
 
     await save(proof)
-    return await verify(proof._id) 
+    verify(proof._id).then() 
+    
+    return proof
 }
 
 async function createByFile(invoiceId, kvitFile='') {
@@ -117,8 +119,10 @@ async function createByFile(invoiceId, kvitFile='') {
         kvitFile
     })
 
-    await save(proof)    
-    return await verify(proof._id) 
+    await save(proof)   
+    verify(proof._id).then() 
+
+    return proof
 }
 
 async function verify(id) {
