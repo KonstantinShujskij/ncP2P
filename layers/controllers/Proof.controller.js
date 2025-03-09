@@ -153,7 +153,7 @@ async function verify(id) {
 
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
-            return await complite(proof, { kvitNumber, card, amount }) 
+            return await complite(proof, { kvitNumber: findKvit, card, amount }) 
         }
     }
 
@@ -167,7 +167,6 @@ async function complite(proof, transaction) {
 
     if(transaction.card) {
         const payment = await Payment.get(proof.payment)
-        const len = payment.card.length
 
         if(payment.card.substring(0, 6) !== transaction.card.substring(0, 6)) { return }
         if(payment.card.substring(payment.card.length - 4, payment.card.length) !== transaction.card.substring(transaction.card.length - 4, transaction.card.length)) { return }
