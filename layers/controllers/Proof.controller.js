@@ -52,6 +52,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+        bank: invoice.bank,
 
         invoiceSubstatus,
         client: invoice.client,
@@ -101,6 +102,7 @@ async function createByFile(invoiceId, kvitFile='') {
         invoiceAmount: invoice.initialAmount,
         invoiceCard: invoice.card,
         invoiceDate: invoice.createdAt,
+        bank: invoice.bank,
 
         invoiceSubstatus,
         client: invoice.client,
