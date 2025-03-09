@@ -157,7 +157,6 @@ async function verify(id) {
         }
     }
 
-    gpt(id).then()
     return proof
 }
 
@@ -182,6 +181,8 @@ async function complite(proof, transaction) {
 }
 
 async function gpt(id) {
+    console.log('GPT', id)
+    
     const proof = await get(id)
     const fileName = proof.kvitFile
     
