@@ -140,20 +140,19 @@ async function verify(id) {
         const transaction = await CheckGov.check(proof.kvitNumber)
         console.log('--- Check gov say:', transaction);
 
-        const findKvit = transaction?.kvitNumber?.toUpperCase()
-        if(!findKvit) { return }
+        const findKvit = proof.kvitNumber?.toUpperCase()
+        if(!findKvit) {  return console.log('Not Kvit Nummer')  }
     
         const candidat = await Proof.findOne({ 
             _id: { $ne: proof._id },
             kvitNumber: findKvit, 
             status: Const.proof.statusList.CONFIRM
         })
-
-        if(candidat) { return }
+        if(candidat) { return console.log('Find candidate') }
 
         if(transaction) { 
             const { kvitNumber, card, amount } = transaction
-            return await complite(proof, { kvitNumber: findKvit, card, amount }) 
+            return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount }) 
         }
     }
 
@@ -161,6 +160,8 @@ async function verify(id) {
 }
 
 async function complite(proof, transaction) {
+    console.log('COMPLIT PROOF');
+    
     proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
     proof.status = Const.proof.statusList.CONFIRM  
@@ -168,8 +169,8 @@ async function complite(proof, transaction) {
     if(transaction.card) {
         const payment = await Payment.get(proof.payment)
 
-        if(payment.card.substring(0, 6) !== transaction.card.substring(0, 6)) { return }
-        if(payment.card.substring(payment.card.length - 4, payment.card.length) !== transaction.card.substring(transaction.card.length - 4, transaction.card.length)) { return }
+        if(payment.card.substring(0, 6) !== transaction.card.substring(0, 6)) { return console.log('card 6 not match') }
+        if(payment.card.substring(payment.card.length - 4, payment.card.length) !== transaction.card.substring(transaction.card.length - 4, transaction.card.length)) { return console.log('card 4 not match') }
     }
     
     const saveProof = await save(proof)
