@@ -70,7 +70,7 @@ async function createByNumber(invoiceId, kvitNumber) {
     await save(proof)
 
     verify(proof._id).then() 
-    gpt(id).then()
+    gpt(proof._id).then()
     
     return proof
 }
@@ -124,7 +124,7 @@ async function createByFile(invoiceId, kvitFile='') {
     await save(proof)   
 
     verify(proof._id).then() 
-    gpt(id).then()
+    gpt(proof._id).then()
 
     return proof
 }
