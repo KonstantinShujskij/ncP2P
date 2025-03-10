@@ -49,6 +49,15 @@ const approve = (req, _, next) => {
     next()
 }
 
+const recheck = (req, _, next) => {   
+    req.body = { 
+        id: toObjectId(req.body.id),
+        bank: req.body.bank
+    }
+
+    next()
+}
+
 const list = (req, _, next) => {   
     req.body = { 
         filter: Filter.admin(req.body.filter), 
@@ -66,5 +75,6 @@ module.exports = {
     clientFile,
     decline,
     approve,
+    recheck,
     list
 }

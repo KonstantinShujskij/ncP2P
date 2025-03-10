@@ -67,12 +67,20 @@ router.post('/accept', Auth, Validate.approve, Serialise.approve,
 )
 
 router.post('/manual', Auth, Validate.decline, Serialise.decline,
-    Interceptor(async (req, res) => {
-        console.log('manual');
-        
+    Interceptor(async (req, res) => {        
         const proof = await Proof.manual(req.body.id)        
 
         res.status(200).json(Format.admin(proof))
+    })
+)
+
+router.post('/recheck', Auth, Validate.recheck, Serialise.recheck,
+    Interceptor(async (req, res) => {        
+        const { id, bank } = req.body     
+        
+        await Proof.recheck(id, bank)        
+
+        res.status(200).json(true)
     })
 )
 

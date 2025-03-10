@@ -4,7 +4,7 @@ import { formatTime } from '../../utils'
 import Copy from '../UI/copy'
 
 import styles from './Proof.module.css'
-import { BASE_URL } from '../../const'
+import { FRONT_URL, BASE_URL } from '../../const'
 import Input from '../UI/Input'
 import useInput from '../../hooks/input.hook'
 import useProofApi from '../../API/proof.api'
@@ -61,6 +61,11 @@ function Proof({proof, refresh}) {
         if(proofIsApprove) { refresh() }
     } 
 
+    const recheckHandler = async (bank='mono') => {
+        const proofIsRecheck = !!(await proofApi.recheck(proof.id, bank))
+        if(proofIsRecheck) { refresh() }
+    } 
+
     return (
         <div className={styles.main}>
             <div className={styles.excel}>
@@ -104,6 +109,11 @@ function Proof({proof, refresh}) {
             <div className={styles.excel}>
                 {(proof.status === 'WAIT' || proof.status === 'MANUAL') && !wait && (
                     <div className={styles.action}>
+                        <div className={styles.banks}>
+                            <div className={styles.bank} onClick={() => recheckHandler('mono')}>
+                                <img src={`${FRONT_URL}/mono.png`} />
+                            </div>
+                        </div>
                         <div className={styles.item}>
                             <Input input={amount} className={styles.input} placeholder="Kvit Number" />
                             <Input input={number} className={styles.input} placeholder="Kvit Number" />

@@ -33,6 +33,11 @@ const list = [
     check('limit', 'invalidValue').notEmpty().isInt({ min: 0 }),
 ]
 
+const recheck = [
+    check('id', 'invalidValue').notEmpty().isMongoId(),
+    check('bank', 'invalidBank').optional().isString(),
+]
+
 
 module.exports = {
     create,
@@ -40,5 +45,6 @@ module.exports = {
     clientFile,
     decline,
     approve,
+    recheck,
     list
 }

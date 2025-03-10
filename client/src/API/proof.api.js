@@ -23,6 +23,11 @@ export default function useProofApi() {
         catch(error) { return false } 
     }
 
+    const recheck = async (id, bank) => {       
+        try { return await protectedRequest('api/proof/recheck', {id, bank}) }
+        catch(error) { return false } 
+    }
+
     const list = async (page=1, limit=20) => {       
         try { return await protectedRequest('api/proof/list', {filter, page, limit}) }
         catch(error) { return {list: [], count: 0} } 
@@ -32,6 +37,8 @@ export default function useProofApi() {
         approve,
         decline,
         manual,
+        recheck,
+
         list
     }
 }

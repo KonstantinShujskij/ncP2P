@@ -68,7 +68,9 @@ async function createByNumber(invoiceId, kvitNumber) {
     })
 
     await save(proof)
+
     verify(proof._id).then() 
+    gpt(id).then()
     
     return proof
 }
@@ -120,15 +122,15 @@ async function createByFile(invoiceId, kvitFile='') {
     })
 
     await save(proof)   
+
     verify(proof._id).then() 
+    gpt(id).then()
 
     return proof
 }
 
 async function verify(id) {
     const proof = await get(id)
-
-    gpt(id).then()
 
     console.log('--- verify proof: ', id)
     console.log('--- bank: ', proof.bank)
@@ -220,9 +222,7 @@ async function decline(id) {
     return await save(proof)
 }
 
-async function manual(id) {
-    console.log(id);
-    
+async function manual(id) {    
     const proof = await get(id)
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
@@ -248,6 +248,19 @@ async function approve({id, amount, kvitNumber}) {
     if(candidat) { throw Exception.isExist }
 
     return await complite(proof, { amount, kvitNumber: findKvit })
+}
+
+async function recheck(id, bank) {        
+    const proof = await get(id)
+    if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
+
+    proof.bank = bank
+
+    await save(proof)
+
+    verify(proof._id).then() 
+
+    return proof
 }
 
 // ---------- LISTS ------------
@@ -300,6 +313,7 @@ module.exports = {
     decline,
     approve,
     manual,
+    recheck,
 
     get,
     list,
