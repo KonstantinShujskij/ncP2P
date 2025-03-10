@@ -153,7 +153,7 @@ async function verify(id) {
         if(candidat) { return console.log('Find candidate') }
 
         if(transaction) { 
-            const { kvitNumber, card, amount } = transaction
+            const { kvitNumber, card, amount, date } = transaction
             return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount, date }) 
         }
     }
