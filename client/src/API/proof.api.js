@@ -23,8 +23,8 @@ export default function useProofApi() {
         catch(error) { return false } 
     }
 
-    const recheck = async (id, bank) => {       
-        try { return await protectedRequest('api/proof/recheck', {id, bank}) }
+    const recheck = async (id, bank, number) => {       
+        try { return await protectedRequest('api/proof/recheck', {id, bank, number}) }
         catch(error) { return false } 
     }
 

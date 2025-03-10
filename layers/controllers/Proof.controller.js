@@ -253,11 +253,12 @@ async function approve({id, amount, kvitNumber}) {
     return await complite(proof, { amount, kvitNumber: findKvit })
 }
 
-async function recheck(id, bank) {        
+async function recheck(id, bank, number) {        
     const proof = await get(id)
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
     proof.bank = bank
+    proof.kvitNumber = number
 
     await save(proof)
 

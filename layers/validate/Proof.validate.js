@@ -36,6 +36,7 @@ const list = [
 const recheck = [
     check('id', 'invalidValue').notEmpty().isMongoId(),
     check('bank', 'invalidBank').optional().isString(),
+    check('number', 'invalidValue').notEmpty().isString(),
 ]
 
 

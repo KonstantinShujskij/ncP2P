@@ -52,7 +52,8 @@ const approve = (req, _, next) => {
 const recheck = (req, _, next) => {   
     req.body = { 
         id: toObjectId(req.body.id),
-        bank: req.body.bank
+        bank: req.body.bank,
+        number: req.body.number.toUpperCase()
     }
 
     next()

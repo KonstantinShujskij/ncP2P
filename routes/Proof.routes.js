@@ -76,9 +76,9 @@ router.post('/manual', Auth, Validate.decline, Serialise.decline,
 
 router.post('/recheck', Auth, Validate.recheck, Serialise.recheck,
     Interceptor(async (req, res) => {        
-        const { id, bank } = req.body     
+        const { id, bank, number } = req.body     
         
-        await Proof.recheck(id, bank)        
+        await Proof.recheck(id, bank, number)        
 
         res.status(200).json(true)
     })

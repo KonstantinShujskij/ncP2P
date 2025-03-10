@@ -62,7 +62,7 @@ function Proof({proof, refresh}) {
     } 
 
     const recheckHandler = async (bank='mono') => {
-        const proofIsRecheck = !!(await proofApi.recheck(proof.id, bank))
+        const proofIsRecheck = !!(await proofApi.recheck(proof.id, bank, number.value))
         if(proofIsRecheck) { refresh() }
     } 
 
