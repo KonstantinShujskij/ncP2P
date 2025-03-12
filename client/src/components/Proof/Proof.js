@@ -113,6 +113,9 @@ function Proof({proof, refresh}) {
                             <div className={styles.bank} onClick={() => recheckHandler('mono')}>
                                 <img src={`${FRONT_URL}/mono.png`} />
                             </div>
+                            <div className={styles.bank} onClick={() => recheckHandler('privat')}>
+                                <img src={`${FRONT_URL}/privat.png`} />
+                            </div>
                         </div>
                         <div className={styles.item}>
                             <Input input={amount} className={styles.input} placeholder="Kvit Number" />

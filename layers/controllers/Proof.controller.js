@@ -5,6 +5,7 @@ const Invoice = require('@controllers/Invoice.controller')
 const Payment = require('@controllers/Payment.controller')
 
 const CheckGov = require('@utils/CheckGov')
+const Privat = require('@utils/Privat')
 const Exception = require('@core/Exception')
 const Const = require('@core/Const')
 const Gpt = require('@utils/gpt.utils')
@@ -155,6 +156,27 @@ async function verify(id) {
         if(transaction) { 
             const { kvitNumber, card, amount, date } = transaction
             return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount, date }) 
+        }
+    }
+    if(proof.bank === Const.bankList.PRIVAT) {                
+        if(!proof.kvitNumber) { return }
+        const findKvit = proof.kvitNumber.toUpperCase()
+
+        const transaction = await Privat.check(proof.kvitNumber)
+        console.log('--- Privat say:', transaction)
+
+        const candidat = await Proof.findOne({ 
+            _id: { $ne: proof._id },
+            kvitNumber: findKvit, 
+            status: Const.proof.statusList.CONFIRM
+        })
+        if(candidat) { return console.log('Find candidate') }
+
+        if(transaction) { 
+            const { timestamp, card, amount } = transaction
+            console.log('---- PREFEX:', card, amount);
+            
+            return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount, date: timestamp }) 
         }
     }
 
