@@ -62,6 +62,7 @@ function Proof({proof, refresh}) {
     } 
 
     const recheckHandler = async (bank='mono') => {
+        refresh()
         const proofIsRecheck = !!(await proofApi.recheck(proof.id, bank, number.value))
         if(proofIsRecheck) { refresh() }
     } 
@@ -112,7 +113,8 @@ function Proof({proof, refresh}) {
                         <div className={styles.banks}>
                             <div className={styles.banks}>
                                 {proof.isChecking? <span class="loader"></span> : <>
-                                    <div>{proof.lastCheck? '✅': "❌"}</div>
+                                    <div>{proof.lastCheck === -1 && "❌"}</div>
+                                    <div>{proof.lastCheck === 1 && " ❗️"}</div>
 
                                     <div className={styles.bank} onClick={() => recheckHandler('mono')}>
                                         <img src={`${FRONT_URL}/mono.png`} />

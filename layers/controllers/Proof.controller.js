@@ -1,4 +1,4 @@
-const { getKvitNumber } = require('@utils/pdf.utils')
+const { getKvitNumber, getBankByKvit, getPrivatKvitNumber } = require('@utils/pdf.utils')
 
 const Proof = require('@models/Proof.model')
 const Invoice = require('@controllers/Invoice.controller')
@@ -14,10 +14,12 @@ const Gpt = require('@utils/gpt.utils')
 // ------ SUPPORT FUNCTION ------
 
 
-async function getNumberByKvit(file, bank) {    
+async function getNumberByKvit(file) {   
     if(!file) { return null }
+    const kvitBank = await getBankByKvit(file)    
     
-    if(bank === Const.bankList.MONO) { return await getKvitNumber(file) }
+    if(kvitBank === Const.bankList.MONO) { return await getKvitNumber(file) }
+    if(kvitBank === Const.bankList.PRIVAT) { return await getPrivatKvitNumber(file) }
 
     return null
 }
@@ -85,7 +87,7 @@ async function createByFile(invoiceId, kvitFile='') {
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
     
-    let number = await getNumberByKvit(kvitFile, invoice.bank) 
+    let number = await getNumberByKvit(kvitFile) 
     if(number) { number = number.toUpperCase() }
 
     const payment = await Payment.softGet(invoice.payment)
@@ -130,18 +132,29 @@ async function createByFile(invoiceId, kvitFile='') {
     return proof
 }
 
-async function verify(id) {
+async function verify(id) {    
     const proof = await get(id)
     if(!proof.kvitNumber) { return proof }
+    
+    let bank = proof.bank
+
+    const regexMono = /\b[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}\b/
+    if(regexMono.test(proof.kvitNumber)) { bank = Const.bankList.MONO } 
+
+    const regexPrivat = /P24[A-Z0-9]{16}/
+    if(regexPrivat.test(proof.kvitNumber)) { bank = Const.bankList.PRIVAT } 
+
+    console.log(bank)
 
     let data = null
 
+    proof.bank = bank
     proof.isChecking = true
     await save(proof)
 
     console.log('go cheking');
     
-    if(proof.bank === Const.bankList.MONO) {      
+    if(bank === Const.bankList.MONO) {      
         const transaction = await CheckGov.check(proof.kvitNumber)
 
         if(transaction) { 
@@ -150,7 +163,7 @@ async function verify(id) {
         }
 
     }
-    if(proof.bank === Const.bankList.PRIVAT) {              
+    if(bank === Const.bankList.PRIVAT) {              
         const transaction = await Privat.check(proof.kvitNumber)
 
         if(transaction) { 
@@ -160,11 +173,10 @@ async function verify(id) {
     }
 
     proof.isChecking = false
-    proof.lastCheck = !!data
+    proof.lastCheck = !!data? 1 : -1
     await save(proof)
 
     console.log('stop cheking');
-
 
     return await complite(proof, data) 
 }

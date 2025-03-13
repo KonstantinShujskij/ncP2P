@@ -34,7 +34,7 @@ const schema = new Schema({
         date: { type: String, default: null },
     },
 
-    lastCheck: { type: Boolean, default: false },
+    lastCheck: { type: Number, default: 0 },
     isChecking: { type: Boolean, default: false },
 
     createdAt: { type: Number },
