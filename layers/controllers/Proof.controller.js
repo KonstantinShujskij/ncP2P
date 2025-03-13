@@ -132,59 +132,46 @@ async function createByFile(invoiceId, kvitFile='') {
 
 async function verify(id) {
     const proof = await get(id)
+    if(!proof.kvitNumber) { return proof }
 
-    console.log('--- verify proof: ', id)
-    console.log('--- bank: ', proof.bank)
+    let data = null
+
+    proof.isChecking = true
+    await save(proof)
+
+    console.log('go cheking');
     
-    if(proof.bank === Const.bankList.MONO) {        
-        if(!proof.kvitNumber) { return }
-        console.log('--- number: ', proof.kvitNumber)
-
+    if(proof.bank === Const.bankList.MONO) {      
         const transaction = await CheckGov.check(proof.kvitNumber)
-        console.log('--- Check gov say:', transaction);
-
-        const findKvit = proof.kvitNumber?.toUpperCase()
-        if(!findKvit) {  return console.log('Not Kvit Nummer')  }
-    
-        const candidat = await Proof.findOne({ 
-            _id: { $ne: proof._id },
-            kvitNumber: findKvit, 
-            status: Const.proof.statusList.CONFIRM
-        })
-        if(candidat) { return console.log('Find candidate') }
 
         if(transaction) { 
-            const { kvitNumber, card, amount, date } = transaction
-            return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount, date }) 
+            const { card, amount, date } = transaction
+            data = { kvitNumber: proof.kvitNumber, card, amount, date }
         }
-    }
-    if(proof.bank === Const.bankList.PRIVAT) {                
-        if(!proof.kvitNumber) { return }
-        const findKvit = proof.kvitNumber.toUpperCase()
 
+    }
+    if(proof.bank === Const.bankList.PRIVAT) {              
         const transaction = await Privat.check(proof.kvitNumber)
-        console.log('--- Privat say:', transaction)
-
-        const candidat = await Proof.findOne({ 
-            _id: { $ne: proof._id },
-            kvitNumber: findKvit, 
-            status: Const.proof.statusList.CONFIRM
-        })
-        if(candidat) { return console.log('Find candidate') }
 
         if(transaction) { 
-            const { timestamp, card, amount } = transaction
-            console.log('---- PREFEX:', card, amount);
-            
-            return await complite(proof, { kvitNumber: proof.kvitNumber, card, amount, date: timestamp }) 
+            const { timestamp, card, amount } = transaction      
+            data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp }
         }
     }
 
-    return proof
+    proof.isChecking = false
+    proof.lastCheck = !!data
+    await save(proof)
+
+    console.log('stop cheking');
+
+
+    return await complite(proof, data) 
 }
 
 async function complite(proof, transaction) {
-    console.log('COMPLIT PROOF');
+    console.log('COMPLIT PROOF')
+    if(!transaction) { return }
     
     proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
@@ -278,6 +265,7 @@ async function approve({id, amount, kvitNumber}) {
 async function recheck(id, bank, number) {        
     const proof = await get(id)
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
+    if(proof.isChecking) { throw Exception.notFind }
 
     proof.bank = bank
     proof.kvitNumber = number

@@ -1,5 +1,6 @@
 const {Schema, model, Types} = require('mongoose')
 const Const = require('../../core/Const')
+const { lstat } = require('fs')
 
 
 const schema = new Schema({
@@ -32,6 +33,9 @@ const schema = new Schema({
         card: { type: String, default: null },
         date: { type: String, default: null },
     },
+
+    lastCheck: { type: Boolean, default: false },
+    isChecking: { type: Boolean, default: false },
 
     createdAt: { type: Number },
     updatedAt: { type: Number }

@@ -110,12 +110,20 @@ function Proof({proof, refresh}) {
                 {(proof.status === 'WAIT' || proof.status === 'MANUAL') && !wait && (
                     <div className={styles.action}>
                         <div className={styles.banks}>
-                            <div className={styles.bank} onClick={() => recheckHandler('mono')}>
-                                <img src={`${FRONT_URL}/mono.png`} />
+                            <div className={styles.banks}>
+                                {proof.isChecking? <span class="loader"></span> : <>
+                                    <div>{proof.lastCheck? '✅': "❌"}</div>
+
+                                    <div className={styles.bank} onClick={() => recheckHandler('mono')}>
+                                        <img src={`${FRONT_URL}/mono.png`} />
+                                    </div>
+                                    <div className={styles.bank} onClick={() => recheckHandler('privat')}>
+                                        <img src={`${FRONT_URL}/privat.png`} />
+                                    </div>
+                                </>}
                             </div>
-                            <div className={styles.bank} onClick={() => recheckHandler('privat')}>
-                                <img src={`${FRONT_URL}/privat.png`} />
-                            </div>
+
+
                         </div>
                         <div className={styles.item}>
                             <Input input={amount} className={styles.input} placeholder="Kvit Number" />
