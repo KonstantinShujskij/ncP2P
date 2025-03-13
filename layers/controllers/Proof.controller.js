@@ -159,7 +159,7 @@ async function verify(id) {
 
         if(transaction) { 
             const { card, amount, date } = transaction
-            data = { kvitNumber: proof.kvitNumber, card, amount, date }
+            data = { kvitNumber: proof.kvitNumber, card, amount, date, auto: true }
         }
 
     }
@@ -168,7 +168,7 @@ async function verify(id) {
 
         if(transaction) { 
             const { timestamp, card, amount } = transaction      
-            data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp }
+            data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp, auto: true }
         }
     }
 
@@ -183,7 +183,10 @@ async function verify(id) {
 
 async function complite(proof, transaction) {
     console.log('COMPLIT PROOF')
-    if(!transaction) { return }
+    console.log(transaction)
+    
+    if(!transaction || !transaction.amount) { return }
+    if(transaction.auto && Math.abs(proof.amount - transaction.amount) > 250) { return }
     
     proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
