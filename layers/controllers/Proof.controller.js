@@ -186,7 +186,7 @@ async function complite(proof, transaction) {
     console.log(transaction)
     
     if(!transaction || !transaction.amount) { return }
-    if(transaction.auto && Math.abs(proof.amount - transaction.amount) > 250) { return }
+    if(transaction.auto && Math.abs(proof.invoiceAmount - transaction.amount) > 250) { return }
     
     proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
