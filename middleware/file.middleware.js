@@ -4,7 +4,9 @@ const multer = require('multer')
 const storage = multer.diskStorage({
     destination(req, _file, callback) { callback(null, `static/kvits/`) },
     filename(_req, file, callback) { 
-        const name = (new Date().toISOString() + '-' + file?.originalname).replace(/:/g, '-')
+        const name = (new Date().toISOString() + '-' + file?.originalname).replace(/:/g, '-').replace('%22', '')
+        console.log('File name', name)
+        
         callback(null, name) 
     }
 })
