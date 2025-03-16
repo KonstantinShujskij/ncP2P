@@ -136,7 +136,7 @@ async function createByFile(invoiceId, kvitFile='') {
 
 async function verify(id) {    
     const proof = await get(id)
-    if(!proof.kvitNumber) { return proof }
+    if(!proof.kvitNumber) { return }
     
     let bank = proof.bank
 
