@@ -1,14 +1,22 @@
 export const formatAmount = (amount) => {
     try {
         if(!amount) { return 0 }
+        if(Number.isInteger(amount)) { return amount }
+
         return amount.toFixed(2)
     }
     catch(err) { return 0 }
 }
 
+if(!Number.isInteger(amount)) { 
+    telegram.sendP2Plogs('Value not integer', amount, clientId)
+
+    throw errors.notFind 
+}
+
 export const formatCardNumber = (number) => {
     if(!number) { return "0000 0000 0000 0000" }
-    return number.replace(/\D/g, "").replace(/(\d{4})/g, "$1 ").trim();
+    return number.replace(/\D/g, "").replace(/(\d{4})/g, "$1 ").trim()
 }
 
 export const formatTime = (milliseconds) => {
