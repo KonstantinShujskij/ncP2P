@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import usePaymentApi from '../../API/payment.api'
+import { formatAmount } from '../../utils'
 
 import styles from './Payment.module.css'
 import Copy from '../UI/copy'
@@ -87,9 +88,9 @@ function Payment({payment, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={payment?.initialAmount} label={(payment?.initialAmount || 0)?.toFixid(2)} />
-                    <Copy value={payment?.amount} label={(payment?.amount || 0)?.toFixid(2)} />
-                    <Copy value={payment?.currentAmount} label={(payment?.currentAmount|| 0)?.toFixid(2) } />
+                    <Copy value={payment?.initialAmount} label={formatAmount(payment?.initialAmount)} />
+                    <Copy value={payment?.amount} label={formatAmount(payment?.amount)} />
+                    <Copy value={payment?.currentAmount} label={formatAmount(payment?.currentAmount)} />
                 </div>
             </div>
             <div className={styles.excel}>

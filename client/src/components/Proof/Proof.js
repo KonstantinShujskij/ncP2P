@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { formatTime } from '../../utils'
+import { formatTime, formatAmount } from '../../utils'
 
 import Copy from '../UI/copy'
 
@@ -71,7 +71,7 @@ function Proof({proof, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={proof?.amount} label={(proof?.amount || 0)?.toFixid(2)} />
+                    <Copy value={proof?.amount} label={formatAmount(proof?.amount)} />
                 </div>
             </div>
             <div className={styles.excel}>

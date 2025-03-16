@@ -1,3 +1,11 @@
+export const formatAmount = (amount) => {
+    try {
+        if(!amount) { return 0 }
+        return amount.toFixed(2)
+    }
+    catch(err) { return 0 }
+}
+
 export const formatCardNumber = (number) => {
     if(!number) { return "0000 0000 0000 0000" }
     return number.replace(/\D/g, "").replace(/(\d{4})/g, "$1 ").trim();

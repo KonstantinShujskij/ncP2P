@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { formatCardNumber, formatTime } from '../../utils'
+import { formatCardNumber, formatTime, formatAmount } from '../../utils'
 
 import Copy from '../UI/copy'
 
@@ -57,8 +57,8 @@ function Invoice({invoice, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={invoice?.initialAmount} label={(invoice?.initialAmount || 0)?.toFixid(2)} />
-                    <Copy value={invoice?.amount} label={(invoice?.amount || 0)?.toFixid(2)} />
+                    <Copy value={invoice?.initialAmount} label={formatAmount(invoice?.initialAmount)} />
+                    <Copy value={invoice?.amount} label={formatAmount(invoice?.amount)} />
                 </div>
             </div>
             <div className={styles.excel}>
