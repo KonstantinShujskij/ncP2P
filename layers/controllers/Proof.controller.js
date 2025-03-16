@@ -283,7 +283,7 @@ async function recheck(id, bank, number) {
     const proof = await get(id)
 
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
-    if(!proof.kvitNumber) { throw Exception.notFind }
+    if(!number) { throw Exception.notFind }
     if(proof.isChecking) { throw Exception.notFind }
 
     proof.bank = bank
