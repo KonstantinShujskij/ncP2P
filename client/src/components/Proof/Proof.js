@@ -71,7 +71,7 @@ function Proof({proof, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={proof?.amount} label={proof?.amount || 0} />
+                    <Copy value={proof?.amount} label={proof?.amount?.toFixid(2) || 0} />
                 </div>
             </div>
             <div className={styles.excel}>
@@ -166,7 +166,7 @@ function Proof({proof, refresh}) {
                 <div className={styles.client}>
                     <Copy value={proof?.client? proof?.client : ""} label={proof?.client? proof?.client : "Unknow Client"} />
                     {!!proof?.client && proof?.conv !== -1 && 
-                        <div className={styles.conv}>{ (proof?.conv).toFixed(2) } / <span className={styles.green}>{ proof?.confirm }</span></div>
+                        <div className={styles.conv}>{(proof?.conv).toFixed(2) } / <span className={styles.green}>{ proof?.confirm }</span></div>
                     }
                 </div>
             </div>

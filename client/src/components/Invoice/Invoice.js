@@ -57,8 +57,8 @@ function Invoice({invoice, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={invoice?.initialAmount} label={invoice?.initialAmount || 0} />
-                    <Copy value={invoice?.amount} label={invoice?.amount || 0} />
+                    <Copy value={invoice?.initialAmount} label={invoice?.initialAmount?.toFixid(2) || 0} />
+                    <Copy value={invoice?.amount} label={invoice?.amount?.toFixid(2) || 0} />
                 </div>
             </div>
             <div className={styles.excel}>
