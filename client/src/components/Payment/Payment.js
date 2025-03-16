@@ -87,9 +87,9 @@ function Payment({payment, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={payment?.initialAmount} label={payment?.initialAmount?.toFixid(2) || 0} />
-                    <Copy value={payment?.amount} label={payment?.amount?.toFixid(2) || 0} />
-                    <Copy value={payment?.currentAmount} label={payment?.currentAmount?.toFixid(2) || 0} />
+                    <Copy value={payment?.initialAmount} label={(payment?.initialAmount || 0)?.toFixid(2)} />
+                    <Copy value={payment?.amount} label={(payment?.amount || 0)?.toFixid(2)} />
+                    <Copy value={payment?.currentAmount} label={(payment?.currentAmount|| 0)?.toFixid(2) } />
                 </div>
             </div>
             <div className={styles.excel}>

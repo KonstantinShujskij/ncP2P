@@ -71,7 +71,7 @@ function Proof({proof, refresh}) {
         <div className={styles.main}>
             <div className={styles.excel}>
                 <div className={styles.amount}>
-                    <Copy value={proof?.amount} label={proof?.amount?.toFixid(2) || 0} />
+                    <Copy value={proof?.amount} label={(proof?.amount || 0)?.toFixid(2)} />
                 </div>
             </div>
             <div className={styles.excel}>
