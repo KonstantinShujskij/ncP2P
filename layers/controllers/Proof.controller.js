@@ -9,7 +9,7 @@ const Privat = require('@utils/Privat')
 const Exception = require('@core/Exception')
 const Const = require('@core/Const')
 const Gpt = require('@utils/gpt.utils')
-
+const DropBox = require('@utils/DropBox')
 
 // ------ SUPPORT FUNCTION ------
 
@@ -90,6 +90,7 @@ async function createByFile(invoiceId, kvitFile='') {
     let number = await getNumberByKvit(kvitFile) 
     if(number) { number = number.toUpperCase() }
 
+    const fileLink = await DropBox.saveKvit(kvitFile)
     const payment = await Payment.softGet(invoice.payment)
 
     let invoiceSubstatus
@@ -121,7 +122,8 @@ async function createByFile(invoiceId, kvitFile='') {
         paymentPartnerId: payment.partnerId,
 
         kvitNumber: number,
-        kvitFile
+        kvitFile,
+        fileLink
     })
 
     await save(proof)   

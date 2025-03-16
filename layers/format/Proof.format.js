@@ -19,6 +19,7 @@ const admin = (proof) => ({
     invoiceDate: proof.invoiceDate,
     kvitNumber: proof.kvitNumber,
     kvitFile: proof.kvitFile,
+    fileLink: proof.fileLink,
 
     lastCheck: proof.lastCheck,
     isChecking: proof.isChecking,

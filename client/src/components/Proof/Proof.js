@@ -80,7 +80,12 @@ function Proof({proof, refresh}) {
                         <Copy value={proof?.id} label={proof?.id? proof.id : 'SystemId'} />
                         <Copy value={proof?.payment} label={proof?.payment? proof.payment : 'PaymentId'} />
                         <Copy value={proof?.kvitNumber} label={proof?.kvitNumber} />
-                        <a className={styles.link} href={`${BASE_URL}/kvits/${proof.kvitFile}`} target='_blanck' >{proof.kvitFile? 'Check File' : 'Have not File'}</a>
+                        {proof?.fileLink && (
+                            <a className={styles.link} href={proof.fileLink} target='_blanck' >Check File</a>
+                        )}
+                        {!proof?.fileLink && (
+                            <a className={styles.link} href={`${BASE_URL}/kvits/${proof.kvitFile}`} target='_blanck' >{proof.kvitFile? 'Check File' : 'Have not File'}</a>
+                        )}
                     </div>
                 </div>
             </div>

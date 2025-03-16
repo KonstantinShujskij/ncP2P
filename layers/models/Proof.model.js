@@ -26,6 +26,7 @@ const schema = new Schema({
 
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },
+    fileLink: { type: String, default: null },
 
     gpt: {
         number: { type: String, default: null },

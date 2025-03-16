@@ -47,8 +47,6 @@ function encodeImageToBase64(fileName) {
 }
 
 async function getData(messages) {
-    console.log(messages);
-
     try {
         const apiKey = config.get('gptApiKey')
         const openai = new OpenAI({ apiKey })
