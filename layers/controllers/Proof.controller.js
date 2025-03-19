@@ -203,6 +203,14 @@ async function complite(proof, transaction) {
             if(transaction.date - 60 * 1000 < proof.invoiceDate) { return console.log('date is not valid') }
         }
     }
+
+    const candidat = await Proof.findOne({ 
+        _id: { $ne: proof._id },
+        kvitNumber: proof.kvitNumber, 
+        status: Const.proof.statusList.CONFIRM
+    })
+    
+    if(candidat) { throw Exception.isExist }
     
     const saveProof = await save(proof)
 
@@ -283,8 +291,18 @@ async function recheck(id, bank, number) {
     const proof = await get(id)
 
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
-    if(!number) { throw Exception.notFind }
     if(proof.isChecking) { throw Exception.notFind }
+
+    const findKvit = number?.toUpperCase()
+    if(!findKvit) { throw Exception.invalidValue }
+
+    const candidat = await Proof.findOne({ 
+        _id: { $ne: proof._id },
+        kvitNumber: findKvit, 
+        status: Const.proof.statusList.CONFIRM
+    })
+    
+    if(candidat) { throw Exception.isExist }
 
     proof.bank = bank
     proof.kvitNumber = number
