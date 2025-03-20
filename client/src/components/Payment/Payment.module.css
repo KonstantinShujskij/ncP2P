@@ -178,3 +178,12 @@
     background-color: transparent;
     color: #66cc66;
 }
+
+.proofs {
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.proofs:hover {
+    color: #fbffff;
+}

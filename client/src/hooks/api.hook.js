@@ -17,7 +17,7 @@ export default function useApi() {
     const publicRequest = useCallback(async (queris, data, type) => {
         try { return await request(queris, 'POST', data, {}, type) } 
         catch(error) { 
-            pushError(error.message)
+            pushError(error)
             throw error 
         } 
     }, [request])

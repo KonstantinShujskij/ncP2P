@@ -66,6 +66,17 @@ function sendCode(telegram) {
     return token
 }
 
+function sendProofs(proofs, telegram) {    
+    proofs.forEach((proof) => {        
+        let text = ''
+        text += `Payment: <code>${proof.payment}</code> %0A`
+        text += `Invoice: <code>${proof.invoice}</code> %0A`
+        text += `Proof: <code>${proof.proof}</code> %0A`
+        text += `${proof.link}`
+
+        sendMessage(telegram, text)
+    })
+}
 
 module.exports = { 
     sendMessage,
@@ -75,5 +86,6 @@ module.exports = {
 
     cantNcApiMake,
     cantSendCallback,
-    moreAmount
+    moreAmount,
+    sendProofs
 }

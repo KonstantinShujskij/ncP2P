@@ -53,6 +53,11 @@ export default function usePaymentApi() {
         catch(error) { return null } 
     }
 
+    const getProofs = async (id) => {       
+        try { return await protectedRequest('api/payment/proofs', {id}) }
+        catch(error) { return false } 
+    }
+
     const getStatistics = async (start, stop) => {       
         try { return await protectedRequest('api/payment/statistic', {start, stop}) }
         catch(error) { return null } 
@@ -67,6 +72,7 @@ export default function usePaymentApi() {
         freeze,
         unfreeze,
         push,
+        getProofs,
 
         togglePriority,
         getStatistics

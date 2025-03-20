@@ -3,6 +3,7 @@ const { Router } = require('express')
 const { Auth } = require('@middleware/auth.middleware')
 const { access, partnerAccess, adminAccess } = require('@middleware/access.middleware')
 const Interceptor = require('@core/Interceptor')
+const Telegram = require('@utils/telegram.utils')
 
 const Validate = require('@validate/Payment.validate')
 const Serialise = require('@serialize/Payment.serialize')
@@ -93,6 +94,15 @@ router.post('/toggle-priority', Auth, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {
         await Payment.togglePriority(req.body.id)
 
+        res.status(200).json(true)
+    })
+)
+
+router.post('/proofs', Auth, Validate.get, Serialise.get, 
+    Interceptor(async (req, res) => {
+        const list = await Payment.sendProofs(req.body.id)        
+
+        Telegram.sendProofs(list, req.user.telegram)
         res.status(200).json(true)
     })
 )

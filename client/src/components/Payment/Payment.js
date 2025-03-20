@@ -71,6 +71,11 @@ function Payment({payment, refresh}) {
         refresh()
     }
 
+    const proofsHandler = async () => {
+        await paymentApi.getProofs(payment.id)
+        refresh()
+    }
+
     const [subStatus, setSubStatus] = useState('')
 
     useEffect(() => {        
@@ -96,6 +101,7 @@ function Payment({payment, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.card}>
                     <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
+                    <span className={styles.proofs} onClick={() => proofsHandler()}>Get Proofs to Telegram</span>
                 </div>
             </div>
             <div className={styles.excel}>

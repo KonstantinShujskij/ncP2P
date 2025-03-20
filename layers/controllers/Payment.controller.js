@@ -3,10 +3,11 @@ const Const = require('@core/Const')
 
 const Payment = require('@models/Payment.model')
 const Invoice = require('@models/Invoice.model')
+const Proof = require('@models/Proof.model')
 
 const { round } = require('@utils/utils')
 const { makeOrder } = require('@utils/NcApi')
-
+const config = require('config')
 
 // ---------- SUPPORT FUNCTION ----------
 
@@ -243,6 +244,22 @@ async function getMaxAvailable(id, invoice) {
     return currentAmount
 }
 
+async function sendProofs(id) {        
+    const payment = await get(id)
+
+    const proofsList = await Proof.find({ payment: payment._id })
+    const list = proofsList.map((proof) => {        
+        return {
+            link: proof.fileLink? proof.fileLink : `${config.get('serverUrl')}/kvits/${proof.kvitFile}`,
+            payment: payment._id,
+            invoice: proof.invoice,
+            proof: proof._id
+        }
+    })
+    
+    return list
+}
+
 // ---------- GET BEST ----------
 
 async function getBestByEqual(amount) {        
@@ -438,6 +455,7 @@ module.exports = {
     freeze,
     unfreeze, 
     togglePriority,
+    sendProofs,
 
     getStatistics
 }
