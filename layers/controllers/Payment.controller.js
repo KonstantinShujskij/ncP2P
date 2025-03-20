@@ -247,7 +247,7 @@ async function getMaxAvailable(id, invoice) {
 async function sendProofs(id) {        
     const payment = await get(id)
 
-    const proofsList = await Proof.find({ payment: payment._id })
+    const proofsList = await Proof.find({ payment: payment._id, status: Const.proof.statusList.CONFIRM })
     const list = proofsList.map((proof) => {        
         return {
             link: proof.fileLink? proof.fileLink : `${config.get('serverUrl')}/kvits/${proof.kvitFile}`,
