@@ -6,7 +6,7 @@ export default function useHttp() {
     const [error, setError] = useState(null)
 
     const request = useCallback(async (url, method='GET', body=null, headers={}, type='json') => {
-        function newError(status=520, message = 'Opps..') { return { status, message } }
+        function newError(status=520, message='Opps..') { return { status, message } }
 
         setLoading(true)
 
@@ -19,7 +19,7 @@ export default function useHttp() {
             const response = await fetch(`${FRONT_URL}/${url}`, {method, body, headers})
             const data = await response.json()
 
-            if(!response.ok) { throw newError(response.status, data.error) }
+            if(!response.ok) { throw newError(response.status, data) }
 
             setLoading(false)
             return data
