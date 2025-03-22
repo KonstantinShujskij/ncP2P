@@ -1,7 +1,7 @@
 module.exports = {
     payTime: 15 * 60 * 1000,
     minPaymentLimit: 500,
-    maxPaymentLimit: 100000,
+    maxPaymentLimit: 200000,
     minInvoiceLimit: 500,
     maxInvoiceLimit: 30000,
     minNcApiLimit: 500,
