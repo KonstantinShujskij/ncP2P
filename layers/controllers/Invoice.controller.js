@@ -100,7 +100,7 @@ async function create({ amount, bank, refId, partnerId, client }) {
 }
 
 async function finalize(user, id, status=Const.invoice.statusList.REJECT, stopCallback=false) {
-    const invoice = await getActiveByUser(user, id)
+    const invoice = user? await getActiveByUser(user, id) : await getActive(id)
     invoice.status = status
     const newInvoice = await save(invoice)
 
@@ -135,7 +135,7 @@ async function toValidOk(user, id) {
 }
 
 async function reject(user, id) { return await finalize(user, id, Const.invoice.statusList.REJECT) }
-async function confirm(id, stopCallback=false) { return await finalize(id, Const.invoice.statusList.CONFIRM, stopCallback) }
+async function confirm(id, stopCallback=false) { return await finalize(null, id, Const.invoice.statusList.CONFIRM, stopCallback) }
 
 async function changeAmount(id, amount) {    
     const invoice = await getActive(id)
