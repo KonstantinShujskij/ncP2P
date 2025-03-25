@@ -35,7 +35,7 @@ function CreatePayment() {
     <div className={styles.main}>
         <div className={styles.form}>
           <h3 className={styles.title}>Make Payment</h3>
-          <Input input={card} type='text' placeholder='card' />
+          <Input input={card} type='text' placeholder='Card' />
           <Input input={amount} type='text' placeholder='Amount' />
           <Input input={course} type='text' placeholder='Course' />
           <Input input={refId} type='text' placeholder='Ref Id' />
