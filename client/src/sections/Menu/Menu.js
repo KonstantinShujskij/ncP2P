@@ -2,26 +2,29 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import useAuth from '../../hooks/auth.hook'
-// import { useSelector } from 'react-redux'
-// import * as selectors from '../redux/selectors/user.selectors'
+import { useSelector } from 'react-redux'
+import * as authSelectors from '../../redux/selectors/auth.selectors'
 
 import styles from './Menu.module.css'
 
 
 function Menu() {
     const { logout } = useAuth()
+    const access = useSelector(authSelectors.access)
 
     return (
         <div className={styles.main}>
             <div className={styles.menu}>
-                <NavLink to={'./statistic'} className={styles.item}>
-                    <div className={styles.icon}>
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <div className={styles.value}>
-                        Dashboard
-                    </div>
-                </NavLink>
+                {(access === 'ADMIN' || access === 'MAKER') && (
+                    <NavLink to={'./statistic'} className={styles.item}>
+                        <div className={styles.icon}>
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div className={styles.value}>
+                            Dashboard
+                        </div>
+                    </NavLink>
+                )}
                 <NavLink to={'./invoices'} className={styles.item}>
                     <div className={styles.icon}>
                         <i class="fa-solid fa-forward"></i>
@@ -54,22 +57,26 @@ function Menu() {
                         Proof
                     </div>
                 </NavLink>
-                <NavLink to={'./make'} className={styles.item}>
-                    <div className={styles.icon}>
-                        <i class="fa-solid fa-calculator"></i>
-                    </div>
-                    <div className={styles.value}>
-                        Make
-                    </div>
-                </NavLink>
-                <NavLink to={'./logs'} className={styles.item}>
-                    <div className={styles.icon}>
-                        <i class="fa-solid fa-code"></i>                    
-                    </div>
-                    <div className={styles.value}>
-                        Logs
-                    </div>
-                </NavLink>
+                {(access === 'ADMIN' || access === 'MAKER') && (
+                    <NavLink to={'./make'} className={styles.item}>
+                        <div className={styles.icon}>
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <div className={styles.value}>
+                            Make
+                        </div>
+                    </NavLink>
+                )}
+                {access === 'ADMIN' && (
+                    <NavLink to={'./logs'} className={styles.item}>
+                        <div className={styles.icon}>
+                            <i class="fa-solid fa-code"></i>                    
+                        </div>
+                        <div className={styles.value}>
+                            Logs
+                        </div>
+                    </NavLink>
+                )}
             </div>
             <div className={styles.logout}>
                 <div className={styles.item} onClick={logout}>

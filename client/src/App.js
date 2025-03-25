@@ -10,7 +10,8 @@ import Menu from "./sections/Menu/Menu"
 
 function App() {
   const isAuth = useSelector(authSelectors.isAuth)
-  const routes = useRoutes(isAuth)
+  const access = useSelector(authSelectors.access)
+  const routes = useRoutes(isAuth, access)
 
   return (
     <div className="app">

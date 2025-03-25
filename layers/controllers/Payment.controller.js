@@ -31,14 +31,15 @@ async function invoiceListByPayment(payment) {
 
 // ---------- MAIN ----------
 
-async function create({ card, amount, refId, partnerId, course }) {    
-    const isExist = refId && !!(await Payment.findOne({ refId })) 
+async function create({ accessId, author }, { card, amount, refId, partnerId, course }) {    
+    const isExist = refId && !!(await Payment.findOne({ refId }))
     if(isExist) { throw Exception.isExist }
 
     const minLimit = getMinLimit(amount)
     const maxLimit = amount > Const.minNcApiLimit? amount - Const.minNcApiLimit : minLimit
     
     const payment = new Payment({ 
+        author, accessId,
         refId, partnerId,
         card, amount, course,
         initialAmount: amount,
@@ -166,8 +167,8 @@ async function sendToNcApi(payment) {
     })
 }
 
-async function pushTail(id) {       
-    const payment = await get(id)
+async function pushTail(user, id) {       
+    const payment = await getByUser(user, id)
 
     const invoiceList = await invoiceListByPayment(id)
 
@@ -191,8 +192,8 @@ async function closeTail(tailId, status) {
     return await refresh(payment._id)
 }
 
-async function reject(id) {   
-    const payment = await get(id)
+async function reject(user, id) {   
+    const payment = await getByUser(user, id)
 
     if(payment.status !== Const.payment.statusList.ACTIVE) { return null }
     if(payment.currentAmount !== payment.initialAmount) { return null }
@@ -203,8 +204,8 @@ async function reject(id) {
     return await refresh(payment._id)
 }
 
-async function freeze(id) {   
-    const payment = await get(id)
+async function freeze(user, id) {   
+    const payment = await getByUser(user, id)
 
     payment.status = Const.payment.statusList.BLOCKED
     payment.isFreeze = true
@@ -214,8 +215,9 @@ async function freeze(id) {
     return await refresh(payment._id)
 }
 
-async function unfreeze(id) {   
-    const payment = await get(id)
+async function unfreeze(user, id) {   
+    const payment = await getByUser(user, id)
+
     if(!payment.isFreeze) { return null }
 
     payment.status = Const.payment.statusList.BLOCKED
@@ -225,8 +227,8 @@ async function unfreeze(id) {
     return await refresh(payment._id)
 }
 
-async function togglePriority(id) {   
-    const payment = await get(id)
+async function togglePriority(user, id) {   
+    const payment = await getByUser(user, id)
 
     payment.priority = !payment.priority
 
@@ -244,8 +246,8 @@ async function getMaxAvailable(id, invoice) {
     return currentAmount
 }
 
-async function sendProofs(id) {        
-    const payment = await get(id)
+async function sendProofs(user, id) {
+    const payment = await getByUser(user, id)
 
     const proofsList = await Proof.find({ payment: payment._id, status: Const.proof.statusList.CONFIRM })
     const list = proofsList.map((proof) => {        
@@ -391,9 +393,11 @@ async function getStatistics(timestart=0, timestop=Infinity, format="%Y-%m-%d", 
 
 // ---------- LIST ----------
 
-async function list(options, page, limit) {   
+async function list(user, options, page, limit) {   
     const sort = { createdAt: -1 }
     const skip = (page - 1) * limit
+    
+    if(user && user.access === Const.userAccess.MAKER) { options.accessId = user.accessId }
 
     const List = await getList(options, sort, skip, limit)
 
@@ -414,6 +418,16 @@ async function get(_id) {
     const payment = await Payment.findOne({ _id })
     if(!payment) { throw Exception.notFind }
     
+    return payment
+}
+
+async function getByUser(user, id) {
+    const payment = await get(id)
+
+    if(user.access === Const.userAccess.MAKER) {
+        if(!payment.accessId.equals(user.accessId)) { throw Exception.notFind }
+    }
+
     return payment
 }
 
@@ -450,6 +464,7 @@ module.exports = {
 
     get,
     softGet,
+    getByUser,
 
     reject,
     freeze,

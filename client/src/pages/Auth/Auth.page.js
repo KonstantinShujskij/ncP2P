@@ -27,8 +27,9 @@ function Auth() {
     const data = await User.verify(login.value, password.value, code.value)
 
     if(data) {
-      const {token, userId} = data
-      return auth.login(token, userId)
+      const {token, userId, access} = data
+      
+      return auth.login(token, userId, access)
     }
 
     code.clear()

@@ -27,7 +27,7 @@ export default function useAuth() {
         }
     }, [token, isUserLoad, isAdmin])
 
-    const login = (userToken, userId) => { dispath(auth.login(userToken, userId)) }
+    const login = (userToken, userId, access) => { dispath(auth.login(userToken, userId, access)) }
     const logout = () => { dispath(auth.logout()) }
 
     

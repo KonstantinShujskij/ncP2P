@@ -83,7 +83,7 @@ router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body             
 
-        const {list, count} = await Proof.list(filter, page, limit)        
+        const {list, count} = await Proof.list(req.user, filter, page, limit)        
 
         req.skipLog = true
         res.status(200).json({ list: list.map((proof) => Format.admin(proof)), count })

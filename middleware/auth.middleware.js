@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const User = require('@controllers/User.controller')
 const middleware = require('@core/Middleware')
 const Exception = require('@core/Exception')
+const Const = require('@core/Const')
 
 const config = require('config')
 
@@ -18,5 +19,17 @@ const Auth = middleware(async (req, res) => {
     catch(error) { throw Exception.notAuth }
 })
 
+const isAdmin =  middleware(async (req, res) => {
+    if(req.user.access !== Const.userAccess.ADMIN) { throw errors.notAuth }
+})
 
-module.exports = { Auth }
+const isMaker =  middleware(async (req, res) => {
+    if(req.user.access !== Const.userAccess.ADMIN && req.user.access !== Const.userAccess.MAKER) { throw errors.notAuth }
+})
+
+const isSupport =  middleware(async (req, res) => {
+    if(req.user.access !== Const.userAccess.ADMIN && req.user.access !== Const.userAccess.SUPPORT) { throw errors.notAuth }
+})
+
+
+module.exports = { Auth, isAdmin, isMaker, isSupport }

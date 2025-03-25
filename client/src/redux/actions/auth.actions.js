@@ -1,9 +1,9 @@
 import { LOGIN, LOGOUT } from '../types/auth.types'
 
-export function login(token, userId, isAdmin=false, access='NONE') {
+export function login(token, userId, access='NONE', isAdmin=false) {    
     return {
         type: LOGIN,
-        payload: { token, userId, isAdmin, access }
+        payload: { token, userId, access, isAdmin }
     }
 }
 

@@ -99,7 +99,7 @@ router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body        
 
-        const {list, count} = await Invoice.list(filter, page, limit)        
+        const {list, count} = await Invoice.list(req.user, filter, page, limit)        
 
         req.skipLog = true
         res.status(200).json({ list: list.map((payment) => Format.admin(payment)), count })

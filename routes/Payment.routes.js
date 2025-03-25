@@ -1,6 +1,6 @@
 
 const { Router } = require('express')
-const { Auth } = require('@middleware/auth.middleware')
+const { Auth, isAdmin, isMaker, isSupport } = require('@middleware/auth.middleware')
 const { access, partnerAccess, adminAccess } = require('@middleware/access.middleware')
 const Interceptor = require('@core/Interceptor')
 const Telegram = require('@utils/telegram.utils')
@@ -23,19 +23,17 @@ router.post('/create', access, partnerAccess, Validate.create, Serialise.create,
         const isBlocked = !!(await BlackList.find(req.body.card))
         if(isBlocked) { throw Exception.cardBlocked }
 
-        const payment = await Payment.create(req.body)
-
+        const payment = await Payment.create({accessId: req.access.id, author: 'h2h'}, req.body)
         res.status(201).json(Format.parnter(payment))
     })
 )
 
-router.post('/create-admin', Auth, Validate.create, Serialise.create, 
+router.post('/create-admin', Auth, isMaker, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const isBlocked = !!(await BlackList.find(req.body.card))
         if(isBlocked) { throw Exception.cardBlocked }
 
-        const payment = await Payment.create(req.body)
-
+        const payment = await Payment.create({ accessId: req.user.accessId, author: req.user.login }, req.body)
         res.status(201).json(Format.parnter(payment))
     })
 )
@@ -60,7 +58,7 @@ router.post('/push', Auth, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {
         const { id } = req.body
 
-        await Payment.pushTail(id)
+        await Payment.pushTail(req.user, id)
 
         res.status(200).json(true)
     })
@@ -68,7 +66,7 @@ router.post('/push', Auth, Validate.get, Serialise.get,
 
 router.post('/reject', Auth, Validate.get, Serialise.get, 
     Interceptor(async (req, res) => {
-        await Payment.reject(req.body.id)
+        await Payment.reject(req.user, req.body.id)
 
         res.status(200).json(true)
     })
@@ -76,7 +74,7 @@ router.post('/reject', Auth, Validate.get, Serialise.get,
 
 router.post('/freeze', Auth, Validate.get, Serialise.get, 
     Interceptor(async (req, res) => {
-        await Payment.freeze(req.body.id)
+        await Payment.freeze(req.user, req.body.id)
 
         res.status(200).json(true)
     })
@@ -84,7 +82,7 @@ router.post('/freeze', Auth, Validate.get, Serialise.get,
 
 router.post('/unfreeze', Auth, Validate.get, Serialise.get, 
     Interceptor(async (req, res) => {
-        await Payment.unfreeze(req.body.id)
+        await Payment.unfreeze(req.user, req.body.id)
 
         res.status(200).json(true)
     })
@@ -92,7 +90,7 @@ router.post('/unfreeze', Auth, Validate.get, Serialise.get,
 
 router.post('/toggle-priority', Auth, Validate.get, Serialise.get, 
     Interceptor(async (req, res) => {
-        await Payment.togglePriority(req.body.id)
+        await Payment.togglePriority(req.user, req.body.id)
 
         res.status(200).json(true)
     })
@@ -100,14 +98,14 @@ router.post('/toggle-priority', Auth, Validate.get, Serialise.get,
 
 router.post('/proofs', Auth, Validate.get, Serialise.get, 
     Interceptor(async (req, res) => {
-        const list = await Payment.sendProofs(req.body.id)        
+        const list = await Payment.sendProofs(req.user, req.body.id)        
 
         Telegram.sendProofs(list, req.user.telegram)
         res.status(200).json(true)
     })
 )
 
-router.post('/statistic', Auth, 
+router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {
         const { start, stop } = req.body
 
@@ -138,7 +136,7 @@ router.post('/order/update',
 router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body
-        const {list, count} = await Payment.list(filter, page, limit)        
+        const {list, count} = await Payment.list(req.user, filter, page, limit)        
 
         req.skipLog = true
         res.status(200).json({ list: list.map((payment) => Format.admin(payment)), count })

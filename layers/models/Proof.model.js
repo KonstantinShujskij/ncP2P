@@ -4,6 +4,8 @@ const { lstat } = require('fs')
 
 
 const schema = new Schema({
+    paymentAccessId: { type: Types.ObjectId, ref: 'Partner' },
+
     invoice: { type: Types.ObjectId, ref: 'Invoice' },
     invoiceRefId: { type: String, default: null },
     invoicePartnerId: { type: String, default: null },
@@ -11,7 +13,7 @@ const schema = new Schema({
     payment: { type: Types.ObjectId, ref: 'Payment' },
     paymentRefId: { type: String, default: null },
     paymentPartnerId: { type: String, default: null },
-
+    
     status: { type: String, default: Const.proof.statusList.WAIT }, 
     bank: { type: String, default: '' },
     amount: { type: Number, default: 0 },

@@ -1,8 +1,11 @@
 const {Schema, model, Types} = require('mongoose')
-const Const = require('../../core/Const')
+const Const = require('@core/Const')
 
 
 const schema = new Schema({
+    author: { type: String, default: '' },
+    accessId: { type: Types.ObjectId, ref: 'Partner' },
+
     refId: { type: String, default: '' },
     partnerId: { type: String, default: '' },
     tailId: { type: String, default: null },

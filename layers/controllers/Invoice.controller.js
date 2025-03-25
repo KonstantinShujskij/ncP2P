@@ -10,6 +10,7 @@ const Exception = require('@core/Exception')
 const Const = require('@core/Const')
 const config = require('config')
 
+
 // ---------- SUPPORT FUNCTION ----------
 
 async function getConv(client, timestart=0, timestop=Infinity) {
@@ -25,7 +26,7 @@ async function getConv(client, timestart=0, timestop=Infinity) {
         }}
     ]) 
     
-    const Conv = data[0]    
+    const Conv = data[0]
     if(!Conv) { return { conv: -1, confirm: -1, count: -1 } }
 
     const conv = Conv.countConfirm / (Conv.count || 1) 
@@ -71,8 +72,11 @@ async function create({ amount, bank, refId, partnerId, client }) {
     if(!payment) { throw Exception.notFind }
 
     const { conv, confirm } = await getConv(client)
+
+    console.log(payment.accessId)
     
     const invoice = new Invoice({ 
+        paymentAccessId: payment.accessId,
         refId, partnerId,
         initialAmount: amount,
         amount, 
@@ -247,10 +251,11 @@ async function getStatistics(timestart=0, timestop=Infinity, format="%Y-%m-%d", 
 
 // ---------- LISTS ----------
 
-async function list(options, page, limit) {       
+async function list(user, options, page, limit) {       
     const sort = { createdAt: -1 }
     const skip = (page - 1) * limit
 
+    if(user && user.access === Const.userAccess.MAKER) { options.paymentAccessId = user.accessId }
     const List = await getList(options, sort, skip, limit)
 
     return { 

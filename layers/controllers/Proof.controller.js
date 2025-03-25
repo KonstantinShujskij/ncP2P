@@ -62,6 +62,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         conv: invoice.conv,
         confirm: invoice.confirm,
 
+        paymentAccessId: payment.accessId,
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
@@ -117,6 +118,7 @@ async function createByFile(invoiceId, kvitFile='') {
         conv: invoice.conv,
         confirm: invoice.confirm,
 
+        paymentAccessId: payment.accessId,
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
@@ -316,10 +318,11 @@ async function recheck(id, bank, number) {
 
 // ---------- LISTS ------------
 
-async function list(options, page, limit) {       
+async function list(user, options, page, limit) {       
     const sort = { createdAt: -1 }
     const skip = (page - 1) * limit
     
+    if(user && user.access === Const.userAccess.MAKER) { options.paymentAccessId = user.accessId }
     const List = await getList(options, sort, skip, limit)
 
     return { 

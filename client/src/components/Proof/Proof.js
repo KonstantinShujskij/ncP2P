@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from "react-redux"
 import { formatTime, formatAmount } from '../../utils'
 
 import Copy from '../UI/copy'
@@ -8,10 +9,12 @@ import { FRONT_URL, BASE_URL } from '../../const'
 import Input from '../UI/Input'
 import useInput from '../../hooks/input.hook'
 import useProofApi from '../../API/proof.api'
+import * as authSelectors from '../../redux/selectors/auth.selectors'
 
 
 function Proof({proof, refresh}) {
     const proofApi = useProofApi()
+    const access = useSelector(authSelectors.access)
 
     const number = useInput(proof?.gpt?.number || proof?.kvitNumber)
     const amount = useInput(proof?.invoiceAmount || 0)
@@ -113,7 +116,9 @@ function Proof({proof, refresh}) {
                 }
             </div>
             <div className={styles.excel}>
-                {(proof.status === 'WAIT' || proof.status === 'MANUAL') && !wait && (
+                {(access === 'ADMIN' || access === 'SUPPORT') && (proof.status === 'WAIT' || proof.status === 'MANUAL') 
+                 && !wait && 
+                 (
                     <div className={styles.action}>
                         <div className={styles.banks}>
                             <div className={styles.banks}>
@@ -129,36 +134,36 @@ function Proof({proof, refresh}) {
                                     </div>
                                 </>}
                             </div>
-
-
                         </div>
                         <div className={styles.item}>
-                            <Input input={amount} className={styles.input} placeholder="Kvit Number" />
+                            <Input input={amount} className={styles.input} placeholder="Amount" />
                             <Input input={number} className={styles.input} placeholder="Kvit Number" />
                         </div>
-                        <div className={styles.buttons}>
-                            <button 
-                                className={`${styles.button} ${isApprove? styles.open : null}`} 
-                                onClick={() => acceptHandler()}
-                                data-type="accept"
-                            >
-                                Approve
-                            </button>
-                            <button 
-                                className={`${styles.button} ${isManual? styles.open : null}`} 
-                                onClick={() => manualHandler()}
-                                data-type="manual"
-                            >
-                                {proof.status === 'MANUAL'? 'Unmanual' : 'Manual'}
-                            </button>
-                            <button 
-                                className={`${styles.button} ${isDecline? styles.open : null}`} 
-                                onClick={() => declineHandler()}
-                                data-type="decline"
-                            >
-                                Decline
-                            </button>
-                        </div>
+                        {!proof.isChecking && (
+                            <div className={styles.buttons}>
+                                <button 
+                                    className={`${styles.button} ${isApprove? styles.open : null}`} 
+                                    onClick={() => acceptHandler()}
+                                    data-type="accept"
+                                >
+                                    Approve
+                                </button>
+                                <button 
+                                    className={`${styles.button} ${isManual? styles.open : null}`} 
+                                    onClick={() => manualHandler()}
+                                    data-type="manual"
+                                >
+                                    {proof.status === 'MANUAL'? 'Unmanual' : 'Manual'}
+                                </button>
+                                <button 
+                                    className={`${styles.button} ${isDecline? styles.open : null}`} 
+                                    onClick={() => declineHandler()}
+                                    data-type="decline"
+                                >
+                                    Decline
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
