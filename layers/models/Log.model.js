@@ -5,6 +5,7 @@ const schema = new Schema({
     url: { type: String, default: '' },
     method: { type: String, default: '' },
     time: { type: Number, default: 0 },
+    user: { type: String, default: '' },
 
     req: { type: Object, default: null },
     res: { type: Object, default: null },

@@ -20,7 +20,8 @@ async function logger(req, res, next) {
             req.logs.statusCode = res.statusCode        
             req.logs.res = JSON.parse(body)
             req.logs.time = Date.now() - req.logs.time
-    
+            req.logs.user = req.user?.login? req.user.login : null
+
             if(!req.skipLog) { Log.create(req.logs).then() }
         }
         catch(err) {
