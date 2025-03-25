@@ -99,8 +99,8 @@ async function create({ amount, bank, refId, partnerId, client }) {
     return invoice
 }
 
-async function finalize(id, status=Const.invoice.statusList.REJECT, stopCallback=false) {
-    const invoice = await getActive(id)
+async function finalize(user, id, status=Const.invoice.statusList.REJECT, stopCallback=false) {
+    const invoice = await getActiveByUser(user, id)
     invoice.status = status
     const newInvoice = await save(invoice)
 
@@ -111,8 +111,8 @@ async function finalize(id, status=Const.invoice.statusList.REJECT, stopCallback
     return invoice
 }
 
-async function toValid(id) {
-    const invoice = await get(id)
+async function toValid(user, id) {
+    const invoice = await getByUser(user, id)
     if(invoice.status !== Const.invoice.statusList.REJECT) { throw Exception.notFind }
 
     invoice.status = Const.invoice.statusList.VALID
@@ -123,8 +123,8 @@ async function toValid(id) {
     return newInvoice
 }
 
-async function toValidOk(id) {
-    const invoice = await getActive(id)
+async function toValidOk(user, id) {
+    const invoice = await getActiveByUser(user, id)
     invoice.validOk = !invoice.validOk
     invoice.status = Const.invoice.statusList.VALID
 
@@ -134,7 +134,7 @@ async function toValidOk(id) {
     return newInvoice
 }
 
-async function reject(id) { return await finalize(id, Const.invoice.statusList.REJECT) }
+async function reject(user, id) { return await finalize(user, id, Const.invoice.statusList.REJECT) }
 async function confirm(id, stopCallback=false) { return await finalize(id, Const.invoice.statusList.CONFIRM, stopCallback) }
 
 async function changeAmount(id, amount) {    
@@ -178,7 +178,9 @@ async function pay(id) {
 
 // ---------- STATISTIC ----------
 
-async function getStatistics(timestart=0, timestop=Infinity, format="%Y-%m-%d", options={}) {   
+async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m-%d", options={}) { 
+    if(user && user.access === Const.userAccess.MAKER) { options.paymentAccessId = user.accessId }
+  
     const data = await Invoice.aggregate([
         { $match: { ...options, createdAt: { $gt: timestart, $lt: timestop } }},
         { $addFields: {
@@ -282,9 +284,29 @@ async function get(_id) {
     return invoice
 }
 
+async function getByUser(user, id) {
+    const invoice = await get(id)
+
+    if(user.access === Const.userAccess.MAKER) {
+        if(!invoice.paymentAccessId.equals(user.accessId)) { throw Exception.notFind }
+    }
+
+    return invoice
+}
+
 async function getActive(_id) {
     const invoice = await Invoice.findOne({ _id, status: {$in: Const.invoice.activeStatusList} })
     if(!invoice) { throw Exception.notFind }
+
+    return invoice
+}
+
+async function getActiveByUser(user, id) {
+    const invoice = await getActive(id)
+
+    if(user.access === Const.userAccess.MAKER) {
+        if(!invoice.paymentAccessId.equals(user.accessId)) { throw Exception.notFind }
+    }
 
     return invoice
 }

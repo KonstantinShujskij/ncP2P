@@ -1,6 +1,6 @@
 
 const { Router } = require('express')
-const { Auth } = require('@middleware/auth.middleware')
+const { Auth, isSupport, isMaker } = require('@middleware/auth.middleware')
 const { access, partnerAccess } = require('@middleware/access.middleware')
 const Interceptor = require('@core/Interceptor')
 const Jwt = require('@utils/Jwt.utils')
@@ -56,7 +56,7 @@ router.post('/reject', Auth, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {        
         const { id } = req.body
 
-        const invoice = await Invoice.reject(id)
+        const invoice = await Invoice.reject(req.user, id)
 
         res.status(200).json(Format.parnter(invoice))
     })
@@ -66,7 +66,7 @@ router.post('/valid', Auth, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {        
         const { id } = req.body
 
-        const invoice = await Invoice.toValid(id)
+        const invoice = await Invoice.toValid(req.user, id)
 
         res.status(200).json(Format.parnter(invoice))
     })
@@ -76,20 +76,20 @@ router.post('/validOk', Auth, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {        
         const { id } = req.body
 
-        const invoice = await Invoice.toValidOk(id)
+        const invoice = await Invoice.toValidOk(req.user, id)
 
         res.status(200).json(Format.parnter(invoice))
     })
 )
 
-router.post('/statistic', Auth, 
+router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {
         const { start, stop } = req.body
 
         const startTime = start? parseInt(start) : 0
         const stopTime = stop? parseInt(stop) : Date.now()
 
-        const data = await Invoice.getStatistics(startTime, stopTime)
+        const data = await Invoice.getStatistics(req.user, startTime, stopTime)
 
         res.status(200).json(data)
     })

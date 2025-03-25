@@ -321,7 +321,9 @@ async function choiceBest(amount, step=0) {
 
 // ---------- STATISTIC ----------
 
-async function getStatistics(timestart=0, timestop=Infinity, format="%Y-%m-%d", options={}) {   
+async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m-%d", options={}) {   
+    if(user && user.access === Const.userAccess.MAKER) { options.accessId = user.accessId }
+
     const data = await Payment.aggregate([
         { $match: { ...options, createdAt: { $gt: timestart, $lt: timestop } }},
         { $addFields: {

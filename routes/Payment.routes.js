@@ -112,7 +112,7 @@ router.post('/statistic', Auth, isMaker,
         const startTime = start? parseInt(start) : 0
         const stopTime = stop? parseInt(stop) : Date.now()
 
-        const data = await Payment.getStatistics(startTime, stopTime)
+        const data = await Payment.getStatistics(req.user, startTime, stopTime)
 
         res.status(200).json(data)
     })
