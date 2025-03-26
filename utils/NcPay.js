@@ -11,7 +11,6 @@ const callback = (invoice, callback=()=>{}) => {
 
         console.log('Send to NcPay')
         console.log('url:', url)
-        console.log('body:', body)
         
         protectedCallback(url, body, callback)
     }
