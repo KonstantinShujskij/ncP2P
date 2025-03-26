@@ -9,7 +9,7 @@ async function handleTask(task) {
         const invoice = await Invoice.get(task.payload.invoice)
 
         if(invoice.status === Const.invoice.statusList.WAIT) {
-            return await Invoice.reject(invoice._id)
+            return await Invoice.reject(null, invoice._id)
         }
     }
 }
