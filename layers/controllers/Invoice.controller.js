@@ -172,7 +172,10 @@ async function pay(id) {
 
     invoice.status = Const.invoice.statusList.VALID
 
-    return await save(invoice)
+    const newInvoice = await save(invoice)
+    await Payment.refresh(invoice.payment)
+
+    return newInvoice
 }
 
 
