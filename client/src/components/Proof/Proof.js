@@ -139,31 +139,30 @@ function Proof({proof, refresh}) {
                             <Input input={amount} className={styles.input} placeholder="Amount" />
                             <Input input={number} className={styles.input} placeholder="Kvit Number" />
                         </div>
-                        {!proof.isChecking && (
-                            <div className={styles.buttons}>
-                                <button 
-                                    className={`${styles.button} ${isApprove? styles.open : null}`} 
-                                    onClick={() => acceptHandler()}
-                                    data-type="accept"
-                                >
-                                    Approve
-                                </button>
-                                <button 
-                                    className={`${styles.button} ${isManual? styles.open : null}`} 
-                                    onClick={() => manualHandler()}
-                                    data-type="manual"
-                                >
-                                    {proof.status === 'MANUAL'? 'Unmanual' : 'Manual'}
-                                </button>
-                                <button 
-                                    className={`${styles.button} ${isDecline? styles.open : null}`} 
-                                    onClick={() => declineHandler()}
-                                    data-type="decline"
-                                >
-                                    Decline
-                                </button>
-                            </div>
-                        )}
+
+                        <div className={styles.buttons}>
+                            <button 
+                                className={`${styles.button} ${isApprove? styles.open : null}`} 
+                                onClick={() => acceptHandler()}
+                                data-type="accept"
+                            >
+                                Approve
+                            </button>
+                            <button 
+                                className={`${styles.button} ${isManual? styles.open : null}`} 
+                                onClick={() => manualHandler()}
+                                data-type="manual"
+                            >
+                                {proof.status === 'MANUAL'? 'Unmanual' : 'Manual'}
+                            </button>
+                            <button 
+                                className={`${styles.button} ${isDecline? styles.open : null}`} 
+                                onClick={() => declineHandler()}
+                                data-type="decline"
+                            >
+                                Decline
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
