@@ -45,6 +45,15 @@ function cantNcApiMake(payment, telegram=config.get('adminGroupe')) {
     sendMessage(telegram, text)
 }
 
+function clientHasActive(invoice, telegram=config.get('adminGroupe')) {
+    const text = `Client have active invoice: %0A`
+    text += `Id: <code>${invoice._id}</code> %0A`
+    text += `Client: <code>${invoice.client}</code> %0A`
+    text += `Amount: <code>${invoice.amount}</code> %0A`
+
+    sendMessage(telegram, text)
+}
+
 function cantSendCallback(invoice, telegram=config.get('adminGroupe')) {
     const text = `Cant send payment callback to NcPay. id: ${invoice}`
     sendMessage(telegram, text)
@@ -86,6 +95,7 @@ module.exports = {
 
     cantNcApiMake,
     cantSendCallback,
+    clientHasActive,
     moreAmount,
     sendProofs
 }
