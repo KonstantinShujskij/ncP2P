@@ -18,9 +18,11 @@ const check = async (type, url, number) => {
         const data = await response.json()
         console.log(data)        
 
-        logs.res = JSON.parse(data)   
-        logs.time = Date.now() - logs.time
-        logs.statusCode = (data && data.card && data.amount)? 200 : 'Have not data'
+        if(data) {
+            logs.res = JSON.parse(data)
+            logs.time = Date.now() - logs.time
+            logs.statusCode = (data && data.card && data.amount)? 200 : 'Have not data'
+        }
 
         await Log.create(logs)
 
