@@ -6,7 +6,7 @@ const config = require('config')
 
 
 const check = async (type, url, number) => {
-    const logs = { url, method: type, req: JSON.parse({ number }), time: Date.now() }
+    const logs = { url, method: type, req: { number }, time: Date.now() }
 
     try {        
         const response = await fetch(url, {
