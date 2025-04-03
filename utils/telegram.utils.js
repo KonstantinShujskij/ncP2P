@@ -46,7 +46,7 @@ function cantNcApiMake(payment, telegram=config.get('adminGroupe')) {
 }
 
 function clientHasActive(invoice, telegram=config.get('adminGroupe')) {
-    const text = `Client have active invoice: %0A`
+    let text = `Client have active invoice: %0A`
     text += `Id: <code>${invoice._id}</code> %0A`
     text += `Client: <code>${invoice.client}</code> %0A`
     text += `Amount: <code>${invoice.amount}</code> %0A`
