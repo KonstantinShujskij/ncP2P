@@ -4,12 +4,14 @@ const Proof = require('@models/Proof.model')
 const Invoice = require('@controllers/Invoice.controller')
 const Payment = require('@controllers/Payment.controller')
 
-const CheckGov = require('@utils/CheckGov')
-const Privat = require('@utils/Privat')
 const Exception = require('@core/Exception')
 const Const = require('@core/Const')
 const Gpt = require('@utils/gpt.utils')
 const DropBox = require('@utils/DropBox')
+
+// const CheckGov = require('@utils/CheckGov')
+// const Privat = require('@utils/Privat')
+const Kvits = require('@utils/Kvits.utils')
 
 // ------ SUPPORT FUNCTION ------
 
@@ -159,7 +161,8 @@ async function verify(id) {
     console.log('go cheking');
     
     if(bank === Const.bankList.MONO) {      
-        const transaction = await CheckGov.check(proof.kvitNumber)
+        // const transaction = await CheckGov.check(proof.kvitNumber)
+        const transaction = await Kvits.checkMono(proof.kvitNumber)
 
         if(transaction) { 
             const { card, amount, date } = transaction
@@ -168,7 +171,8 @@ async function verify(id) {
 
     }
     if(bank === Const.bankList.PRIVAT) {              
-        const transaction = await Privat.check(proof.kvitNumber)
+        // const transaction = await Privat.check(proof.kvitNumber)
+        const transaction = await Kvits.checkPrivat(proof.kvitNumber)
 
         if(transaction) { 
             const { timestamp, card, amount } = transaction      

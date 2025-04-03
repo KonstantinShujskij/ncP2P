@@ -7,6 +7,7 @@ const schema = new Schema({
     time: { type: Number, default: 0 },
     user: { type: String, default: '' },
 
+    statusCode: { type: String, default: null },
     req: { type: Object, default: null },
     res: { type: Object, default: null },
 

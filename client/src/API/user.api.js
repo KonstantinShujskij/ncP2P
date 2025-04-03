@@ -19,9 +19,15 @@ export default function useUserApi() {
         catch(error) { return null } 
     }
 
+    const getAutoStatistics = async (start, stop) => {       
+        try { return await protectedRequest('api/user/autoStatistic', {start, stop}) }
+        catch(error) { return null } 
+    }
+
     return { 
         twoFA,
         verify,
-        get
+        get,
+        getAutoStatistics
     }
 }

@@ -8,6 +8,8 @@ const Serialise = require('@serialize/User.serialize')
 const Format = require('@format/User.format')
 
 const User = require('@controllers/User.controller')
+const Log = require('@controllers/Log.controller')
+const { Auth, isAdmin, isMaker, isSupport } = require('@middleware/auth.middleware')
 
 
 const router = Router()
@@ -44,6 +46,19 @@ router.post('/login', Validate.login, Serialise.twoFA,
         const token = Jwt.generateLoginJwt(user._id)
     
         res.status(200).json({ token, userId: user._id, access: user.access })
+    })
+)
+
+router.post('/autoStatistic', Auth, isMaker,
+    Interceptor(async (req, res) => {
+        const { start, stop } = req.body
+
+        const startTime = start? parseInt(start) : 0
+        const stopTime = stop? parseInt(stop) : Date.now()
+
+        const data = await Log.getAutoStatistic(req.user, startTime, stopTime)
+
+        res.status(200).json(data)
     })
 )
 
