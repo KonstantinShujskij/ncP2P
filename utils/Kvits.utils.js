@@ -16,6 +16,7 @@ const check = async (type, url, number) => {
         })
 
         const data = await response.json()
+        console.log(data)        
 
         logs.res = JSON.parse(data)   
         logs.time = Date.now() - logs.time
@@ -26,6 +27,8 @@ const check = async (type, url, number) => {
         return data
     } 
     catch (error) {   
+        console.log(error)
+        
         logs.statusCode = 'Not have Responce' 
         logs.time = Date.now() - logs.time
 

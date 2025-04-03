@@ -172,6 +172,8 @@ async function verify(id) {
     }
     if(bank === Const.bankList.PRIVAT) {              
         // const transaction = await Privat.check(proof.kvitNumber)
+        console.log('Go to private');
+        
         const transaction = await Kvits.checkPrivat(proof.kvitNumber)
 
         if(transaction) { 
