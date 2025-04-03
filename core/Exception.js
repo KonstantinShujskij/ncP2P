@@ -15,6 +15,7 @@ module.exports = {
     cantPushTail: { status: 409, msg: 'This payment have avtiv invoices or waiting for tail' },
 
     cardBlocked: { status: 409, msg: 'Card is Blocked' },
+    clientHasActive: { status: 409, msg: 'Client has Active' },
 
     notAuth: { status: 401, msg: 'Bad Auth' },
     notAccess: { status: 401, msg: 'Not Access' },

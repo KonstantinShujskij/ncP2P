@@ -68,6 +68,9 @@ async function create({ amount, bank, refId, partnerId, client }) {
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
+    const isClientWait = client && !!(await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })) 
+    if(isClientWait) { throw Exception.clientHasActive }
+
     const payment = await Payment.choiceBest(amount)
     if(!payment) { throw Exception.notFind }
 
