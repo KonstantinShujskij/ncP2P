@@ -9,7 +9,6 @@ const Jwt = require('@utils/Jwt.utils')
 const Exception = require('@core/Exception')
 const Const = require('@core/Const')
 const config = require('config')
-const telegram = require('@utils/telegram.utils')
 
 // ---------- SUPPORT FUNCTION ----------
 
@@ -71,7 +70,6 @@ async function create({ amount, bank, refId, partnerId, client }) {
     const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
     const isClientWait = client && !!(activeInvoice) 
     if(isClientWait) { 
-        telegram.clientHasActive(activeInvoice)
         throw Exception.clientHasActive 
     }
 
