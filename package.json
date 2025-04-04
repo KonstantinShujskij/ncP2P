@@ -25,6 +25,7 @@
     "@serialize": "./layers/serialize"
   },
   "dependencies": {
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "config": "^3.3.12",
     "cors": "^2.8.5",
@@ -42,6 +43,8 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.14.0",
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "nodemon": "^3.1.7"

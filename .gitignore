@@ -2,3 +2,9 @@ node_modules
 static/kvits/
 config/production.json
 config/default.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
