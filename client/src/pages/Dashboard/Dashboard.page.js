@@ -75,7 +75,7 @@ function Dashboard() {
       <h1>Auto</h1>
       <div>
         <p className={styles.item}>Mono conversion: <Copy value={data?.autoData?.mono?.conversion || 0} label={data?.autoData?.mono?.conversion?.toFixed(2) || 0} /></p>
-        <p className={styles.item}>Privat conversion: <Copy value={data?.autoData?.privat?.conversion || 0} label={data?.autoData?.mono?.conversion?.toFixed(2) || 0} /></p>
+        <p className={styles.item}>Privat conversion: <Copy value={data?.autoData?.privat?.conversion || 0} label={data?.autoData?.privat?.conversion?.toFixed(2) || 0} /></p>
       </div>
     </div>
   )
