@@ -13,7 +13,7 @@ async function create(data={}) {
 async function getAutoStatistic(user, timestart=0, timestop=Infinity) {  
     const options = { createdAt: { $gt: timestart, $lt: timestop } }
 
-    const dataMono = await Invoice.aggregate([
+    const dataMono = await Log.aggregate([
         { $match: { ...options, method: Const.bankList.MONO }},
         { $group: {
             _id: null,
@@ -27,7 +27,7 @@ async function getAutoStatistic(user, timestart=0, timestop=Infinity) {
         }}
     ]) 
 
-    const dataPrivat = await Invoice.aggregate([
+    const dataPrivat = await Log.aggregate([
         { $match: { ...options, method: Const.bankList.MONO }},
         { $group: {
             _id: null,
@@ -45,8 +45,8 @@ async function getAutoStatistic(user, timestart=0, timestop=Infinity) {
     console.log(dataPrivat)
    
     return {
-        mono: dataMono,
-        privat: dataPrivat
+        mono: dataMono.length? dataMono[0] : null,
+        privat: dataPrivat.length? dataPrivat[0] : null,
     }
 }
 
