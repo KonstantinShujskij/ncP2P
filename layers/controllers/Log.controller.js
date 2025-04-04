@@ -28,7 +28,7 @@ async function getAutoStatistic(user, timestart=0, timestop=Infinity) {
     ]) 
 
     const dataPrivat = await Log.aggregate([
-        { $match: { ...options, method: Const.bankList.MONO }},
+        { $match: { ...options, method: Const.bankList.PRIVAT }},
         { $group: {
             _id: null,
             count: { $sum: 1 },
