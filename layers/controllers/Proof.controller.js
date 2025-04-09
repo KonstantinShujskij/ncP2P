@@ -159,34 +159,16 @@ async function verify(id) {
     await save(proof)
 
     console.log('go cheking');
-    
-    if(bank === Const.bankList.MONO) {      
-        // const transaction = await CheckGov.check(proof.kvitNumber)
-        const transaction = await Kvits.checkMono(proof.kvitNumber)
-
-        if(transaction) { 
-            const { card, amount, date } = transaction
-            data = { kvitNumber: proof.kvitNumber, card, amount, date, auto: true }
-        }
-
-    }
-    if(bank === Const.bankList.PRIVAT) {              
-        // const transaction = await Privat.check(proof.kvitNumber)
-        console.log('Go to private');
-        
-        const transaction = await Kvits.checkPrivat(proof.kvitNumber)
-
-        if(transaction) { 
-            const { timestamp, card, amount } = transaction      
-            data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp, auto: true }
-        }
+    const transaction = await Kvits.checkByBank(bank, proof.kvitNumber)
+    if(transaction) { 
+        console.log('take data')
+        const { timestamp, card, amount } = transaction
+        data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp, auto: true }
     }
 
     proof.isChecking = false
     proof.lastCheck = !!data? 1 : -1
     await save(proof)
-
-    console.log('stop cheking');
 
     return await complite(proof, data) 
 }
