@@ -31,6 +31,25 @@ router.post('/create', access, partnerAccess, Validate.create, Serialise.create,
     })
 )
 
+router.post('/host-pay', access, partnerAccess, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {
+        const { id } = req.body
+        const invoice = await Invoice.pay(id)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
+router.post('/host-get', access, partnerAccess, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {
+        const { id } = req.body
+        const invoice = await Invoice.get(id)     
+
+        const list = await Proof.find({ invoice: invoice._id })       
+        res.status(200).json({ invoice: Format.client(invoice), proofs: list })
+    })
+)
+
 router.post('/pay', Validate.pay, Serialise.pay,
     Interceptor(async (req, res) => {
         const id = Jwt.validateLinkJwt(req.body.hash)

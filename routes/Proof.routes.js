@@ -41,6 +41,17 @@ router.post('/create-client-file', file.single('kvit'), Validate.clientFile, Ser
     })
 )
 
+router.post('/create-host-file', file.single('kvit'), Validate.get, Serialise.hostFile, 
+    Interceptor(async (req, res) => {        
+        console.log(req.body)
+    
+        const { id, kvitFile } = req.body                     
+        const proof = await Proof.createByFile(id, kvitFile)
+
+        res.status(201).json(Format.client(proof))
+    })
+)
+
 router.post('/decline', Auth, isSupport, Validate.decline, Serialise.decline, 
     Interceptor(async (req, res) => {
         const proof = await Proof.decline(req.body.id)
