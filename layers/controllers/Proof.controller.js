@@ -233,7 +233,13 @@ async function gpt(id) {
     proof.gpt.card = data["recipient_card"]
     proof.gpt.date = data["invoice_date"]
 
+    const regexPrivat = /P24[A-Z0-9]{16}/
+    const isPrivate = regexPrivat.test(proof.gpt.number)
+
+    if(isPrivate && !!proof.gpt.number) { proof.kvitNumber = proof.gpt.number }
     await save(proof)
+    if(isPrivate && !!proof.gpt.number) { await verify(id) }
+
     return true
 }
 
