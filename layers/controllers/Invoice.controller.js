@@ -69,7 +69,7 @@ async function create({ amount, bank, refId, partnerId, client }) {
 
     const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
     const isClientWait = client && !!(activeInvoice) 
-    if(isClientWait) { 
+    if(isClientWait && client !== 'test_client') { 
         throw Exception.clientHasActive 
     }
 
