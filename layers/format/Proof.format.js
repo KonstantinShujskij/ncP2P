@@ -11,6 +11,7 @@ const admin = (proof) => ({
     client: proof.client,
     confirm: proof.confirm,
     conv: proof.conv,
+    ncpayConv: proof.ncpayConv,
 
     bank: proof.bank,
     amount: proof.amount,
