@@ -23,6 +23,7 @@ const schema = new Schema({
     client: { type: String, default: null },
     conv: { type: Number, default: -1 },
     confirm: { type: Number, default: -1 },
+    ncpayConv: { type: Object, default: null },
 
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },

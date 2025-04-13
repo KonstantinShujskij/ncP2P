@@ -63,22 +63,18 @@ async function setSubstatus(invoice) {
 
 // ---------- MAIN ----------
 
-async function create({ amount, bank, refId, partnerId, client }) {    
+async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {      
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
     const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
     const isClientWait = client && !!(activeInvoice) 
-    if(isClientWait && client !== 'test_client') { 
-        throw Exception.clientHasActive 
-    }
+    if(isClientWait && client !== 'test_client') { throw Exception.clientHasActive }    
 
     const payment = await Payment.choiceBest(amount)
     if(!payment) { throw Exception.notFind }
 
     const { conv, confirm } = await getConv(client)
-
-    console.log(payment.accessId)
     
     const invoice = new Invoice({ 
         paymentAccessId: payment.accessId,
@@ -90,8 +86,9 @@ async function create({ amount, bank, refId, partnerId, client }) {
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
         card: payment.card,
-        conv, confirm
-    })
+        conv, confirm,
+        ncpayConv,
+    })     
 
     const hash = Jwt.generateLinkJwt(invoice._id)
     const payPageUrl = config.get('payPageUrl')

@@ -77,6 +77,12 @@
     color: #6bffeb;
 }
 
+.line {
+    width: 100%;
+    background-color: #2e3e74;
+    height: 2px;
+}
+
 .time {
     max-width: 80px;
     margin-left: auto;

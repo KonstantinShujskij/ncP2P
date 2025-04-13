@@ -9,7 +9,8 @@ const create = (req, _, next) => {
         refId: req.body.refId || '',
         partnerId: req.body.partnerId || '',
         bank: req.body.bank || null,
-        client: req.body.client || null
+        client: req.body.client || null,
+        ncpayConv: req.body.conv
     }
 
     next()

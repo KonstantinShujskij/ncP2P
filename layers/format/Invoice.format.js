@@ -21,6 +21,7 @@ const admin = (invoice) => ({
     client: invoice.client,
     confirm: invoice.confirm,
     conv: invoice.conv,
+    ncpayConv: invoice.ncpayConv,
 
     status: invoice.status,
     validOk: invoice.validOk,

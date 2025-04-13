@@ -13,7 +13,12 @@ function Invoice({invoice, refresh}) {
     const [isRejectWait, setIsRejectWait] = useState(false)
     const [isValidWait, setIsValidWait] = useState(false)
     const [isValidOkWait, setIsValidOkWait] = useState(false)
-    
+
+    let clientColor = '#4bef81'
+    if(invoice?.conv < 0.5 || invoice?.confirm < 10) { clientColor = '#ff6b6b' }
+    else if(!!invoice?.ncpayConv?.all?.conversion && (invoice?.ncpayConv?.all?.conversion < 0.5 || invoice?.ncpayConv?.all?.confirmCount < 10)) { clientColor = '#f6a740' }
+    else if(!!invoice?.ncpayConv?.later30?.conversion && (invoice?.ncpayConv?.later30?.conversion < 0.5 || invoice?.ncpayConv?.later30?.confirmCount < 10)) { clientColor = '#f6a740' }
+
     const rejectHandler = async () => {
         if(!isRejectWait) { 
             setIsValidWait(false)
@@ -123,8 +128,15 @@ function Invoice({invoice, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.client}>
                     <Copy value={invoice?.client? invoice?.client : ""} label={invoice?.client? invoice?.client : "Unknow Client"} />
+                    {!!invoice?.client && <div className={styles.line} style={{backgroundColor: clientColor}}></div>}
                     {!!invoice?.client && invoice?.conv !== -1 && 
                         <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
+                    }
+                    {!!invoice?.client && !!invoice?.ncpayConv?.all && 
+                        <div className={styles.conv}>{ (invoice?.ncpayConv?.all?.conversion).toFixed(2) } / <span className={styles.green}>{ invoice?.ncpayConv?.all?.confirmCount }</span></div>
+                    }
+                    {!!invoice?.client && !!invoice?.ncpayConv?.later30 && 
+                        <div className={styles.conv}>{ (invoice?.ncpayConv?.later30?.conversion).toFixed(2) } / <span className={styles.green}>{ invoice?.ncpayConv?.later30?.confirmCount }</span></div>
                     }
                 </div>
             </div>
