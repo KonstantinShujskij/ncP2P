@@ -132,12 +132,6 @@ function Invoice({invoice, refresh}) {
                     {!!invoice?.client && invoice?.conv !== -1 && 
                         <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
                     }
-                    {!!invoice?.client && !!invoice?.ncpayConv?.all && 
-                        <div className={styles.conv}>{ (invoice?.ncpayConv?.all?.conversion).toFixed(2) } / <span className={styles.green}>{ invoice?.ncpayConv?.all?.confirmCount }</span></div>
-                    }
-                    {!!invoice?.client && !!invoice?.ncpayConv?.later30 && 
-                        <div className={styles.conv}>{ (invoice?.ncpayConv?.later30?.conversion).toFixed(2) } / <span className={styles.green}>{ invoice?.ncpayConv?.later30?.confirmCount }</span></div>
-                    }
                 </div>
             </div>
             <div className={styles.excel}>
