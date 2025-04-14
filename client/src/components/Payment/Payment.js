@@ -103,7 +103,7 @@ function Payment({payment, refresh}) {
                     <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
                     <span className={styles.proofs} onClick={() => proofsHandler()}>Get Proofs to Telegram</span>
                     {!!payment?.tailId && <div className={styles.row}>
-                        <Copy value={payment?.tailAmount} label={`tail = ${payment?.tailAmount}`}  />
+                        <Copy value={payment?.tailAmount} label={`tail = ${formatAmount(payment?.tailAmount)}`}  />
                         <span  style={{color: payment?.isTail? '#f6a740' : '#4bef81'}} >{payment?.isTail? 'wait' : 'confirm'}</span> 
                     </div>}
                 </div>
