@@ -187,3 +187,9 @@
 .proofs:hover {
     color: #fbffff;
 }
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
