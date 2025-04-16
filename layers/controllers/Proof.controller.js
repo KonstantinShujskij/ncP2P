@@ -238,9 +238,12 @@ async function gpt(id) {
     const regexPrivat = /P24[A-Z0-9]{16}/
     const isPrivate = regexPrivat.test(proof.gpt.number)
 
-    if(isPrivate && !!proof.gpt.number) { proof.kvitNumber = proof.gpt.number }
+    const regexMono = /\b[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}\b/
+    const isMono = regexMono.test(proof.gpt.number)
+
+    if((isPrivate || isMono) && !!proof.gpt.number) { proof.kvitNumber = proof.gpt.number }
     await save(proof)
-    if(isPrivate && !!proof.gpt.number) { await verify(id) }
+    if((isPrivate || isMono) && !!proof.gpt.number) { await verify(id) }
 
     return true
 }
