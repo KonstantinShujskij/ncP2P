@@ -5,6 +5,7 @@ module.exports = {
     invalidRefId: { status: 415, msg: 'Incorrect Reference Id' },
     invalidPartnerId: { status: 415, msg: 'Incorrect Partner Id' },
     invalidBank: { status: 415, msg: 'Incorrect Bank' },
+    invalidClient: { status: 415, msg: 'Incorrect Client' },
 
     manyProofs: { status: 415, msg: 'So many proofs. Please wait' },
     
