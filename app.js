@@ -33,6 +33,13 @@ app.use('/api/admin', require('./routes/Admin.route'))
 
 app.get('/kvits/:path', (req, res) => { res.sendFile(path.resolve(__dirname, 'static', 'kvits', `${req.params.path}`)) })
 
+process.on('uncaughtException', (error) => {
+    console.error('Необработанное исключение:', error.stack);
+})
+
+process.on('unhandledRejection', (reason) => {
+    console.error('Необработанное отклонение промиса:', reason.stack || reason);
+})
 
 async function start() {
     await mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
