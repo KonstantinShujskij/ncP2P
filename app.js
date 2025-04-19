@@ -34,11 +34,19 @@ app.use('/api/admin', require('./routes/Admin.route'))
 app.get('/kvits/:path', (req, res) => { res.sendFile(path.resolve(__dirname, 'static', 'kvits', `${req.params.path}`)) })
 
 process.on('uncaughtException', (error) => {
-    console.error('Необработанное исключение:', error.stack);
+    console.error('❗️Необработанное исключение!')
+    console.error('Сообщение:', error.message)
+    console.error('Стек вызовов:', error.stack)
 })
 
-process.on('unhandledRejection', (reason) => {
-    console.error('Необработанное отклонение промиса:', reason.stack || reason);
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❗️Необработанное отклонение промиса!')
+    if (reason instanceof Error) {
+        console.error('Сообщение:', reason.message)
+        console.error('Стек вызовов:', reason.stack)
+    } else {
+        console.error('Причина:', reason)
+    }
 })
 
 async function start() {
