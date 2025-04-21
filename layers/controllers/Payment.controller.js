@@ -391,7 +391,7 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     conversion = confirmCount / (count || 1)
     avarageTime = avarageTime / (count || 1)
     avarageSum = totalConfirm / (confirmCount || 1)
-    overPayments = totalInitialBlocked + totalInitialConfirm - totalConfirm - totalBlocked
+    overPayments = totalInitialConfirm - totalConfirm + totalBlocked
         
     return {
         count,
