@@ -195,33 +195,56 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         { $group: {
             _id: { $dateToString: { format, date: "$date" } },
             count: { $sum: 1 },
-            countConfirm: { $sum: { $cond: { if: { $eq: ['$status', "CONFIRM"] }, then: 1, else: 0 }}},
-
             total: { $sum: '$amount'},
+
+            countConfirm: { $sum: { $cond: { if: { $eq: ['$status', "CONFIRM"] }, then: 1, else: 0 }}},
             totalConfirm: { $sum: { $cond: { if: { $eq: ['$status', "CONFIRM"] }, then: '$amount', else: 0 }}},
             totalInitialConfirm: { $sum: { $cond: { if: { $eq: ['$status', "CONFIRM"] }, then: '$initialAmount', else: 0 }}},
+            
+            countValid: { $sum: { $cond: { if: { $and: [ { $eq: ['$status', "VALID"] }, { $eq: ['$validOk', false] } ] }, then: 1, else: 0 }}},
+            totalValid: { $sum: { $cond: { if: { $and: [ { $eq: ['$status', "VALID"] }, { $eq: ['$validOk', false] } ] }, then: '$amount', else: 0 }}},
+
+            countValidOk: { $sum: { $cond: { if: { $and: [ { $eq: ['$status', "VALID"] }, { $eq: ['$validOk', true] } ] }, then: 1, else: 0 }}},
+            totalValidOk: { $sum: { $cond: { if: { $and: [ { $eq: ['$status', "VALID"] }, { $eq: ['$validOk', true] } ] }, then: '$amount', else: 0 }}},
+
             dt: { $sum: '$dt' }
         }},
         { $sort: { _id: 1 } },
         { $project: {
             count: 1,
-            countConfirm: 1,
-            conversion: { $divide: [ "$countConfirm", "$count" ] },
-
             total: 1,
+
+            countConfirm: 1,
             totalConfirm: 1,
             totalInitialConfirm: 1,
 
+            countValid: 1,
+            totalValid: 1,
+            
+            countValidOk: 1,
+            totalValidOk: 1,
+
+            conversion: { $divide: [ {$sum: [ "$countConfirm", "$countValidOk"]}, "$count" ] },
             dt: 1,
         }}
     ]) 
     
     let count = 0
-    let confirmCount = 0
-    let conversion = 0
     let total = 0
+
+    let confirmCount = 0
     let totalConfirm = 0
     let totalInitialConfirm = 0
+
+    let countValid = 0
+    let totalValid = 0
+
+    let countValidOk = 0
+    let totalValidOk = 0
+
+    let totalValidandValidOk = 0
+
+    let conversion = 0
     let avarageTime = 0
     let avarageSum = 0
 
@@ -229,10 +252,14 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     data.forEach((item) => {
         count += item.count
         confirmCount += item.countConfirm
+        countValid += item.countValid
+        countValidOk += item.countValid
 
         total += item.total
         totalConfirm += item.totalConfirm
         totalInitialConfirm += item.totalInitialConfirm
+        totalValid += item.totalValid
+        totalValidOk += item.totalValidOk
 
         avarageTime += item.dt
     })   
@@ -240,6 +267,7 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     conversion = confirmCount / (count || 1)
     avarageTime = avarageTime / (count || 1)
     avarageSum = totalConfirm / (confirmCount || 1)
+    totalValidandValidOk = totalValid + totalValidOk
         
     return {
         count,
@@ -249,7 +277,12 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         totalConfirm,
         totalInitialConfirm,
         avarageSum,
-        avarageTime
+        avarageTime,
+        countValid,
+        countValidOk,
+        totalValid,
+        totalValidOk,
+        totalValidandValidOk
     }
     
     //data

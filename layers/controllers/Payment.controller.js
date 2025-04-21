@@ -338,6 +338,10 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
             total: { $sum: '$amount'},
             totalConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$amount', else: 0 }}},
             totalInitialConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$initialAmount', else: 0 }}},
+
+            totalBlocked: { $sum: { $cond: { if: { $eq: ['$status', "BLOCKED"] }, then: '$currentAmount', else: 0 }}},
+            totalInitialBlocked: { $sum: { $cond: { if: { $eq: ['$status', "BLOCKED"] }, then: '$initialAmount', else: 0 }}},
+
             dt: { $sum: '$dt' }
         }},
         { $sort: { _id: 1 } },
@@ -349,6 +353,9 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
             total: 1,
             totalConfirm: 1,
             totalInitialConfirm: 1,
+
+            totalBlocked: 1,
+            totalInitialBlocked: 1,
 
             dt: 1,
         }}
@@ -363,6 +370,9 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     let avarageTime = 0
     let avarageSum = 0
 
+    let totalInitialBlocked = 0
+    let totalBlocked = 0
+    let overPayments = 0
 
     data.forEach((item) => {
         count += item.count
@@ -372,12 +382,16 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         totalConfirm += item.totalConfirm
         totalInitialConfirm += item.totalInitialConfirm
 
+        totalBlocked += item.totalBlocked
+        totalInitialBlocked += item.totalInitialBlocked
+
         avarageTime += item.dt
     })   
 
     conversion = confirmCount / (count || 1)
     avarageTime = avarageTime / (count || 1)
     avarageSum = totalConfirm / (confirmCount || 1)
+    overPayments = totalInitialBlocked + totalInitialConfirm - totalConfirm - totalBlocked
         
     return {
         count,
@@ -387,7 +401,8 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         totalConfirm,
         totalInitialConfirm,
         avarageSum,
-        avarageTime
+        avarageTime,
+        overPayments
     }
     
     //data
