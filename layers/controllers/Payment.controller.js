@@ -50,7 +50,7 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
     return await save(payment)
 }
 
-async function refresh(id) {            
+async function refresh(id) {               
     const payment = await get(id)
 
     if(payment.status === Const.payment.statusList.REJECT) { return }
@@ -88,7 +88,7 @@ async function refresh(id) {
     payment.currentAmount = currentAmount
     payment.isRefresh = true
     payment.isWait = isWait
-    
+
     if(payment.isFreeze) { 
         payment.status = Const.payment.statusList.BLOCKED
 
@@ -99,25 +99,26 @@ async function refresh(id) {
         payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
-        // callback()
-
         return await save(payment)
     }
 
-    if(maxLimit >= minLimit && maxLimit >= Const.minInvoiceLimit) {        
+    if(maxLimit >= minLimit && maxLimit >= Const.minInvoiceLimit) {      
         payment.status = Const.payment.statusList.ACTIVE
         payment.maxLimit = maxLimit
         
+        const isChangeMinLimit = (minLimit !== payment.minLimit)
+        if(isChangeMinLimit && maxLimit !== currentAmount) { payment.minLimit = minLimit }
+        
         return await save(payment)
-    }    
+    }
     
-    if(currentAmount % 100 === 0 && currentAmount >= Const.minInvoiceLimit) {        
+    if(currentAmount % 100 === 0 && currentAmount >= Const.minInvoiceLimit) {       
         payment.status = Const.payment.statusList.ACTIVE
         payment.minLimit = currentAmount
         payment.maxLimit = currentAmount
 
         return await save(payment)
-    }    
+    }
 
     if(isWait) {
         payment.status = Const.payment.statusList.BLOCKED

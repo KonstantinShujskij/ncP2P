@@ -69,7 +69,9 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {
 
     const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
     const isClientWait = client && !!(activeInvoice) 
-    if(isClientWait && client !== 'test_client') { throw Exception.clientHasActive }    
+
+    const testClients = ['test_client', '794_6311f3e40c3283cdb1d36a70', '881_680a4766a46c55d20a1decf9']
+    if(isClientWait && !testClients.includes(client)) { throw Exception.clientHasActive }    
 
     const payment = await Payment.choiceBest(amount)
     if(!payment) { throw Exception.notFind }
