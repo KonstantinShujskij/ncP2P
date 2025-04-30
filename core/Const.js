@@ -27,6 +27,10 @@ module.exports = {
         activeStatusList: [ 'WAIT', 'MANUAL' ],
     },
 
+    tail: {
+        statusList: { CREATE: "CREATE", WAIT: "WAIT", CONFIRM: 'CONFIRM', REJECT: 'REJECT' },
+    },
+
     maxSaveRecursion: 10,
     bankList: { MONO: 'mono', PRIVAT: 'privat' },
     access: { PARTNER: 'PARTNER', ADMIN: 'ADMIN' },

@@ -48,8 +48,8 @@ export default function usePaymentApi() {
         catch(error) { return null } 
     }
 
-    const push = async (id) => {       
-        try { return await protectedRequest('api/payment/push', {id}) }
+    const push = async (id, amount) => {              
+        try { return await protectedRequest('api/payment/push', {id, amount}) }
         catch(error) { return null } 
     }
 
@@ -57,6 +57,12 @@ export default function usePaymentApi() {
         try { return await protectedRequest('api/payment/proofs', {id}) }
         catch(error) { return false } 
     }
+
+    const getTails = async (id) => {       
+        try { return await protectedRequest('api/payment/tails', {id}) }
+        catch(error) { return [] } 
+    }
+
 
     const getStatistics = async (start, stop) => {       
         try { return await protectedRequest('api/payment/statistic', {start, stop}) }
@@ -73,6 +79,7 @@ export default function usePaymentApi() {
         unfreeze,
         push,
         getProofs,
+        getTails,
 
         togglePriority,
         getStatistics

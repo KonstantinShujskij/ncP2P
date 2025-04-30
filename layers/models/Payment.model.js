@@ -18,6 +18,8 @@ const schema = new Schema({
     currentAmount: { type: Number },
     tailAmount: { type: Number, default: 0 },
 
+    tails: [ { type: Object, ref: 'Tail' } ],
+
     minLimit: { type: Number, default: Const.minPaymentLimit },
     maxLimit: { type: Number },
 

@@ -5,6 +5,8 @@ import Copy from '../UI/copy'
 
 import styles from './Invoice.module.css'
 import useInvoiceApi from '../../API/invoice.api'
+import Input from '../UI/Input'
+import useInput from '../../hooks/input.hook'
 
 
 function Invoice({invoice, refresh}) {
@@ -13,6 +15,9 @@ function Invoice({invoice, refresh}) {
     const [isRejectWait, setIsRejectWait] = useState(false)
     const [isValidWait, setIsValidWait] = useState(false)
     const [isValidOkWait, setIsValidOkWait] = useState(false)
+    const [isChangeWait, setIsChangeWait] = useState(false)
+
+    const changeAmount = useInput()
 
     let clientColor = '#4bef81'
     if(invoice?.conv < 0.5 || invoice?.confirm < 10) { clientColor = '#ff6b6b' }
@@ -23,12 +28,42 @@ function Invoice({invoice, refresh}) {
         if(!isRejectWait) { 
             setIsValidWait(false)
             setIsValidOkWait(false)
+            setIsChangeWait(false)
 
             return setIsRejectWait(true) 
         }
 
         await invoiceApi.reject(invoice.id)
         setIsRejectWait(false) 
+        refresh()
+    }
+
+    const forseHandler = async () => {
+        if(!isRejectWait) { 
+            setIsValidWait(false)
+            setIsValidOkWait(false)
+            setIsChangeWait(false)
+
+            return setIsRejectWait(true) 
+        }
+
+        await invoiceApi.forse(invoice.id)
+        setIsRejectWait(false) 
+        refresh()
+    }
+
+    const changeHandler = async () => {
+        if(!isChangeWait) { 
+            setIsValidWait(false)
+            setIsValidOkWait(false)
+            setIsRejectWait(false)
+
+            return setIsChangeWait(true)
+        }
+
+        await invoiceApi.change(invoice.id, changeAmount.value)
+        setIsChangeWait(false) 
+        changeAmount.clear()
         refresh()
     }
 
@@ -122,6 +157,27 @@ function Invoice({invoice, refresh}) {
                                 Reject
                             </button>
                         </>}
+
+                        {(invoice.status === "CONFIRM") && <div className={styles.col}>
+                            <Input input={changeAmount} placeholder='amount' className={styles.input}/>
+
+                            <div className={styles.row}>
+                                <button 
+                                    className={`${styles.button} ${isRejectWait? styles.open : null}`} 
+                                    onClick={() => forseHandler()}
+                                    data-type="decline"
+                                >
+                                    Reject
+                                </button>
+                                <button 
+                                    className={`${styles.button} ${isChangeWait? styles.open : null}`} 
+                                    onClick={() => changeHandler()}
+                                    data-type="accept"
+                                >
+                                    Change
+                                </button>
+                            </div>
+                        </div>}
                     </div>
                 </div> 
             </div>

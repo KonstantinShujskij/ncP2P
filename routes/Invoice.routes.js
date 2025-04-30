@@ -1,6 +1,6 @@
 
 const { Router } = require('express')
-const { Auth, isSupport, isMaker } = require('@middleware/auth.middleware')
+const { Auth, isSupport, isMaker, isAdmin } = require('@middleware/auth.middleware')
 const { access, partnerAccess } = require('@middleware/access.middleware')
 const Interceptor = require('@core/Interceptor')
 const Jwt = require('@utils/Jwt.utils')
@@ -100,6 +100,29 @@ router.post('/validOk', Auth, Validate.get, Serialise.get,
         res.status(200).json(Format.parnter(invoice))
     })
 )
+
+router.post('/forse', Auth, isAdmin, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {        
+        const { id } = req.body
+
+        const invoice = await Invoice.forse(req.user, id)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
+router.post('/change', Auth, isAdmin, Validate.change, Serialise.change,
+    Interceptor(async (req, res) => {        
+        const { id, amount } = req.body
+        console.log(amount);
+        
+
+        const invoice = await Invoice.change(req.user, id, amount)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
 
 router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {

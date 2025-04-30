@@ -18,6 +18,11 @@ const get = [
     check('id', 'invalidValue').notEmpty().isMongoId(),
 ]
 
+const push = [
+    check('id', 'invalidValue').notEmpty().isMongoId(),
+    check('amount', 'invalidAmount').notEmpty().isFloat({ min: 0 })
+]
+
 const list = [
     check('filter', 'invalidValue').optional().isObject(),
     check('page', 'invalidValue').notEmpty().isInt({ min: 0 }),
@@ -29,5 +34,6 @@ module.exports = {
     create,
     block,
     list,
-    get
+    get,
+    push
 }

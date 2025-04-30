@@ -103,6 +103,31 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {
     return invoice
 }
 
+async function forse(user, id, status=Const.invoice.statusList.REJECT) {
+    const invoice = await get(id)
+    invoice.status = status
+    const newInvoice = await save(invoice)
+
+    // NcPay.callback(newInvoice)
+    
+    await Payment.refresh(invoice.payment)
+
+    return invoice
+}
+
+async function change(user, id, amount) {
+    const invoice = await get(id)
+    if(invoice.status !== Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
+    invoice.amount = amount
+    const newInvoice = await save(invoice)
+
+    // NcPay.callback(newInvoice)
+    
+    await Payment.refresh(invoice.payment)
+
+    return invoice
+}
+
 async function finalize(user, id, status=Const.invoice.statusList.REJECT, stopCallback=false) {
     const invoice = user? await getActiveByUser(user, id) : await getActive(id)
     invoice.status = status
@@ -371,9 +396,11 @@ module.exports = {
     changeAmount,
     close,
     pay,
-
+    change,
+    
     toValid,
     toValidOk,
+    forse,
     getStatistics,
 
     get,

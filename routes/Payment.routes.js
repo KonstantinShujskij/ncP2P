@@ -11,6 +11,7 @@ const Format = require('@format/Payment.format')
 
 const Payment = require('@controllers/Payment.controller')
 const BlackList = require('@controllers/BlackList.controller')
+const Tail = require('@controllers/Tail.controller')
 
 const Exception = require('@core/Exception')
 
@@ -54,11 +55,11 @@ router.post('/block', Auth, Validate.block, Serialise.block,
     })
 )
 
-router.post('/push', Auth, Validate.get, Serialise.get, 
+router.post('/push', Auth, Validate.push, Serialise.push, 
     Interceptor(async (req, res) => {
-        const { id } = req.body
+        const { id, amount } = req.body
 
-        await Payment.pushTail(req.user, id)
+        await Payment.pushTail(req.user, id, amount)
 
         res.status(200).json(true)
     })
@@ -105,6 +106,15 @@ router.post('/proofs', Auth, Validate.get, Serialise.get,
     })
 )
 
+router.post('/tails', Auth, Validate.get, Serialise.get, 
+    Interceptor(async (req, res) => {
+        const list = await Tail.list(req.body.id)        
+
+        res.status(200).json(list)
+    })
+)
+
+
 router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {
         const { start, stop } = req.body
@@ -121,12 +131,12 @@ router.post('/statistic', Auth, isMaker,
 router.post('/order/update',  
     Interceptor(async (req, res) => {
         const {id, status} = req.body 
-        console.log('----- Close in NcAPi', id, status);
+        console.log('----- Close in NcAPi', id, status)
         
-        try { await Payment.closeTail(id, status) }
+        try { await Tail.closeTail(id, status) }
         catch(error) {
-            console.log('----- error in save payment with NcApi');
-            console.log(error);
+            console.log('----- error in save payment with NcApi')
+            console.log(error)
         }
 
         res.status(200).json(true)

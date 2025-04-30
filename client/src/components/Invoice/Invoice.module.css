@@ -138,3 +138,18 @@
     margin-right: 16px;
     font-size: 14px;
 }
+
+.input {
+    padding: 4px;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.row {
+    display: flex;
+    gap: 4px;
+}

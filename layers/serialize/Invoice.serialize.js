@@ -24,6 +24,15 @@ const get = async (req, _, next) => {
     next()
 }
 
+const change = async (req, _, next) => {   
+    req.body = { 
+        id: toObjectId(req.body.id),
+        amount: req.body.amount
+    }
+
+    next()
+}
+
 const pay = async (req, _, next) => {   
     req.body = { 
         hash: req.body.hash,
@@ -47,5 +56,6 @@ module.exports = {
     create,
     pay,
     get,
+    change,
     list
 }

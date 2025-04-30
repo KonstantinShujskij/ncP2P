@@ -29,6 +29,15 @@ const get = (req, _, next) => {
     next()
 }
 
+const push = (req, _, next) => {   
+    req.body = { 
+        id: req.body.id, 
+        amount: req.body.amount
+    }
+
+    next()
+}
+
 const list = (req, _, next) => {   
     req.body = { 
         filter: Filter.admin(req.body.filter), 
@@ -44,5 +53,6 @@ module.exports = {
     create,
     block,
     list,
-    get
+    get,
+    push
 }

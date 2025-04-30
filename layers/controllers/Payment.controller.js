@@ -4,6 +4,7 @@ const Const = require('@core/Const')
 const Payment = require('@models/Payment.model')
 const Invoice = require('@models/Invoice.model')
 const Proof = require('@models/Proof.model')
+const Tail = require('@controllers/Tail.controller')
 
 const { round } = require('@utils/utils')
 const { makeOrder } = require('@utils/NcApi')
@@ -52,10 +53,10 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
 
 async function refresh(id) {               
     const payment = await get(id)
-
-    if(payment.status === Const.payment.statusList.REJECT) { return }
+    if(payment.status === Const.payment.statusList.REJECT) { return }  
 
     const invoiceList = await invoiceListByPayment(id)
+    const tails = await Tail.list(id)
 
     let isOneWait = false
     let isOneValid = false
@@ -77,11 +78,23 @@ async function refresh(id) {
     payment.isOneValid = isOneValid
     payment.isAllValidOk = isAllValidOk
 
+    let isTail = false
+    let tailAmount = 0
+
+    tails.forEach((tail) => { 
+        if(tail.status === Const.tail.statusList.WAIT) { isTail = true } 
+        if(tail.status === Const.tail.statusList.CREATE && !!tail.tailId) { isTail = true } 
+
+        if(tail.status === Const.tail.statusList.WAIT || tail.status === Const.tail.statusList.CONFIRM) {
+            tailAmount += tail.amount
+        }
+    })
+
     const finaleAmount = invoiceList.finale.reduce((amount, invoice) => (amount + invoice.amount), 0)
     const waitAmount = invoiceList.active.reduce((amount, invoice) => (amount + invoice.amount), 0)
-    const isWait = !!invoiceList.active.length || payment.isTail
+    const isWait = !!invoiceList.active.length || isTail
 
-    const currentAmount = payment.initialAmount - payment.tailAmount - finaleAmount - waitAmount
+    const currentAmount = payment.initialAmount - tailAmount - finaleAmount - waitAmount    
     const minLimit = getMinLimit(payment.initialAmount)
     const maxLimit = currentAmount - Const.minNcApiLimit
 
@@ -145,52 +158,30 @@ async function refresh(id) {
 
     const savePayment = await save(payment)
 
-    if(!payment.tailId) { await sendToNcApi(payment) }
+    if(!payment.tails.length) { await pushTail(null, id, payment.currentAmount) }
 
     return savePayment
 }
 
-async function sendToNcApi(payment) {           
-    makeOrder(payment.card, payment.currentAmount, payment._id, async (invoice) => {
-        try {
-            const newPayment = await get(payment.id)
-        
-            newPayment.isTail = true
-            newPayment.tailId = invoice.body.id
-            newPayment.tailAmount = payment.currentAmount
-            
-            await save(newPayment)
-        }
-        catch(error) {
-            console.log('----cant bind tail:', invoice.body)
-            console.log(error)
-        }
-    })
-}
-
-async function pushTail(user, id) {       
-    const payment = await getByUser(user, id)
+async function pushTail(user, id, amount) {       
+    const payment = user? await getByUser(user, id) : await get(id)
 
     const invoiceList = await invoiceListByPayment(id)
 
-    if(payment.isTail) { throw Exception.cantPushTail }
+    // if(payment.isTail) { throw Exception.cantPushTail }
     if(!!invoiceList.active.length && !payment.isAllValidOk) { throw Exception.cantPushTail }
 
-    sendToNcApi(payment) 
+    const tail = await Tail.create(payment.card, amount, payment._id)
+    if(tail) { payment.tails.push(tail._id) }
+    
+    await save(payment)
+    await refresh(id)
 }
 
-async function closeTail(tailId, status) {       
-    if(status !== 'CONFIRM') { return }    
+async function closeTail(tailId, status) {     
+    const paymentId = await Tail.close(tailId, status)
 
-    const payment = await Payment.findOne({ tailId })
-    if(!payment) { throw Exception.notFind }
-
-    payment.status = Const.payment.statusList.SUCCESS
-    payment.isTail = false
-
-    await save(payment)
-
-    return await refresh(payment._id)
+    return await refresh(paymentId)
 }
 
 async function reject(user, id) {   

@@ -4,6 +4,8 @@ import { formatAmount } from '../../utils'
 
 import styles from './Payment.module.css'
 import Copy from '../UI/copy'
+import Input from '../UI/Input'
+import useInput from '../../hooks/input.hook'
 
 
 function formatCardNumber(number) {
@@ -20,6 +22,8 @@ function formatTime(milliseconds) {
 
 function Payment({payment, refresh}) {
     const paymentApi = usePaymentApi()
+
+    const tailAmount = useInput()
     
     const [isWaitFreeze, setIsWaitFreeze] = useState(false)
     const [isRejectWait, setIsRejectWait] = useState(false)
@@ -60,8 +64,8 @@ function Payment({payment, refresh}) {
 
             return setIsTailWait(true)
         }
-
-        await paymentApi.push(payment.id)
+        
+        await paymentApi.push(payment.id, tailAmount.value)
         setIsTailWait(false) 
         refresh()
     }
@@ -77,6 +81,7 @@ function Payment({payment, refresh}) {
     }
 
     const [subStatus, setSubStatus] = useState('')
+    const [tails, setTails] = useState([])
 
     useEffect(() => {        
         if(payment?.isAllValidOk) { setSubStatus('VALID-OK') }
@@ -87,7 +92,15 @@ function Payment({payment, refresh}) {
             if(!subStatus) { setSubStatus('TAIL') }
             else {  setSubStatus('TAIL-VALID') }
         }
+
+        const load = async () => {
+            const list = await paymentApi.getTails(payment.id)
+            setTails(list)
+        }
+
+        load()
     }, [])
+
 
     return (
         <div className={styles.main}>
@@ -102,10 +115,11 @@ function Payment({payment, refresh}) {
                 <div className={styles.card}>
                     <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
                     <span className={styles.proofs} onClick={() => proofsHandler()}>Get Proofs to Telegram</span>
-                    {!!payment?.tailId && <div className={styles.row}>
-                        <Copy value={payment?.tailAmount} label={`tail = ${formatAmount(payment?.tailAmount)}`}  />
-                        <span  style={{color: payment?.isTail? '#f6a740' : '#4bef81'}} >{payment?.isTail? 'wait' : 'confirm'}</span> 
-                    </div>}
+
+                    {tails.map((tail) => <div className={styles.row}>
+                        <Copy value={tail?.amount} label={`tail = ${formatAmount(tail?.amount)}`}  />
+                        <span  style={{color: tail?.status !== 'CONFIRM'? '#f6a740' : '#4bef81'}} >{tail?.status}</span> 
+                    </div>)}
                 </div>
             </div>
             <div className={styles.excel}>
@@ -122,25 +136,30 @@ function Payment({payment, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.action}>
                     <div className={styles.buttons}>
-                        {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
+                        <div className={styles.line}>
+                            {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
+                                <button 
+                                    className={`${styles.button} ${isWaitFreeze? styles.open : null}`} 
+
+                                    onClick={() => freezeHandler()}
+                                    data-type="decline"
+                                >
+                                    {payment?.isFreeze? "Unfreeze" : "Freeze" }
+                                </button>
+                            </>}
+
                             <button 
-                                className={`${styles.button} ${isWaitFreeze? styles.open : null}`} 
-
-                                onClick={() => freezeHandler()}
-                                data-type="decline"
+                                className={`${styles.priority} ${payment?.priority? styles.open : null}`} 
+                                onClick={() => priorityHandler()}
                             >
-                                {payment?.isFreeze? "Unfreeze" : "Freeze" }
+                                <i className="fa-solid fa-star"></i>
                             </button>
-                        </>}
+                        </div>
 
-                        <button 
-                            className={`${styles.priority} ${payment?.priority? styles.open : null}`} 
-                            onClick={() => priorityHandler()}
-                        >
-                            <i className="fa-solid fa-star"></i>
-                        </button>
 
-                        {payment?.isFreeze && <>
+                        {payment?.isFreeze && <div className={styles.col}>
+                            <Input input={tailAmount} placeholder='Amount' className={styles.input} />
+                               
                             <button 
                                 className={`${styles.button} ${isTailWait? styles.open : null}`} 
                                 onClick={() => tailHandler()}
@@ -148,7 +167,7 @@ function Payment({payment, refresh}) {
                             >
                                 PTail
                             </button>
-                        </>}
+                        </div>}
 
                         {payment.status === "ACTIVE" && <>
                             <button 
