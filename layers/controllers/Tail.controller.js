@@ -28,7 +28,8 @@ async function create(card, amount, payment) {
 async function close(tailId, status) {       
     const tail = await Tail.findOne({ tailId })
     if(!tail) { throw Exception.notFind }
-
+    if(tail.status === Const.tail.statusList.CONFIRM || tail.status === Const.tail.statusList.REJECT) { throw Exception.notFind }
+    
     if(status === 'CONFIRM') { tail.status = Const.tail.statusList.CONFIRM } 
     if(status === 'REJECT') { tail.status = Const.tail.statusList.REJECT } 
 

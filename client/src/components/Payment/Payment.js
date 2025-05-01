@@ -57,7 +57,7 @@ function Payment({payment, refresh}) {
         refresh()
     }
 
-    const tailHandler = async () => {
+    const tailHandler = async () => {       
         if(!isTailWait) { 
             setIsRejectWait(false) 
             setIsWaitFreeze(false)
@@ -66,7 +66,10 @@ function Payment({payment, refresh}) {
         }
         
         await paymentApi.push(payment.id, tailAmount.value)
+        
         setIsTailWait(false) 
+        tailAmount.clear()
+        load()
         refresh()
     }
 
@@ -83,7 +86,12 @@ function Payment({payment, refresh}) {
     const [subStatus, setSubStatus] = useState('')
     const [tails, setTails] = useState([])
 
-    useEffect(() => {        
+    const load = async () => {
+        const list = await paymentApi.getTails(payment.id)
+        setTails(list)
+    }
+
+    useEffect(() => {               
         if(payment?.isAllValidOk) { setSubStatus('VALID-OK') }
         if(payment?.isOneValid) { setSubStatus('VALID') }
         if(payment?.isOneWait) { setSubStatus('WAIT') }
@@ -91,11 +99,6 @@ function Payment({payment, refresh}) {
         if(payment?.isTail) { 
             if(!subStatus) { setSubStatus('TAIL') }
             else {  setSubStatus('TAIL-VALID') }
-        }
-
-        const load = async () => {
-            const list = await paymentApi.getTails(payment.id)
-            setTails(list)
         }
 
         load()
@@ -118,7 +121,7 @@ function Payment({payment, refresh}) {
 
                     {tails.map((tail) => <div className={styles.row}>
                         <Copy value={tail?.amount} label={`tail = ${formatAmount(tail?.amount)}`}  />
-                        <span  style={{color: tail?.status !== 'CONFIRM'? '#f6a740' : '#4bef81'}} >{tail?.status}</span> 
+                        <span className={styles.tail} data-type={tail?.status} >{tail?.status}</span> 
                     </div>)}
                 </div>
             </div>
@@ -162,7 +165,7 @@ function Payment({payment, refresh}) {
                                
                             <button 
                                 className={`${styles.button} ${isTailWait? styles.open : null}`} 
-                                onClick={() => tailHandler()}
+                                onClick={() => { tailHandler() }}
                                 data-type="accept"
                             >
                                 PTail

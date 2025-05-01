@@ -6,6 +6,7 @@ module.exports = {
     maxInvoiceLimit: 30000,
     minNcApiLimit: 500,
     smallLim: 1500,
+    maxTail: 100000,
     
     payment: {
         statusList: { ACTIVE: 'ACTIVE', BLOCKED: 'BLOCKED', SUCCESS: 'SUCCESS', REJECT: 'REJECT' },

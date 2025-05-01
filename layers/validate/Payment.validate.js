@@ -20,7 +20,7 @@ const get = [
 
 const push = [
     check('id', 'invalidValue').notEmpty().isMongoId(),
-    check('amount', 'invalidAmount').notEmpty().isFloat({ min: 0 })
+    check('amount', 'invalidAmount').notEmpty().isFloat({ min: 0, max: Const.maxTail })
 ]
 
 const list = [

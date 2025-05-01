@@ -155,12 +155,9 @@ async function refresh(id) {
 
     payment.status = Const.payment.statusList.BLOCKED
     payment.isWait = true
-
-    const savePayment = await save(payment)
-
-    if(!payment.tails.length) { await pushTail(null, id, payment.currentAmount) }
-
-    return savePayment
+    payment.isFreeze = true
+    
+    return await save(payment)
 }
 
 async function pushTail(user, id, amount) {       

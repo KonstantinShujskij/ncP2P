@@ -54,32 +54,32 @@ function Dashboard() {
 
       <h1>Invoice</h1>
       <div>
-        <p className={styles.item}>count: <Copy value={data?.invoice?.count || 0} label={data?.invoice?.count || 0} /></p>
-        <p className={styles.item}>confirmCount: <Copy value={data?.invoice?.confirmCount || 0} label={data?.invoice?.confirmCount || 0} /> </p>
-        <p className={styles.item}>ValidCount: <Copy value={data?.invoice?.countValid || 0} label={data?.invoice?.countValid || 0} /> </p>
-        <p className={styles.item}>ValidOkCount: <Copy value={data?.invoice?.countValidOk || 0} label={data?.invoice?.countValidOk || 0} /> </p>
-        <p className={styles.item}>conversion: <Copy value={data?.invoice?.conversion || 0} label={data?.invoice?.conversion || 0} /></p>
-        <p className={styles.item}>totalConfirm: <Copy value={data?.invoice?.totalConfirm || 0} label={data?.invoice?.totalConfirm || 0} /></p>
-        <p className={styles.item}>totalInitialConfirm: <Copy value={data?.invoice?.totalInitialConfirm || 0} label={data?.invoice?.totalInitialConfirm || 0} /></p>
-        <p className={styles.item}>totalValidandValidOk: <Copy value={data?.invoice?.totalValidandValidOk || 0} label={data?.invoice?.totalValidandValidOk || 0} /></p>
-        <p className={styles.item}>avarageSum: <Copy value={data?.invoice?.avarageSum || 0} label={data?.invoice?.avarageSum || 0} /></p>
+        <span className={styles.item}>count: <Copy value={data?.invoice?.count || 0} label={data?.invoice?.count || 0} /></span>
+        <span className={styles.item}>confirmCount: <Copy value={data?.invoice?.confirmCount || 0} label={data?.invoice?.confirmCount || 0} /> </span>
+        <span className={styles.item}>ValidCount: <Copy value={data?.invoice?.countValid || 0} label={data?.invoice?.countValid || 0} /> </span>
+        <span className={styles.item}>ValidOkCount: <Copy value={data?.invoice?.countValidOk || 0} label={data?.invoice?.countValidOk || 0} /> </span>
+        <span className={styles.item}>conversion: <Copy value={data?.invoice?.conversion || 0} label={data?.invoice?.conversion || 0} /></span>
+        <span className={styles.item}>totalConfirm: <Copy value={data?.invoice?.totalConfirm || 0} label={data?.invoice?.totalConfirm || 0} /></span>
+        <span className={styles.item}>totalInitialConfirm: <Copy value={data?.invoice?.totalInitialConfirm || 0} label={data?.invoice?.totalInitialConfirm || 0} /></span>
+        <span className={styles.item}>totalValidandValidOk: <Copy value={data?.invoice?.totalValidandValidOk || 0} label={data?.invoice?.totalValidandValidOk || 0} /></span>
+        <span className={styles.item}>avarageSum: <Copy value={data?.invoice?.avarageSum || 0} label={data?.invoice?.avarageSum || 0} /></span>
       </div>
 
       <h1>Payment</h1>
       <div>
-        <p className={styles.item}>count: <Copy value={data?.payment?.count || 0} label={data?.payment?.count || 0} /></p>
-        <p className={styles.item}>confirmCount: <Copy value={data?.payment?.confirmCount || 0} label={data?.payment?.confirmCount || 0} /> </p>
-        <p className={styles.item}>conversion: <Copy value={data?.payment?.conversion || 0} label={data?.payment?.conversion || 0} /></p>
-        <p className={styles.item}>totalConfirm: <Copy value={data?.payment?.totalConfirm || 0} label={data?.payment?.totalConfirm || 0} /></p>
-        <p className={styles.item}>totalInitialConfirm: <Copy value={data?.payment?.totalInitialConfirm || 0} label={data?.payment?.totalInitialConfirm || 0} /></p>
-        <p className={styles.item}>avarageSum: <Copy value={data?.payment?.avarageSum || 0} label={data?.payment?.avarageSum || 0} /></p>
-        <p className={styles.item}>overPayments: <Copy value={data?.payment?.overPayments || 0} label={data?.payment?.overPayments?.toFixed(2) || 0} /></p>
+        <span className={styles.item}>count: <Copy value={data?.payment?.count || 0} label={data?.payment?.count || 0} /></span>
+        <span className={styles.item}>confirmCount: <Copy value={data?.payment?.confirmCount || 0} label={data?.payment?.confirmCount || 0} /> </span>
+        <span className={styles.item}>conversion: <Copy value={data?.payment?.conversion || 0} label={data?.payment?.conversion || 0} /></span>
+        <span className={styles.item}>totalConfirm: <Copy value={data?.payment?.totalConfirm || 0} label={data?.payment?.totalConfirm || 0} /></span>
+        <span className={styles.item}>totalInitialConfirm: <Copy value={data?.payment?.totalInitialConfirm || 0} label={data?.payment?.totalInitialConfirm || 0} /></span>
+        <span className={styles.item}>avarageSum: <Copy value={data?.payment?.avarageSum || 0} label={data?.payment?.avarageSum || 0} /></span>
+        <span className={styles.item}>overPayments: <Copy value={data?.payment?.overPayments || 0} label={data?.payment?.overPayments?.toFixed(2) || 0} /></span>
       </div>
 
       <h1>Auto</h1>
       <div>
-        <p className={styles.item}>Mono conversion: <Copy value={data?.autoData?.mono?.conversion || 0} label={data?.autoData?.mono?.conversion?.toFixed(2) || 0} /></p>
-        <p className={styles.item}>Privat conversion: <Copy value={data?.autoData?.privat?.conversion || 0} label={data?.autoData?.privat?.conversion?.toFixed(2) || 0} /></p>
+        <span className={styles.item}>Mono conversion: <Copy value={data?.autoData?.mono?.conversion || 0} label={data?.autoData?.mono?.conversion?.toFixed(2) || 0} /></span>
+        <span className={styles.item}>Privat conversion: <Copy value={data?.autoData?.privat?.conversion || 0} label={data?.autoData?.privat?.conversion?.toFixed(2) || 0} /></span>
       </div>
     </div>
   )

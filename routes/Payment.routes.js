@@ -57,7 +57,7 @@ router.post('/block', Auth, Validate.block, Serialise.block,
 
 router.post('/push', Auth, Validate.push, Serialise.push, 
     Interceptor(async (req, res) => {
-        const { id, amount } = req.body
+        const { id, amount } = req.body        
 
         await Payment.pushTail(req.user, id, amount)
 
@@ -133,7 +133,7 @@ router.post('/order/update',
         const {id, status} = req.body 
         console.log('----- Close in NcAPi', id, status)
         
-        try { await Tail.closeTail(id, status) }
+        try { await Tail.close(id, status) }
         catch(error) {
             console.log('----- error in save payment with NcApi')
             console.log(error)

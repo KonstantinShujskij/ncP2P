@@ -48,7 +48,7 @@ export default function usePaymentApi() {
         catch(error) { return null } 
     }
 
-    const push = async (id, amount) => {              
+    const push = async (id, amount) => {                      
         try { return await protectedRequest('api/payment/push', {id, amount}) }
         catch(error) { return null } 
     }
