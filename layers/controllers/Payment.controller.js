@@ -51,7 +51,9 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
     return await save(payment)
 }
 
-async function refresh(id) {               
+async function refresh(id) {     
+    console.log('refresh')
+              
     const payment = await get(id)
     if(payment.status === Const.payment.statusList.REJECT) { return }  
     if(!!payment.tailId) { return sendOld(payment) }  

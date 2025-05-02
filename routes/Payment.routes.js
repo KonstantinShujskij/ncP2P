@@ -135,6 +135,8 @@ router.post('/order/update',
         
         try { 
             const paymentId = await Tail.close(id, status) 
+            console.log(paymentId)
+            
             await Payment.refresh(paymentId)
         }
         catch(error) {
