@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import usePaymentApi from '../../API/payment.api'
 import { formatAmount } from '../../utils'
+import { useSelector } from "react-redux"
 
 import styles from './Payment.module.css'
 import Copy from '../UI/copy'
 import Input from '../UI/Input'
 import useInput from '../../hooks/input.hook'
+import * as authSelectors from '../../redux/selectors/auth.selectors'
 
 
 function formatCardNumber(number) {
@@ -22,6 +24,7 @@ function formatTime(milliseconds) {
 
 function Payment({payment, refresh}) {
     const paymentApi = usePaymentApi()
+    const access = useSelector(authSelectors.access)
 
     const tailAmount = useInput()
     
@@ -203,7 +206,7 @@ function Payment({payment, refresh}) {
                         </>}
                     </div>
 
-                    {payment?.isFreeze && <div className={styles.line}>
+                    {payment?.isFreeze  && (access === 'MAKER' || access === 'ADMIN') && <div className={styles.line}>
                         {custom && <>
                             <Input input={tailAmount} placeholder='Amount' className={styles.input} />
                                 

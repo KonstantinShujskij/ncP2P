@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { formatCardNumber, formatTime, formatAmount } from '../../utils'
+import { useSelector } from "react-redux"
 
 import Copy from '../UI/copy'
 
@@ -7,10 +8,12 @@ import styles from './Invoice.module.css'
 import useInvoiceApi from '../../API/invoice.api'
 import Input from '../UI/Input'
 import useInput from '../../hooks/input.hook'
+import * as authSelectors from '../../redux/selectors/auth.selectors'
 
 
 function Invoice({invoice, refresh}) {
     const invoiceApi = useInvoiceApi()
+    const access = useSelector(authSelectors.access)
 
     const [isRejectWait, setIsRejectWait] = useState(false)
     const [isValidWait, setIsValidWait] = useState(false)
@@ -158,7 +161,7 @@ function Invoice({invoice, refresh}) {
                             </button>
                         </>}
 
-                        {(invoice.status === "CONFIRM") && <div className={styles.col}>
+                        {(invoice.status === "CONFIRM") && (access === 'SUPPORT' || access === 'ADMIN') && <div className={styles.col}>
                             <Input input={changeAmount} placeholder='amount' className={styles.input}/>
 
                             <div className={styles.row}>
