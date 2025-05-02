@@ -186,7 +186,7 @@ function Proof({proof, refresh}) {
                     {!!proof?.client && !!proof?.ncpayConv?.later30 && 
                         <div className={styles.conv}>nLd: {(proof?.ncpayConv?.later30?.conversion).toFixed(2) } / <span className={styles.green}>{ proof?.ncpayConv?.later30?.confirmCount }</span></div>
                     }
-                    {!!proof?.client && proof?.conv?.trust !== -1 && <div>trust: true</div>}
+                    {!!proof?.client && proof?.conv?.trust && <div className={styles.conv}>trust: true</div>}
                 </div>
             </div>
             <div className={styles.excel}>
