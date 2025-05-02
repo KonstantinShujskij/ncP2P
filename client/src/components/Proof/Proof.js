@@ -29,7 +29,7 @@ function Proof({proof, refresh}) {
     if(proof?.conv < 0.5 || proof?.confirm < 10) { clientColor = '#ff6b6b' }
     else if(!!proof?.ncpayConv?.all?.conversion && (proof?.ncpayConv?.all?.conversion < 0.5 || proof?.ncpayConv?.all?.confirmCount < 10)) { clientColor = '#f6a740' }
     else if(!!proof?.ncpayConv?.later30?.conversion && (proof?.ncpayConv?.later30?.conversion < 0.5 || proof?.ncpayConv?.later30?.confirmCount < 10)) { clientColor = '#f6a740' }
-    if(invoice?.conv?.trust) { clientColor = '#4bef81' }
+    if(proof?.conv?.trust) { clientColor = '#4bef81' }
 
 
     const declineHandler = async () => {
@@ -186,7 +186,7 @@ function Proof({proof, refresh}) {
                     {!!proof?.client && !!proof?.ncpayConv?.later30 && 
                         <div className={styles.conv}>nLd: {(proof?.ncpayConv?.later30?.conversion).toFixed(2) } / <span className={styles.green}>{ proof?.ncpayConv?.later30?.confirmCount }</span></div>
                     }
-                    {!!invoice?.client && invoice?.conv?.trust !== -1 && <div>trust: true</div>}
+                    {!!proof?.client && invoice?.conv?.trust !== -1 && <div>trust: true</div>}
                 </div>
             </div>
             <div className={styles.excel}>
