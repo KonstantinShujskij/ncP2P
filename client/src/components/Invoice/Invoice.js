@@ -192,6 +192,7 @@ function Invoice({invoice, refresh}) {
                     {!!invoice?.client && invoice?.conv !== -1 && 
                         <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
                     }
+                    {JSON.stringify(invoice?.conv)}
                 </div>
             </div>
             <div className={styles.excel}>
