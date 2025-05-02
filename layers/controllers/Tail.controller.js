@@ -7,6 +7,8 @@ async function create(card, amount, payment) {
     const tail = new Tail({ amount, card, payment })
     await save(tail)
 
+    
+
     makeOrder(card, amount, payment, async (invoice) => {
         try {
             const newTail = await get(tail.id)
