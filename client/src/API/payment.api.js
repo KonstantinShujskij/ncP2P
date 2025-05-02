@@ -63,7 +63,6 @@ export default function usePaymentApi() {
         catch(error) { return [] } 
     }
 
-
     const getStatistics = async (start, stop) => {       
         try { return await protectedRequest('api/payment/statistic', {start, stop}) }
         catch(error) { return null } 

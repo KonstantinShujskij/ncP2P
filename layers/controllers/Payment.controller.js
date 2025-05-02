@@ -9,7 +9,7 @@ const Tail = require('@controllers/Tail.controller')
 const { round } = require('@utils/utils')
 const { makeOrder } = require('@utils/NcApi')
 const config = require('config')
-
+const { sendOld } = require('@utils/telegram.utils')
 // ---------- SUPPORT FUNCTION ----------
 
 function getMinLimit(amount) {
@@ -54,7 +54,7 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
 async function refresh(id) {               
     const payment = await get(id)
     if(payment.status === Const.payment.statusList.REJECT) { return }  
-    if(!!payment.tailId) { return }  
+    if(!!payment.tailId) { return sendOld(payment) }  
 
     const invoiceList = await invoiceListByPayment(id)
     const tails = await Tail.list(id)

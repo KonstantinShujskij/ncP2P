@@ -87,6 +87,17 @@ function sendProofs(proofs, telegram) {
     })
 }
 
+function sendOld(payment, telegram) {    
+    proofs.forEach((proof) => {        
+        let text = 'Error Old Refresh'
+        text += `Payment Id: <code>${payment.id}</code> %0A`
+        text += `Amount: <code>${payment.amount}</code> %0A`
+        text += `Status: <code>${payment.status}</code> %0A`
+
+        sendMessage(telegram, text)
+    })
+}
+
 module.exports = { 
     sendMessage,
     sendAuth,
@@ -97,5 +108,6 @@ module.exports = {
     cantSendCallback,
     clientHasActive,
     moreAmount,
-    sendProofs
+    sendProofs,
+    sendOld
 }
