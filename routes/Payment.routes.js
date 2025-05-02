@@ -57,9 +57,9 @@ router.post('/block', Auth, Validate.block, Serialise.block,
 
 router.post('/push', Auth, Validate.push, Serialise.push, 
     Interceptor(async (req, res) => {
-        const { id, amount } = req.body        
+        const { id, amount, auto } = req.body        
 
-        await Payment.pushTail(req.user, id, amount)
+        await Payment.pushTail(req.user, id, amount, auto)
 
         res.status(200).json(true)
     })

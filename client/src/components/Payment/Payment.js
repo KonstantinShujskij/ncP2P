@@ -28,11 +28,15 @@ function Payment({payment, refresh}) {
     const [isWaitFreeze, setIsWaitFreeze] = useState(false)
     const [isRejectWait, setIsRejectWait] = useState(false)
     const [isTailWait, setIsTailWait] = useState(false)
+    const [isTailDefaultWait, setIsTailDefaultWait] = useState(false)
+
+    const [custom, setCustom] = useState(false)
 
     const freezeHandler = async () => {
         if(!isWaitFreeze) { 
             setIsTailWait(false)
             setIsRejectWait(false)
+            setIsTailDefaultWait(false)
 
             return setIsWaitFreeze(true) 
         }
@@ -48,6 +52,7 @@ function Payment({payment, refresh}) {
         if(!isRejectWait) { 
             setIsTailWait(false)
             setIsWaitFreeze(false)
+            setIsTailDefaultWait(false)
 
             return setIsRejectWait(true) 
         }
@@ -61,6 +66,7 @@ function Payment({payment, refresh}) {
         if(!isTailWait) { 
             setIsRejectWait(false) 
             setIsWaitFreeze(false)
+            setIsTailDefaultWait(false)
 
             return setIsTailWait(true)
         }
@@ -69,6 +75,25 @@ function Payment({payment, refresh}) {
         
         setIsTailWait(false) 
         tailAmount.clear()
+        setCustom(false)
+
+        load()
+        refresh()
+    }
+
+    const tailDefaultHandler = async () => {       
+        if(!isTailWait) { 
+            setIsRejectWait(false) 
+            setIsWaitFreeze(false)
+            setIsTailWait(true)
+
+            return setIsTailDefaultWait(true)
+        }
+        
+        await paymentApi.push(payment.id, 1, true)
+        
+        setIsTailDefaultWait(false)
+
         load()
         refresh()
     }
@@ -139,33 +164,28 @@ function Payment({payment, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.action}>
                     <div className={styles.buttons}>
-                        <div className={styles.line}>
-                            {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
-                                <button 
-                                    className={`${styles.button} ${isWaitFreeze? styles.open : null}`} 
-
-                                    onClick={() => freezeHandler()}
-                                    data-type="decline"
-                                >
-                                    {payment?.isFreeze? "Unfreeze" : "Freeze" }
-                                </button>
-                            </>}
-
+                        {payment.status !== "SUCCESS" && payment.status !== "REJECT" && <>
                             <button 
-                                className={`${styles.priority} ${payment?.priority? styles.open : null}`} 
-                                onClick={() => priorityHandler()}
+                                className={`${styles.button} ${isWaitFreeze? styles.open : null}`} 
+
+                                onClick={() => freezeHandler()}
+                                data-type="decline"
                             >
-                                <i className="fa-solid fa-star"></i>
+                                {payment?.isFreeze? "Unfreeze" : "Freeze" }
                             </button>
-                        </div>
+                        </>}
 
+                        <button 
+                            className={`${styles.priority} ${payment?.priority? styles.open : null}`} 
+                            onClick={() => priorityHandler()}
+                        >
+                            <i className="fa-solid fa-star"></i>
+                        </button>
 
-                        {payment?.isFreeze && <div className={styles.col}>
-                            <Input input={tailAmount} placeholder='Amount' className={styles.input} />
-                               
+                        {payment?.isFreeze && <div className={styles.col}>                            
                             <button 
                                 className={`${styles.button} ${isTailWait? styles.open : null}`} 
-                                onClick={() => { tailHandler() }}
+                                onClick={() => { tailDefaultHandler() }}
                                 data-type="accept"
                             >
                                 PTail
@@ -182,6 +202,30 @@ function Payment({payment, refresh}) {
                             </button>
                         </>}
                     </div>
+
+                    {payment?.isFreeze && <div className={styles.line}>
+                        {custom && <>
+                            <Input input={tailAmount} placeholder='Amount' className={styles.input} />
+                                
+                            <button 
+                                className={`${styles.button} ${isTailWait? styles.open : null}`} 
+                                onClick={() => { tailHandler() }}
+                                data-type="accept"
+                            >
+                                PTail
+                            </button>
+                        </>}
+
+                        {!custom && <>
+                            <button 
+                                className={`${styles.button}`} 
+                                onClick={() => { setCustom(true) }}
+                                data-type="accept"
+                            >
+                                PTCustom
+                            </button>
+                        </>}
+                    </div>}
                 </div>
             </div>
             <div className={styles.excel}>

@@ -54,6 +54,7 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
 async function refresh(id) {               
     const payment = await get(id)
     if(payment.status === Const.payment.statusList.REJECT) { return }  
+    if(!!payment.tailId) { return }  
 
     const invoiceList = await invoiceListByPayment(id)
     const tails = await Tail.list(id)
@@ -160,15 +161,18 @@ async function refresh(id) {
     return await save(payment)
 }
 
-async function pushTail(user, id, amount) {       
+async function pushTail(user, id, amount, auto=false) {       
+    console.log(auto)
+    
     const payment = user? await getByUser(user, id) : await get(id)
 
     const invoiceList = await invoiceListByPayment(id)
 
     // if(payment.isTail) { throw Exception.cantPushTail }
     if(!!invoiceList.active.length && !payment.isAllValidOk) { throw Exception.cantPushTail }
+    if(auto && payment.currentAmount <= 0) { throw Exception.invalidAmount }
 
-    const tail = await Tail.create(payment.card, amount, payment._id)
+    const tail = await Tail.create(payment.card, auto? payment.currentAmount : amount, payment._id)
     if(tail) { payment.tails.push(tail._id) }
     
     await save(payment)

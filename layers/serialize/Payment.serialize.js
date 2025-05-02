@@ -32,7 +32,8 @@ const get = (req, _, next) => {
 const push = (req, _, next) => {   
     req.body = { 
         id: req.body.id, 
-        amount: req.body.amount
+        amount: req.body.amount,
+        auto: req.body.auto
     }
 
     next()
