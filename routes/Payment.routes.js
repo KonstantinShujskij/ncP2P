@@ -133,7 +133,10 @@ router.post('/order/update',
         const {id, status} = req.body 
         console.log('----- Close in NcAPi', id, status)
         
-        try { await Tail.close(id, status) }
+        try { 
+            const paymentId = await Tail.close(id, status) 
+            await Payment.refresh(paymentId)
+        }
         catch(error) {
             console.log('----- error in save payment with NcApi')
             console.log(error)

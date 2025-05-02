@@ -5,9 +5,7 @@ const { makeOrder } = require('@utils/NcApi')
 
 async function create(card, amount, payment) {         
     const tail = new Tail({ amount, card, payment })
-    await save(tail)
-
-    
+    await save(tail)   
 
     makeOrder(card, amount, payment, async (invoice) => {
         try {
