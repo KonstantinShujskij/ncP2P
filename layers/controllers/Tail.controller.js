@@ -26,23 +26,15 @@ async function create(card, amount, payment) {
 }
 
 async function close(tailId, status) {   
-    console.log(tailId, status)
+    const tail = await Tail.findOne({ tailId })
+    if(!tail) { throw Exception.notFind }
+    if(tail.status === Const.tail.statusList.CONFIRM || tail.status === Const.tail.statusList.REJECT) { throw Exception.notFind }
+    
+    if(status === 'CONFIRM') { tail.status = Const.tail.statusList.CONFIRM } 
+    if(status === 'REJECT') { tail.status = Const.tail.statusList.REJECT } 
 
-    try {
-        const tail = await Tail.findOne({ tailId })
-        if(!tail) { throw Exception.notFind }
-        if(tail.status === Const.tail.statusList.CONFIRM || tail.status === Const.tail.statusList.REJECT) { throw Exception.notFind }
-        
-        if(status === 'CONFIRM') { tail.status = Const.tail.statusList.CONFIRM } 
-        if(status === 'REJECT') { tail.status = Const.tail.statusList.REJECT } 
-
-        await save(tail)
-        return tail.payment
-    }
-    catch(error) {
-        console.log(error)        
-    }
-
+    await save(tail)
+    return tail.payment
 }
 
 async function list(payment) {       

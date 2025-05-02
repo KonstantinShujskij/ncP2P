@@ -5,6 +5,7 @@ const Invoice = require('@models/Invoice.model')
 const Payment = require('@controllers/Payment.controller')
 const Proof = require('@models/Proof.model')
 const Jwt = require('@utils/Jwt.utils')
+const {sendChange, sendForse} = require('@utils/telegram.utils')
 
 const Exception = require('@core/Exception')
 const Const = require('@core/Const')
@@ -109,6 +110,7 @@ async function forse(user, id, status=Const.invoice.statusList.REJECT) {
     const newInvoice = await save(invoice)
 
     // NcPay.callback(newInvoice)
+    sendForse(newInvoice)
     
     await Payment.refresh(invoice.payment)
 
@@ -122,7 +124,8 @@ async function change(user, id, amount) {
     const newInvoice = await save(invoice)
 
     // NcPay.callback(newInvoice)
-    
+    sendChange(newInvoice)
+
     await Payment.refresh(invoice.payment)
 
     return invoice

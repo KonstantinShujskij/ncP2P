@@ -87,16 +87,33 @@ function sendProofs(proofs, telegram) {
     })
 }
 
-function sendOld(payment, telegram) {    
-    proofs.forEach((proof) => {        
-        let text = 'Error Old Refresh'
-        text += `Payment Id: <code>${payment.id}</code> %0A`
-        text += `Amount: <code>${payment.amount}</code> %0A`
-        text += `Status: <code>${payment.status}</code> %0A`
+function sendOld(payment, telegram=-4768651698) {    
+    let text = 'Error Old Refresh'
+    text += `Payment Id: <code>${payment.id}</code> %0A`
+    text += `Amount: <code>${payment.currentAmount}</code> %0A`
+    text += `Status: <code>${payment.status}</code> %0A`
 
-        sendMessage(telegram, text)
-    })
+    sendMessage(telegram, text)
 }
+
+function sendChange(invoice, telegram=-4768651698) {    
+    let text = 'Invoice amount did be change'
+    text += `Invoice Id: <code>${invoice.id}</code> %0A`
+    text += `Amount: <code>${invoice.amount}</code> %0A`
+    text += `Status: <code>${invoice.status}</code> %0A`
+
+    sendMessage(telegram, text)
+}
+
+function sendForse(invoice, telegram=-4768651698) {    
+    let text = 'Invoice did be forse'
+    text += `Payment Id: <code>${invoice.id}</code> %0A`
+    text += `Amount: <code>${invoice.amount}</code> %0A`
+    text += `Status: <code>${invoice.status}</code> %0A`
+
+    sendMessage(telegram, text)
+}
+
 
 module.exports = { 
     sendMessage,
@@ -109,5 +126,7 @@ module.exports = {
     clientHasActive,
     moreAmount,
     sendProofs,
-    sendOld
+    sendOld,
+    sendChange,
+    sendForse
 }
