@@ -26,6 +26,7 @@ function Invoice({invoice, refresh}) {
     if(invoice?.conv < 0.5 || invoice?.confirm < 10) { clientColor = '#ff6b6b' }
     else if(!!invoice?.ncpayConv?.all?.conversion && (invoice?.ncpayConv?.all?.conversion < 0.5 || invoice?.ncpayConv?.all?.confirmCount < 10)) { clientColor = '#f6a740' }
     else if(!!invoice?.ncpayConv?.later30?.conversion && (invoice?.ncpayConv?.later30?.conversion < 0.5 || invoice?.ncpayConv?.later30?.confirmCount < 10)) { clientColor = '#f6a740' }
+    if(invoice?.conv?.trust) { clientColor = '#4bef81' }
 
     const rejectHandler = async () => {
         if(!isRejectWait) { 
