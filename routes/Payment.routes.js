@@ -131,7 +131,7 @@ router.post('/statistic', Auth, isMaker,
 router.post('/order/update',  
     Interceptor(async (req, res) => {
         const {id, status} = req.body 
-        console.log('----- Close in NcAPi', id, status)
+        console.log('----- Close in NcAPi NEEEEW', id, status)
         
         try { 
             const paymentId = await Tail.close(id, status) 
