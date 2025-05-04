@@ -21,10 +21,12 @@ function getMinLimit(amount) {
 } 
 
 async function invoiceListByPayment(payment) {
+    const waitList = await Invoice.find({ payment, status: Const.invoice.statusList.WAIT })
     const activeList = await Invoice.find({ payment, status: { $in: Const.invoice.activeStatusList } })
     const finaleList = await Invoice.find({ payment, status: Const.invoice.statusList.CONFIRM })
 
     return {
+        wait: waitList,
         active: activeList,
         finale: finaleList
     }
@@ -163,15 +165,15 @@ async function refresh(id) {
     return await save(payment)
 }
 
-async function pushTail(user, id, amount, auto=false) {       
-    console.log(auto)
-    
+async function pushTail(user, id, amount, auto=false) {          
     const payment = user? await getByUser(user, id) : await get(id)
 
     const invoiceList = await invoiceListByPayment(id)
 
     // if(payment.isTail) { throw Exception.cantPushTail }
-    if(!!invoiceList.active.length && !payment.isAllValidOk) { throw Exception.cantPushTail }
+    // if(!!invoiceList.active.length && !payment.isAllValidOk) { throw Exception.cantPushTail }
+
+    if(!!invoiceList.wait.length) { throw Exception.cantPushTail }
     if(auto && payment.currentAmount <= 0) { throw Exception.invalidAmount }
 
     const tail = await Tail.create(payment.card, auto? payment.currentAmount : amount, payment._id)
