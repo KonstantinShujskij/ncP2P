@@ -74,6 +74,9 @@ function Dashboard() {
         <span className={styles.item}>totalInitialConfirm: <Copy value={data?.payment?.totalInitialConfirm || 0} label={data?.payment?.totalInitialConfirm || 0} /></span>
         <span className={styles.item}>avarageSum: <Copy value={data?.payment?.avarageSum || 0} label={data?.payment?.avarageSum || 0} /></span>
         <span className={styles.item}>overPayments: <Copy value={data?.payment?.overPayments || 0} label={data?.payment?.overPayments?.toFixed(2) || 0} /></span>
+        <span className={styles.item}>totalReject: <Copy value={data?.payment?.totalReject || 0} label={data?.payment?.totalReject || 0} /></span>
+        <span className={styles.item}>total with out Reject: <Copy value={data?.payment?.totalNoReject || 0} label={data?.payment?.totalNoReject || 0} /></span>
+        <span className={styles.item}>total USDT: <Copy value={data?.payment?.totalUSDT || 0} label={data?.payment?.totalUSDT?.toFixed(2) || 0} /></span>
       </div>
 
       <h1>Auto</h1>

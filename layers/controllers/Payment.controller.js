@@ -333,11 +333,15 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
             countConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: 1, else: 0 }}},
 
             total: { $sum: '$amount'},
+            totalInitial: { $sum: '$initialAmount'},
             totalConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$amount', else: 0 }}},
             totalInitialConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$initialAmount', else: 0 }}},
 
             totalBlocked: { $sum: { $cond: { if: { $eq: ['$status', "BLOCKED"] }, then: '$currentAmount', else: 0 }}},
-            totalInitialBlocked: { $sum: { $cond: { if: { $eq: ['$status', "BLOCKED"] }, then: '$initialAmount', else: 0 }}},
+            totalUSDT: { $sum: { $cond: { if: { $or: [{$eq: ['$course', 0]}, {$eq: ['$status', "REJECT"]}] }, then: 0, else: { $divide: ['$amount', "$course" ] } }}},
+
+            totalReject: { $sum: { $cond: { if: { $eq: ['$status', "REJECT"] }, then: '$initialAmount', else: 0 }}},
+            totalConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$amount', else: 0 }}},
 
             dt: { $sum: '$dt' }
         }},
@@ -348,12 +352,16 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
             conversion: { $divide: [ "$countConfirm", "$count" ] },
 
             total: 1,
+            totalInitial: 1,
             totalConfirm: 1,
             totalInitialConfirm: 1,
 
             totalBlocked: 1,
             totalInitialBlocked: 1,
 
+            totalReject: 1,
+            totalUSDT: 1,
+        
             dt: 1,
         }}
     ]) 
@@ -366,6 +374,10 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     let totalInitialConfirm = 0
     let avarageTime = 0
     let avarageSum = 0
+    let totalInitial = 0
+    let totalReject = 0
+    let totalNoReject = 0
+    let totalUSDT = 0
 
     let totalInitialBlocked = 0
     let totalBlocked = 0
@@ -382,6 +394,10 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         totalBlocked += item.totalBlocked
         totalInitialBlocked += item.totalInitialBlocked
 
+        totalReject += item.totalReject
+        totalInitial += item.totalInitial
+        totalUSDT += item.totalUSDT
+
         avarageTime += item.dt
     })   
 
@@ -389,6 +405,7 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
     avarageTime = avarageTime / (count || 1)
     avarageSum = totalConfirm / (confirmCount || 1)
     overPayments = totalInitialConfirm - totalConfirm + totalBlocked
+    totalNoReject = totalInitial - totalReject
         
     return {
         count,
@@ -399,7 +416,10 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
         totalInitialConfirm,
         avarageSum,
         avarageTime,
-        overPayments
+        overPayments,
+        totalReject,
+        totalNoReject,
+        totalUSDT
     }
     
     //data

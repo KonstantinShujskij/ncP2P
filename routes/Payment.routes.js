@@ -114,7 +114,6 @@ router.post('/tails', Auth, Validate.get, Serialise.get,
     })
 )
 
-
 router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {
         const { start, stop } = req.body
