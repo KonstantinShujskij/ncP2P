@@ -50,9 +50,12 @@ router.post('/login', Validate.login, Serialise.twoFA,
 )
 
 router.post('/maker-list', Auth, Interceptor(async (req, res) => {
-    const auth = await User.list(Const.userAccess.MAKER)
+    const makersList = await User.list(Const.userAccess.MAKER)
+    const adminsList = await User.list(Const.userAccess.ADMIN)
 
-    res.status(201).json(auth)
+    log
+
+    res.status(201).json([...makersList, ...adminsList])
 })) 
 
 router.post('/autoStatistic', Auth, isMaker,
