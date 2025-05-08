@@ -53,8 +53,6 @@ router.post('/maker-list', Auth, Interceptor(async (req, res) => {
     const makersList = await User.list(Const.userAccess.MAKER)
     const adminsList = await User.list(Const.userAccess.ADMIN)
 
-    log
-
     res.status(201).json([...makersList, ...adminsList])
 })) 
 
