@@ -338,7 +338,7 @@ async function getStatistics(user, timestart=0, timestop=Infinity, format="%Y-%m
             totalInitialConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$initialAmount', else: 0 }}},
 
             totalBlocked: { $sum: { $cond: { if: { $eq: ['$status', "BLOCKED"] }, then: '$currentAmount', else: 0 }}},
-            totalUSDT: { $sum: { $cond: { if: { $or: [{$eq: ['$course', 0]}, {$eq: ['$status', "REJECT"]}] }, then: 0, else: { $divide: ['$amount', "$course" ] } }}},
+            totalUSDT: { $sum: { $cond: { if: { $or: [{$eq: ['$course', 0]}, {$eq: ['$status', "REJECT"]}] }, then: 0, else: { $divide: ['$initialAmount', "$course" ] } }}},
 
             totalReject: { $sum: { $cond: { if: { $eq: ['$status', "REJECT"] }, then: '$initialAmount', else: 0 }}},
             totalConfirm: { $sum: { $cond: { if: { $eq: ['$status', "SUCCESS"] }, then: '$amount', else: 0 }}},
