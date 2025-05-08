@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styles from './Dashboard.module.css'
 import usePaymentApi from '../../API/payment.api'
@@ -8,6 +8,7 @@ import Copy from '../../components/UI/copy'
 import Input from '../../components/UI/Input'
 import useInput from '../../hooks/input.hook'
 import { getTimestamp } from '../../utils'
+import Maker from './Maker/Maker'
 
 
 function Dashboard() {
@@ -16,7 +17,9 @@ function Dashboard() {
   const userApi = useUserApi()
 
   const [data, setData] = useState(null)
-
+  const [triger, setTriger] = useState(false)
+  const [makers, setMakers] = useState([])
+  
   const min = useInput(null)
   const max = useInput(null)
 
@@ -27,6 +30,8 @@ function Dashboard() {
     const paymentData = await paymentApi.getStatistics(start, stop)
     const invoiceData = await invoiceApi.getStatistics(start, stop)
     const autoData = await userApi.getAutoStatistics(start, stop)
+
+    setTriger(!triger)
 
     if(paymentData?.conversion) { paymentData.conversion = paymentData.conversion.toFixed(2) }
     if(paymentData?.avarageSum) { paymentData.avarageSum = paymentData.avarageSum.toFixed(2) }
@@ -39,6 +44,14 @@ function Dashboard() {
       autoData: autoData
     })
   }
+
+  useEffect(() => { 
+    const load = async () => {
+    setMakers(await userApi.MakerList()) 
+    }
+
+    load()
+  }, [])
 
 
   return (
@@ -77,6 +90,10 @@ function Dashboard() {
         <span className={styles.item}>totalReject: <Copy value={data?.payment?.totalReject || 0} label={data?.payment?.totalReject || 0} /></span>
         <span className={styles.item}>total with out Reject: <Copy value={data?.payment?.totalNoReject || 0} label={data?.payment?.totalNoReject || 0} /></span>
         <span className={styles.item}>total USDT: <Copy value={data?.payment?.totalUSDT || 0} label={data?.payment?.totalUSDT?.toFixed(2) || 0} /></span>
+      </div>
+
+      <div className={styles.row}>
+        {makers.map((maker) => <Maker maker={maker.accessId} start={min.value} stop={max.value} name={maker.login} triger={triger} key={maker.id} />)}
       </div>
 
       <h1>Auto</h1>

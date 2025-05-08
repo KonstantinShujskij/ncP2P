@@ -10,7 +10,7 @@ const Format = require('@format/User.format')
 const User = require('@controllers/User.controller')
 const Log = require('@controllers/Log.controller')
 const { Auth, isAdmin, isMaker, isSupport } = require('@middleware/auth.middleware')
-
+const Const = require('@core/Const')
 
 const router = Router()
 
@@ -48,6 +48,12 @@ router.post('/login', Validate.login, Serialise.twoFA,
         res.status(200).json({ token, userId: user._id, access: user.access })
     })
 )
+
+router.post('/maker-list', Auth, Interceptor(async (req, res) => {
+    const auth = await User.list(Const.userAccess.MAKER)
+
+    res.status(201).json(auth)
+})) 
 
 router.post('/autoStatistic', Auth, isMaker,
     Interceptor(async (req, res) => {

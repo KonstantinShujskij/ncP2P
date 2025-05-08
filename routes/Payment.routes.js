@@ -14,6 +14,7 @@ const BlackList = require('@controllers/BlackList.controller')
 const Tail = require('@controllers/Tail.controller')
 
 const Exception = require('@core/Exception')
+const { toObjectId } = require('@utils/utils')
 
 
 const router = Router()
@@ -116,12 +117,15 @@ router.post('/tails', Auth, Validate.get, Serialise.get,
 
 router.post('/statistic', Auth, isMaker,
     Interceptor(async (req, res) => {
-        const { start, stop } = req.body
+        const { start, stop, accessId } = req.body
+        
+        let options = {}
+        if(accessId) { options = { accessId: toObjectId(accessId) } }
 
         const startTime = start? parseInt(start) : 0
         const stopTime = stop? parseInt(stop) : Date.now()
 
-        const data = await Payment.getStatistics(req.user, startTime, stopTime)
+        const data = await Payment.getStatistics(req.user, startTime, stopTime, options)
 
         res.status(200).json(data)
     })

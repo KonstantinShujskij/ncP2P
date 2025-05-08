@@ -63,8 +63,8 @@ export default function usePaymentApi() {
         catch(error) { return [] } 
     }
 
-    const getStatistics = async (start, stop) => {       
-        try { return await protectedRequest('api/payment/statistic', {start, stop}) }
+    const getStatistics = async (start, stop, accessId=null) => {       
+        try { return await protectedRequest('api/payment/statistic', {start, stop, accessId }) }
         catch(error) { return null } 
     }
 
