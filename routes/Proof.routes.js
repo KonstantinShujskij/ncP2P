@@ -52,7 +52,7 @@ router.post('/create-host-file', file.single('kvit'), Validate.get, Serialise.ho
     })
 )
 
-router.post('/decline', Auth, isSupport, Validate.decline, Serialise.decline, 
+router.post('/decline', Auth, Validate.decline, Serialise.decline, 
     Interceptor(async (req, res) => {
         const proof = await Proof.decline(req.body.id)
 
@@ -60,7 +60,7 @@ router.post('/decline', Auth, isSupport, Validate.decline, Serialise.decline,
     })
 )
 
-router.post('/accept', Auth, isSupport, Validate.approve, Serialise.approve,
+router.post('/accept', Auth, Validate.approve, Serialise.approve,
     Interceptor(async (req, res) => {
         const { kvitNumber } = req.body   
         if(/[^\x00-\x7F]/.test(kvitNumber)) { throw Exception.invalidValue }
@@ -71,7 +71,7 @@ router.post('/accept', Auth, isSupport, Validate.approve, Serialise.approve,
     })
 )
 
-router.post('/manual', Auth, isSupport, Validate.decline, Serialise.decline,
+router.post('/manual', Auth, Validate.decline, Serialise.decline,
     Interceptor(async (req, res) => {        
         const proof = await Proof.manual(req.body.id)        
 
@@ -79,7 +79,7 @@ router.post('/manual', Auth, isSupport, Validate.decline, Serialise.decline,
     })
 )
 
-router.post('/recheck', Auth, isSupport, Validate.recheck, Serialise.recheck,
+router.post('/recheck', Auth, Validate.recheck, Serialise.recheck,
     Interceptor(async (req, res) => {        
         const { id, bank, number } = req.body     
         if(/[^\x00-\x7F]/.test(number)) { throw Exception.invalidValue }

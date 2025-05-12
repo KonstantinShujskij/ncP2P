@@ -123,7 +123,7 @@ function Proof({proof, refresh}) {
                 }
             </div>
             <div className={styles.excel}>
-                {(access === 'ADMIN' || access === 'SUPPORT') && (proof.status === 'WAIT' || proof.status === 'MANUAL') 
+                {(access === 'ADMIN' || access === 'SUPPORT' || access === 'MAKER') && (proof.status === 'WAIT' || proof.status === 'MANUAL') 
                  && !wait && 
                  (
                     <div className={styles.action}>
