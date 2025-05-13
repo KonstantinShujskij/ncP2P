@@ -20,6 +20,9 @@ const router = Router()
 //
 router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
+        const ip = req.header('x-forwarded-for') || req.socket.remoteAddress
+        console.log('------------- ip created', ip)        
+
         const invoice = await Invoice.create(req.body)
         
         const hash = Jwt.generateLinkJwt(invoice._id)
