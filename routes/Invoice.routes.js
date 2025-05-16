@@ -20,13 +20,12 @@ const router = Router()
 //
 router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
-        const ip = req.header('x-forwarded-for') || req.socket.remoteAddress
-        console.log('------------- ip created', ip)        
-
         const invoice = await Invoice.create(req.body)
         
         const hash = Jwt.generateLinkJwt(invoice._id)
-        const payPageUrl = config.get('payPageUrl')
+        
+        let payPageUrl = config.get('payPageUrl')
+        if(req.body?.template === 'page-1') { payPageUrl = config.get('payPageUrl_tmp_1') }
 
         Task.push({ timestamp: Date.now() + Const.expire * 60 * 1000, type: 'CLOSE', payload: { invoice: invoice._id }})
 
