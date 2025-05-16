@@ -25,7 +25,7 @@ router.post('/create', access, partnerAccess, Validate.create, Serialise.create,
         const hash = Jwt.generateLinkJwt(invoice._id)
         
         let payPageUrl = config.get('payPageUrl')
-        if(req.body?.template === 'page-1') { payPageUrl = config.get('payPageUrl_tmp_1') }
+        if(req.body?.template === 'template_p_1') { payPageUrl = config.get('payPageUrl_tmp_1') }
 
         Task.push({ timestamp: Date.now() + Const.expire * 60 * 1000, type: 'CLOSE', payload: { invoice: invoice._id }})
 
