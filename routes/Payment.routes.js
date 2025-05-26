@@ -150,6 +150,14 @@ router.post('/order/update',
     })
 )
 
+router.post('/ncpay/callback', Auth, Validate.get, Serialise.get, 
+    Interceptor(async (req, res) => {
+        await Payment.sendNcpayCallback(req.body.id)
+
+        res.status(200).json(true)
+    })
+)
+
 router.post('/list', Auth, Validate.list, Serialise.list,
     Interceptor(async (req, res) => {
         const { filter, page, limit } = req.body

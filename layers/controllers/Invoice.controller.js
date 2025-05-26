@@ -77,7 +77,7 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {
     const { conv, confirm } = await getConv(client)
     
     let payment = null
-    if(Math.random() > 0) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
+    if(Math.random() > Const.invoice.ncPayRandom) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
     if(!payment) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.DEFAULT, conv, confirm }) }
     if(!payment) { throw Exception.notFind }
 
@@ -138,7 +138,7 @@ async function finalize(user, id, status=Const.invoice.statusList.REJECT, stopCa
     invoice.status = status
     const newInvoice = await save(invoice)
 
-    if(!stopCallback) { NcPay.callback(newInvoice) }
+    if(!stopCallback) { NcPay.invoiceCallback(newInvoice) }
     
     await Payment.refresh(invoice.payment)
 
@@ -194,7 +194,7 @@ async function close(id, amount) {
     }
 
     console.log('SEND CUSTOM CALLBACK')
-    NcPay.callback({_doc: {...invoice, amount: invoice.amount + available, status: Const.invoice.statusList.CONFIRM }})
+    NcPay.invoiceCallback({_doc: {...invoice, amount: invoice.amount + available, status: Const.invoice.statusList.CONFIRM }})
     moreAmount(invoice, amount)
     
     await changeAmount(id, amount)    

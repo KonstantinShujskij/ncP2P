@@ -154,6 +154,11 @@
     min-width: 80px;
 }
 
+.action {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
 .priority {
     display: block;

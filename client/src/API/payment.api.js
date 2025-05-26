@@ -33,6 +33,11 @@ export default function usePaymentApi() {
         catch(error) { return null } 
     }
 
+    const ncPayCallback = async (id) => {       
+        try { return await protectedRequest('api/payment/ncpay/callback', {id}) }
+        catch(error) { return null } 
+    }
+
     const freeze = async (id) => {       
         try { return await protectedRequest('api/payment/freeze', {id}) }
         catch(error) { return null } 
@@ -81,6 +86,7 @@ export default function usePaymentApi() {
         getTails,
 
         togglePriority,
-        getStatistics
+        getStatistics,
+        ncPayCallback
     }
 }

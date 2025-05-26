@@ -32,6 +32,7 @@ const admin = (payment) => ({
     isOneValid: payment.isOneValid,
     isAllValidOk: payment.isAllValidOk,
     priority: payment.priority,
+    filter: payment.filter,
     
     createdAt: payment.createdAt
 })

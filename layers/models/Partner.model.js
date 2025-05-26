@@ -1,3 +1,4 @@
+const Const = require('@core/Const')
 const {Schema, model, Types} = require('mongoose')
 
 const schema = new Schema({
@@ -8,9 +9,9 @@ const schema = new Schema({
     whiteList: [],
 
     paymentMinLimit: {
-        default: {type: Number, default: 0},
-        customLimit: {type: Number, default: 10000},
-        persent: {type: Number, default: 0.05}
+        default: {type: Number, default: Const.payment.minLimit.default},
+        customLimit: {type: Number, default: Const.payment.minLimit.customLimit},
+        persent: {type: Number, default: Const.payment.minLimit.persent}
     }
 })
 

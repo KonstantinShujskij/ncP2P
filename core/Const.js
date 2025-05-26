@@ -24,6 +24,7 @@ module.exports = {
         statusList: { WAIT: 'WAIT', VALID: 'VALID', CONFIRM: 'CONFIRM', REJECT: 'REJECT' },
         activeStatusList: [ 'VALID', 'WAIT' ],
         finaleStatusList: [ 'CONFIRM', 'REJECT' ],
+        ncPayRandom: 0.5
     },
 
     proof: {

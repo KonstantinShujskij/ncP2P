@@ -28,12 +28,26 @@ function Payment({payment, refresh}) {
 
     const tailAmount = useInput()
     
+    const [isCallback, setIsCallback] = useState(false)
     const [isWaitFreeze, setIsWaitFreeze] = useState(false)
     const [isRejectWait, setIsRejectWait] = useState(false)
     const [isTailWait, setIsTailWait] = useState(false)
     const [isTailDefaultWait, setIsTailDefaultWait] = useState(false)
 
     const [custom, setCustom] = useState(false)
+
+    const callbackHandler = async () => {
+        if(!isCallback) { 
+            setIsTailWait(false)
+            setIsRejectWait(false)
+            setIsTailDefaultWait(false)
+
+            return setIsCallback(true) 
+        }
+
+        await paymentApi.ncPayCallback(payment.id) 
+        setIsCallback(false) 
+    }
 
     const freezeHandler = async () => {
         if(!isWaitFreeze) { 
@@ -209,6 +223,20 @@ function Payment({payment, refresh}) {
                                 Reject
                             </button>
                         </>}
+                    </div>
+
+                    <div className={styles.buttons} >
+                        {payment?.filter?.type === 'NCPAY' && payment.status !== "SUCCESS" && payment.status !== "REJECT" && 
+                            <>
+                                <button 
+                                    className={`${styles.button} ${isCallback? styles.open : null}`} 
+                                    onClick={() => callbackHandler()}
+                                    data-type="accept"
+                                >
+                                    Send To NcPay
+                                </button>
+                            </>
+                        }
                     </div>
 
                     {payment?.isFreeze  && (access === 'MAKER' || access === 'ADMIN') && <div className={styles.line}>

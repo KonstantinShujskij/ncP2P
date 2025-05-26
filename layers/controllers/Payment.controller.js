@@ -8,9 +8,9 @@ const Tail = require('@controllers/Tail.controller')
 const Partner = require('@controllers/Partner.controller')
 
 const { round } = require('@utils/utils')
-const { makeOrder } = require('@utils/NcApi')
 const config = require('config')
 const { sendOld } = require('@utils/telegram.utils')
+const { paymentCallback } = require('@utils/NcPay')
 // ---------- SUPPORT FUNCTION ----------
 
 function getMinLimit(amount, paymentMinLimit=Const.payment.minLimit) {
@@ -123,7 +123,9 @@ async function refresh(id) {
         payment.status = Const.payment.statusList.SUCCESS
         payment.amount = payment.initialAmount - currentAmount
 
-        return await save(payment)
+        await save(payment)
+
+        return paymentCallback(payment)
     }
 
     if(maxLimit >= minLimit && maxLimit >= Const.minInvoiceLimit) {      
@@ -204,6 +206,8 @@ async function reject(user, id) {
     payment.status = Const.payment.statusList.REJECT
 
     await save(payment)
+    paymentCallback(payment)
+
     return await refresh(payment._id)
 }
 
@@ -264,6 +268,12 @@ async function sendProofs(user, id) {
     
     return list
 }
+
+async function sendNcpayCallback(id) {        
+    const payment = await get(id)
+    paymentCallback({...payment?._doc, status: Const.payment.statusList.SUCCESS})
+}
+
 
 // ---------- GET BEST ----------
 
@@ -535,5 +545,6 @@ module.exports = {
     togglePriority,
     sendProofs,
 
-    getStatistics
+    getStatistics,
+    sendNcpayCallback
 }
