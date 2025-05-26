@@ -14,13 +14,16 @@ module.exports = {
             default: 500,
             customLimit: 10000,
             persent: 0.05
+        },
+        filter: {
+            types: { DEFAULT: 'DEFAULT', NCPAY: 'NCPAY' } 
         }
     },
 
     invoice: {
         statusList: { WAIT: 'WAIT', VALID: 'VALID', CONFIRM: 'CONFIRM', REJECT: 'REJECT' },
         activeStatusList: [ 'VALID', 'WAIT' ],
-        finaleStatusList: [ 'CONFIRM', 'REJECT' ]
+        finaleStatusList: [ 'CONFIRM', 'REJECT' ],
     },
 
     proof: {

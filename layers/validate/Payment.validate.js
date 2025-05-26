@@ -7,7 +7,8 @@ const create = [
     check('amount', 'invalidAmount').notEmpty().isFloat({ min: Const.minPaymentLimit, max: Const.maxPaymentLimit }),
     check('refId', 'invalidRefId').optional().isString(),
     check('partnerId', 'invalidRefId').optional().isString(),
-    check('course', 'invalidValue').optional().isFloat({ min: 0 })
+    check('course', 'invalidValue').optional().isFloat({ min: 0 }),
+    check('filter', 'invalidValue').optional().isObject()
 ]
 
 const block = [

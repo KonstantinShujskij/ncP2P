@@ -5,6 +5,7 @@ const Payment = require('@models/Payment.model')
 const Invoice = require('@models/Invoice.model')
 const Proof = require('@models/Proof.model')
 const Tail = require('@controllers/Tail.controller')
+const Partner = require('@controllers/Partner.controller')
 
 const { round } = require('@utils/utils')
 const { makeOrder } = require('@utils/NcApi')
@@ -12,12 +13,12 @@ const config = require('config')
 const { sendOld } = require('@utils/telegram.utils')
 // ---------- SUPPORT FUNCTION ----------
 
-function getMinLimit(amount) {
-    if(amount < Const.payment.minLimit.customLimit) { 
-        return Const.payment.minLimit.default
+function getMinLimit(amount, paymentMinLimit=Const.payment.minLimit) {
+    if(amount < paymentMinLimit.customLimit) { 
+        return paymentMinLimit.default
     }
 
-    return round(amount * Const.payment.minLimit.persent, 100)
+    return round(amount * paymentMinLimit.persent, 100)
 } 
 
 async function invoiceListByPayment(payment) {
@@ -34,11 +35,13 @@ async function invoiceListByPayment(payment) {
 
 // ---------- MAIN ----------
 
-async function create({ accessId, author }, { card, amount, refId, partnerId, course }) {    
+async function create({ accessId, author }, { card, amount, refId, partnerId, course, filter }) {    
     const isExist = refId && !!(await Payment.findOne({ refId }))
     if(isExist) { throw Exception.isExist }
 
-    const minLimit = getMinLimit(amount)
+    const partner = await Partner.get(accessId)
+
+    const minLimit = getMinLimit(amount, partner.paymentMinLimit)
     const maxLimit = amount > Const.minNcApiLimit? amount - Const.minNcApiLimit : minLimit
     
     const payment = new Payment({ 
@@ -50,6 +53,8 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
         minLimit, maxLimit,
     })
 
+    if(filter) { payment.filter = filter }
+
     return await save(payment)
 }
 
@@ -60,6 +65,7 @@ async function refresh(id) {
     if(payment.status === Const.payment.statusList.REJECT) { return }  
     if(!!payment.tailId) { return sendOld(payment) }  
 
+    const partner = await Partner.get(payment.accessId)
     const invoiceList = await invoiceListByPayment(id)
     const tails = await Tail.list(id)
 
@@ -100,7 +106,7 @@ async function refresh(id) {
     const isWait = !!invoiceList.active.length || isTail
 
     const currentAmount = payment.initialAmount - tailAmount - finaleAmount - waitAmount    
-    const minLimit = getMinLimit(payment.initialAmount)
+    const minLimit = getMinLimit(payment.initialAmount, partner.paymentMinLimit)
     const maxLimit = currentAmount - Const.minNcApiLimit
 
     payment.currentAmount = currentAmount
@@ -261,49 +267,72 @@ async function sendProofs(user, id) {
 
 // ---------- GET BEST ----------
 
-async function getBestByEqual(amount) {        
-    const list = await Payment.find({ 
+async function getBestByEqual(amount, filter=null) {        
+    const options = { 
         status: Const.payment.statusList.ACTIVE, 
         currentAmount: amount, 
         isRefresh: true,
         isTail: false,
-        isFreeze: false
-    }).sort({ createdAt: 1 })
+        isFreeze: false,
+        //$expr: { $eq: [{ $mod: [ amount, '$filter.round' ]}, 0] }
+    }
 
-    return list.length? list[0] : null
+    if(filter) {
+        if(filter.type) { options['filter.type'] = filter.type }
+
+        options['filter.conv'] = { $lte: (filter.conv || 0) }
+        options['filter.confirm'] = { $lte: (filter.confirm || 0) }
+    }
+
+    const [best] = await Payment.aggregate([
+        { $match: options },
+        { $sort:  { createdAt: 1 } },
+        { $limit: 1 }
+    ])
+
+    return best || null
 }
 
-async function getBestByLimits(amount) {    
+async function getBestByLimits(amount, filter=null) {    
     const options = { 
         status: Const.payment.statusList.ACTIVE,
         isFreeze: false,
         minLimit: { $lte: amount }, 
-        maxLimit: { $gte: amount }
+        maxLimit: { $gte: amount },
+        $expr: { $eq: [{ $mod: [ amount, '$filter.round' ]}, 0] }
+    }    
+
+    if(filter) {
+        if(filter.type) { options['filter.type'] = filter.type }
+
+        options['filter.conv'] = { $lte: (filter.conv || 0) }
+        options['filter.confirm'] = { $lte: (filter.confirm || 0) }
     }
 
-    const list = await Payment.aggregate([
+    const [best] = await Payment.aggregate([
         {$match: options},
         {$addFields: { delta: { $subtract: ["$maxLimit", amount] }}},
-        {$sort: { priority: -1, createdAt: 1 }}
+        {$sort: { priority: -1, createdAt: 1 }},
+        {$limit: 1}
     ])
 
-    return list.length? list[0] : null
+    return best || null
 }
 
-async function getBest(amount) {    
-    const equalBest = await getBestByEqual(amount)    
+async function getBest(amount, filter=null) {    
+    const equalBest = await getBestByEqual(amount, filter)    
     if(equalBest) { return await softGet(equalBest._id) }
 
-    const limitBest = await getBestByLimits(amount)
+    const limitBest = await getBestByLimits(amount, filter)
     if(limitBest) { return await softGet(limitBest._id) }
 
     return null
 }
 
-async function choiceBest(amount, step=0) {        
+async function choiceBest(amount, filter=null, step=0) {        
     if(step > Const.maxSaveRecursion) { return null }
     
-    const bestPayment = await getBest(amount)
+    const bestPayment = await getBest(amount, filter)
     if(!bestPayment) { return null }
 
     try {
@@ -311,8 +340,8 @@ async function choiceBest(amount, step=0) {
         return await save(bestPayment)
     }
     catch(error) {
-        console.log('----- Cant change best');
-        return choiceBest(amount, step + 1)
+        console.log('----- Cant change best')
+        return choiceBest(amount, filter, step + 1)
     }
 }
 
@@ -320,10 +349,7 @@ async function choiceBest(amount, step=0) {
 
 async function getStatistics(user, timestart=0, timestop=Infinity, options={}, format="%Y-%m-%d") {   
     if(user && user.access === Const.userAccess.MAKER) { options.accessId = user.accessId }
-
-    console.log(options);
     
-
     const data = await Payment.aggregate([
         { $match: { ...options, createdAt: { $gt: timestart, $lt: timestop } }},
         { $addFields: {
@@ -367,7 +393,7 @@ async function getStatistics(user, timestart=0, timestop=Infinity, options={}, f
         
             dt: 1,
         }}
-    ]) 
+    ])
     
     let count = 0
     let confirmCount = 0

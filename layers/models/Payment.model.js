@@ -35,6 +35,13 @@ const schema = new Schema({
     isFreeze: { type: Boolean, default: false },
     priority: { type: Boolean, default: false },
 
+    filter: {
+        type: { type: String, default: Const.payment.filter.types.DEFAULT },
+        conv: { type: Number, default: -1 },
+        confirm: { type: Number, default: -1 },
+        round: { type: Number, default: 1 }
+    },
+
     createdAt: { type: Number },
     updatedAt: { type: Number }
 }, {

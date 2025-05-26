@@ -1,3 +1,4 @@
+const Const = require('@core/Const')
 const Filter = require('@filter/Payment.filters')
 
 
@@ -7,7 +8,13 @@ const create = (req, _, next) => {
         amount: req.body.amount,
         refId: req.body.refId || '',
         partnerId: req.body.partnerId,
-        course: req.body.course || 0
+        course: req.body.course || 0,
+        filter: req.body.filter? {
+            type: req.body.filter.type || Const.payment.filter.types.DEFAULT,
+            conv: req.body.filter.conv || 0,
+            confirm: req.body.filter.confirm || 0,
+            round: req.body.filter.round || 1
+        } : null
     }
 
     next()

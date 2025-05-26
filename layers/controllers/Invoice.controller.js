@@ -74,11 +74,13 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {
     const testClients = ['test_client', '794_6311f3e40c3283cdb1d36a70', '881_680a4766a46c55d20a1decf9']
     if(isClientWait && !testClients.includes(client)) { throw Exception.clientHasActive }    
 
-    const payment = await Payment.choiceBest(amount)
-    if(!payment) { throw Exception.notFind }
-
     const { conv, confirm } = await getConv(client)
     
+    let payment = null
+    if(Math.random() > 0) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
+    if(!payment) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.DEFAULT, conv, confirm }) }
+    if(!payment) { throw Exception.notFind }
+
     const invoice = new Invoice({ 
         paymentAccessId: payment.accessId,
         refId, partnerId,
