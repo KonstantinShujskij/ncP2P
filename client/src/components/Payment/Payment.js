@@ -233,7 +233,7 @@ function Payment({payment, refresh}) {
                                     onClick={() => callbackHandler()}
                                     data-type="accept"
                                 >
-                                    Send To NcPay
+                                    Confirm Callback
                                 </button>
                             </>
                         }

@@ -28,6 +28,8 @@ router.post('/create', Validate.create, Serialise.crerate,
 router.post('/2fa', Validate.login, Serialise.login, 
     Interceptor(async (req, res) => {
         const { login, password } = req.body
+
+        console.log(login, password);
     
         const user = await User.verify(login, password)
         await User.twoFA(user._id)
