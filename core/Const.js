@@ -5,7 +5,7 @@ module.exports = {
     minInvoiceLimit: 500,
     maxInvoiceLimit: 30000,
     minNcApiLimit: 500,
-    smallLim: 1500,
+    smallLim: 900,
     maxTail: 100000,
     
     payment: {
@@ -24,7 +24,7 @@ module.exports = {
         statusList: { WAIT: 'WAIT', VALID: 'VALID', CONFIRM: 'CONFIRM', REJECT: 'REJECT' },
         activeStatusList: [ 'VALID', 'WAIT' ],
         finaleStatusList: [ 'CONFIRM', 'REJECT' ],
-        ncPayRandom: 0.5
+        ncPayRandom: 0.25
     },
 
     proof: {
