@@ -69,7 +69,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
-        type: payment?.filter?.type || Const.payment.filter.types.DEFAULT,
+        // type: payment?.filter?.type || Const.payment.filter.types.DEFAULT,
 
         kvitNumber: number,
         kvitFile: ''
@@ -122,7 +122,7 @@ async function createByFile(invoiceId, kvitFile='') {
         conv: invoice.conv,
         confirm: invoice.confirm,
         ncpayConv: invoice.ncpayConv,
-        type: payment?.filter?.type || Const.payment.filter.types.DEFAULT,
+        // type: payment?.filter?.type || Const.payment.filter.types.DEFAULT,
 
         paymentAccessId: payment.accessId,
         payment: invoice.payment,
