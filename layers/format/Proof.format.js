@@ -21,6 +21,7 @@ const admin = (proof) => ({
     kvitNumber: proof.kvitNumber,
     kvitFile: proof.kvitFile,
     fileLink: proof.fileLink,
+    type: proof.type,
 
     lastCheck: proof.lastCheck,
     isChecking: proof.isChecking,
@@ -44,6 +45,7 @@ const client = (proof) => ({
     id: proof._id,
     invoice: proof.invoice,
     status: proof.status,
+    type: proof.type,
 
     bank: proof.bank,
     amount: proof.amount,

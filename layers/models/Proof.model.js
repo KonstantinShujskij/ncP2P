@@ -40,6 +40,7 @@ const schema = new Schema({
 
     lastCheck: { type: Number, default: 0 },
     isChecking: { type: Boolean, default: false },
+    type: { type: Boolean, default: Const.payment.filter.types.DEFAULT },
 
     createdAt: { type: Number },
     updatedAt: { type: Number }

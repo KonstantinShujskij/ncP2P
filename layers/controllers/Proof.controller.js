@@ -69,6 +69,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
+        type: payment.filter.type || Const.payment.filter.types.DEFAULT,
 
         kvitNumber: number,
         kvitFile: ''
