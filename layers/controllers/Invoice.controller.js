@@ -204,7 +204,7 @@ async function close(id, amount) {
 async function pay(id) {
     const invoice = await getActive(id)
 
-    if(Date.now() - invoice.createdAt > 2 * 1000) { invoice.status = Const.invoice.statusList.VALID }
+    invoice.status = Const.invoice.statusList.VALID 
 
     const newInvoice = await save(invoice)
     await Payment.refresh(invoice.payment)
