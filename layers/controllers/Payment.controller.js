@@ -166,11 +166,23 @@ async function refresh(id) {
 
     //NCAPI
 
-    payment.status = Const.payment.statusList.BLOCKED
-    payment.isWait = true
-    payment.isFreeze = true
-    
-    return await save(payment)
+    if(!payment.tails.length && payment?.filter?.type === Const.payment.filter.types.NCPAY) { 
+        payment.status = Const.payment.statusList.BLOCKED
+        payment.isWait = true
+
+        const savePayment = await save(payment)
+
+        await pushTail(null, id, payment.currentAmount) 
+        
+        return savePayment
+    }
+    else {
+        payment.status = Const.payment.statusList.BLOCKED
+        payment.isWait = true
+        payment.isFreeze = true
+        
+        return await save(payment)
+    }
 }
 
 async function pushTail(user, id, amount, auto=false) {          
