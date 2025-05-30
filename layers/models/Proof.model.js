@@ -1,6 +1,5 @@
 const {Schema, model, Types} = require('mongoose')
-const Const = require('../../core/Const')
-const { lstat } = require('fs')
+const Const = require('@core/Const')
 
 
 const schema = new Schema({
@@ -40,7 +39,7 @@ const schema = new Schema({
 
     lastCheck: { type: Number, default: 0 },
     isChecking: { type: Boolean, default: false },
-    // type: { type: Boolean, default: Const.payment.filter.types.DEFAULT },
+    type: { type: String, default: Const.payment.filter.types.DEFAULT },
 
     createdAt: { type: Number },
     updatedAt: { type: Number }
