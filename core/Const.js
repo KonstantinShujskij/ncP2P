@@ -1,5 +1,5 @@
 module.exports = {
-    payTime: 30 * 60 * 1000,
+    payTime: 15 * 60 * 1000,
     minPaymentLimit: 500,
     maxPaymentLimit: 200000,
     minInvoiceLimit: 500,
