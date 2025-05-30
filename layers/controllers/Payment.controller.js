@@ -179,8 +179,10 @@ async function refresh(id) {
     else {
         payment.status = Const.payment.statusList.BLOCKED
         payment.isWait = true
-        payment.isFreeze = true
-        
+        if(payment?.filter?.type !== Const.payment.filter.types.NCPAY) { 
+            payment.isFreeze = true 
+        }
+
         return await save(payment)
     }
 }
