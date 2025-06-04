@@ -12,3 +12,15 @@
     display: flex;
     gap: 14px;
 }
+
+.users {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+    max-width: 100vw;
+    flex-wrap: wrap;
+}
+
+.user {
+    flex-shrink: 0;
+}

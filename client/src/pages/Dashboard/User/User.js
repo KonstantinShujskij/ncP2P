@@ -27,7 +27,7 @@ function User({user, start, stop, name, triger}) {
   useEffect(() => { load() }, [triger])
 
   return (
-    <div className={styles.main}>
+    <div className={styles.user}>
       <h1>{name}</h1>
       <div>
         <span className={styles.item}>FinalCount: <Copy value={data?.finalCount || 0} label={data?.finalCount || 0} /></span>

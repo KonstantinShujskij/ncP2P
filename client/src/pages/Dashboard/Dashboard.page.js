@@ -119,7 +119,7 @@ function Dashboard() {
         <span className={styles.item}>AvgValidOkToFinal: <Copy value={data?.proof?.avgValidOkToFinal || 0} label={data?.proof?.avgValidOkToFinal || 0} /></span>
       </div>
 
-      <div className={styles.row}>
+      <div className={styles.users}>
         {users.map((user) => <User user={user._id} start={min.value} stop={max.value} name={user.login} triger={triger} key={user._id} />)}
       </div>
     </div>
