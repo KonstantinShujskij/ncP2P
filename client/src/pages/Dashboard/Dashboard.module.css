@@ -24,3 +24,7 @@
 .user {
     flex-shrink: 0;
 }
+
+.hide {
+    display: none;
+}
