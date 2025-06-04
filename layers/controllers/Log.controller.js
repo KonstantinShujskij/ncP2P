@@ -40,9 +40,6 @@ async function getAutoStatistic(user, timestart=0, timestop=Infinity) {
             conversion: { $divide: [ "$countConfirm", "$count" ] },
         }}
     ]) 
-    
-    console.log(dataMono)
-    console.log(dataPrivat)
    
     return {
         mono: dataMono.length? dataMono[0] : null,

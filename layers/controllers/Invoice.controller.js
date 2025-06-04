@@ -165,6 +165,17 @@ async function toValidOk(user, id) {
     const newInvoice = await save(invoice)
     await Payment.refresh(invoice.payment)
 
+    try {
+        const proofs = await Proof.find({ invoice })
+        proofs.forEach(async (proof) => {
+            proof.toValidok = Date.now()
+            await proof.save()
+        })
+    }
+    catch(err) {
+        console.log(err)        
+    }
+
     return newInvoice
 }
 

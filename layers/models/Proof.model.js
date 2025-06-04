@@ -4,6 +4,7 @@ const Const = require('@core/Const')
 
 const schema = new Schema({
     paymentAccessId: { type: Types.ObjectId, ref: 'Partner' },
+    user: { type: Types.ObjectId, ref: 'User' },
 
     invoice: { type: Types.ObjectId, ref: 'Invoice' },
     invoiceRefId: { type: String, default: null },
@@ -42,7 +43,12 @@ const schema = new Schema({
     type: { type: String, default: Const.payment.filter.types.DEFAULT },
 
     createdAt: { type: Number },
-    updatedAt: { type: Number }
+    updatedAt: { type: Number },
+    
+    toConfirm: { type: Number, default: 0 },
+    toReject: { type: Number, default: 0 },
+    toManual: { type: Number, default: 0 },
+    toValidok: { type: Number, default: 0 },
 }, {
     timestamps: { currentTime: () => Date.now() }
 })

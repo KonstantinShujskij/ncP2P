@@ -142,7 +142,7 @@ async function createByFile(invoiceId, kvitFile='') {
     return proof
 }
 
-async function verify(id) {    
+async function verify(id, userId=null) {        
     const proof = await get(id)
     if(!proof.kvitNumber) { return }
     
@@ -174,10 +174,10 @@ async function verify(id) {
     proof.lastCheck = !!data? 1 : -1
     await save(proof)
 
-    return await complite(proof, data) 
+    return await complite(proof, data, userId) 
 }
 
-async function complite(proof, transaction) {
+async function complite(proof, transaction, userId=null) {
     console.log('COMPLIT PROOF')
     console.log(transaction)
     
@@ -186,7 +186,9 @@ async function complite(proof, transaction) {
     
     proof.kvitNumber = transaction?.kvitNumber?.toUpperCase()
     proof.amount = transaction.amount
-    proof.status = Const.proof.statusList.CONFIRM  
+    proof.status = Const.proof.statusList.CONFIRM 
+    proof.toConfirm = Date.now() 
+    if(userId) { proof.user = userId }
 
     if(transaction.card) {
         const payment = await Payment.get(proof.payment)
@@ -250,14 +252,15 @@ async function gpt(id) {
     return true
 }
 
-
 // ---------- SUPPORT ------------
 
-async function decline(id) {
+async function decline(id, userId) {
     const proof = await get(id)
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
     proof.status = Const.proof.statusList.REJECT
+    proof.toReject = Date.now()
+    proof.user = userId
 
     return await save(proof)
 }
@@ -267,12 +270,15 @@ async function manual(id) {
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
     if(proof.status === Const.proof.statusList.MANUAL) { proof.status = Const.proof.statusList.WAIT }
-    else if(proof.status === Const.proof.statusList.WAIT) { proof.status = Const.proof.statusList.MANUAL }
+    else if(proof.status === Const.proof.statusList.WAIT) { 
+        proof.status = Const.proof.statusList.MANUAL 
+        proof.toManual = Date.now()
+    }
 
     return await save(proof)
 }
 
-async function approve({id, amount, kvitNumber}) {        
+async function approve({id, amount, kvitNumber}, userId) {        
     const proof = await get(id)
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
 
@@ -287,10 +293,10 @@ async function approve({id, amount, kvitNumber}) {
     
     if(candidat) { throw Exception.isExist }
 
-    return await complite(proof, { amount, kvitNumber: findKvit })
+    return await complite(proof, { amount, kvitNumber: findKvit }, userId)
 }
 
-async function recheck(id, bank, number) {        
+async function recheck(id, bank, number, userId) {        
     const proof = await get(id)
 
     if(!Const.proof.activeStatusList.includes(proof.status)) { throw Exception.notFind }
@@ -312,10 +318,84 @@ async function recheck(id, bank, number) {
 
     await save(proof)
 
-    verify(proof._id).then() 
+    verify(proof._id, userId).then() 
 
     return proof
 }
+
+// ---------- STATISTIC ----------
+
+async function getStatistics(user, timestart=0, timestop=Infinity, options={}, format="%Y-%m-%d") { 
+    if(user && user.access === Const.userAccess.MAKER) { options.paymentAccessId = user.accessId }
+  
+    const data = await Proof.aggregate([
+        { $match: { ...options, createdAt: { $gt: timestart, $lt: timestop } }},
+        { $addFields: {
+            date: { $toDate: '$createdAt' },
+            dtToFinal: {
+                $cond: [ 
+                    { $eq: ["$toManual", 0] },
+                    { $subtract: [{ $cond: [{ $gt: ["$toConfirm", 0] }, "$toConfirm", "$toReject"] }, "$createdAt"] },
+                    null
+                ]
+            },
+            dtValidOkToFinal: {
+                $cond: [
+                    { $and: [{ $gt: ["$toManual", 0] }, { $gt: ["$toValidok", 0] }] },
+                    { $subtract: [{ $cond: [{ $gt: ["$toConfirm", 0] }, "$toConfirm", "$toReject"] }, "$toValidok"] },
+                    null
+                ]
+            }
+        }},
+        { $group: {
+            _id: { $dateToString: { format, date: "$date" } },
+            count: { $sum: 1 },
+            finalCount: { $sum: { $cond: [{ $in: ["$status", ["CONFIRM", "REJECT"]] }, 1, 0] }},
+            avgWaitToFinal: { $avg: "$dtToFinal" },
+            avgValidOkToFinal: { $avg: "$dtValidOkToFinal" }
+        }},
+        { $sort: { _id: 1 } },
+        { $project: {
+            count: 1,
+            finalCount: 1,
+            avgWaitToFinal: { $ifNull: ["$avgWaitToFinal", 0] },
+            avgValidOkToFinal: { $ifNull: ["$avgValidOkToFinal", 0] }
+        }}
+    ]) 
+    
+    let count = 0
+    let finalCount = 0
+
+    let waitToFinalConst = 0
+    let waitToFinal = 0
+
+    let validOkToFinalConst = 0
+    let validOkToFinal = 0
+
+    data.forEach((item) => {       
+        count += item.count
+        finalCount += item.finalCount
+
+        if(item.avgWaitToFinal) {
+            waitToFinalConst += 1
+            waitToFinal += item.avgWaitToFinal
+        }
+        if(item.avgValidOkToFinal) {
+            validOkToFinalConst += 1
+            validOkToFinal += item.avgValidOkToFinal
+        }
+    })   
+
+    const avgWaitToFinal = waitToFinal / (waitToFinalConst || 1)
+    const avgValidOkToFinal = validOkToFinal / (validOkToFinalConst || 1)
+
+    return {
+        finalCount,
+        avgWaitToFinal,
+        avgValidOkToFinal
+    }
+}
+
 
 // ---------- LISTS ------------
 
@@ -369,6 +449,8 @@ module.exports = {
     approve,
     manual,
     recheck,
+
+    getStatistics,
 
     get,
     list,

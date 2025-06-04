@@ -3,23 +3,27 @@ import React, { useEffect, useState } from 'react'
 import styles from './Dashboard.module.css'
 import usePaymentApi from '../../API/payment.api'
 import useInvoiceApi from '../../API/invoice.api'
+import useProofApi from '../../API/proof.api'
 import useUserApi from '../../API/user.api'
 import Copy from '../../components/UI/copy'
 import Input from '../../components/UI/Input'
 import useInput from '../../hooks/input.hook'
 import { getTimestamp } from '../../utils'
 import Maker from './Maker/Maker'
+import User from './User/User'
 
 
 function Dashboard() {
   const paymentApi = usePaymentApi()
   const invoiceApi = useInvoiceApi()
+  const proofApi = useProofApi()
   const userApi = useUserApi()
 
   const [data, setData] = useState(null)
   const [triger, setTriger] = useState(false)
   const [makers, setMakers] = useState([])
-  
+  const [users, setUsers] = useState([])
+
   const min = useInput(null)
   const max = useInput(null)
 
@@ -29,6 +33,7 @@ function Dashboard() {
 
     const paymentData = await paymentApi.getStatistics(start, stop)
     const invoiceData = await invoiceApi.getStatistics(start, stop)
+    const proofData = await proofApi.getStatistics(start, stop)
     const autoData = await userApi.getAutoStatistics(start, stop)
 
     setTriger(!triger)
@@ -38,16 +43,21 @@ function Dashboard() {
     if(invoiceData?.conversion) { invoiceData.conversion = invoiceData.conversion.toFixed(2) }
     if(invoiceData?.avarageSum) { invoiceData.avarageSum = invoiceData.avarageSum.toFixed(2) }
 
+    if(proofData?.avgWaitToFinal) { proofData.avgWaitToFinal = `${parseInt(proofData.avgWaitToFinal / (1000 * 60))} min ${parseInt(proofData.avgWaitToFinal / 1000) % 60} s` }
+    if(proofData?.avgValidOkToFinal) { proofData.avgValidOkToFinal = `${parseInt(proofData.avgValidOkToFinal / (1000 * 60))} min ${parseInt(proofData.avgValidOkToFinal / 1000) % 60} s` }
+
     setData({
       payment: paymentData,
       invoice: invoiceData,
+      proof: proofData,
       autoData: autoData
     })
   }
 
   useEffect(() => { 
-    const load = async () => {
-    setMakers(await userApi.MakerList()) 
+    const load = async () => { 
+      setMakers(await userApi.MakerList()) 
+      setUsers(await userApi.UserList()) 
     }
 
     load()
@@ -100,6 +110,17 @@ function Dashboard() {
       <div>
         <span className={styles.item}>Mono conversion: <Copy value={data?.autoData?.mono?.conversion || 0} label={data?.autoData?.mono?.conversion?.toFixed(2) || 0} /></span>
         <span className={styles.item}>Privat conversion: <Copy value={data?.autoData?.privat?.conversion || 0} label={data?.autoData?.privat?.conversion?.toFixed(2) || 0} /></span>
+      </div>
+
+      <h1>Proofs</h1>
+      <div>
+        <span className={styles.item}>FinalCount: <Copy value={data?.proof?.finalCount || 0} label={data?.proof?.finalCount || 0} /></span>
+        <span className={styles.item}>AvgWaitToFinal: <Copy value={data?.proof?.avgWaitToFinal || 0} label={data?.proof?.avgWaitToFinal || 0} /></span>
+        <span className={styles.item}>AvgValidOkToFinal: <Copy value={data?.proof?.avgValidOkToFinal || 0} label={data?.proof?.avgValidOkToFinal || 0} /></span>
+      </div>
+
+      <div className={styles.row}>
+        {users.map((user) => <User user={user._id} start={min.value} stop={max.value} name={user.login} triger={triger} key={user._id} />)}
       </div>
     </div>
   )
