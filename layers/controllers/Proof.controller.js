@@ -201,9 +201,9 @@ async function complite(proof, transaction, userId=null) {
             console.log('Tx date: ', transaction.date)
             console.log('In date: ', proof.invoiceDate)
             console.log('Dt date: ', proof.invoiceDate - transaction.date)
-            console.log('invalid', transaction.date - 60 * 1000 < proof.invoiceDate);
+            console.log('invalid', transaction.date + 60 * 1000 < proof.invoiceDate);
             
-            if(transaction.date - 60 * 1000 < proof.invoiceDate) { return console.log('date is not valid') }
+            if(transaction.date + 60 * 1000 < proof.invoiceDate) { return console.log('date is not valid') }
         }
     }
 
