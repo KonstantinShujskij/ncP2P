@@ -160,14 +160,18 @@ async function verify(id, userId=null) {
     proof.isChecking = true
     await save(proof)
 
-    console.log('go cheking', bank)
+    console.log('go cheking', bank, proof.kvitNumber)
 
     const transaction = await Kvits.checkByBank(bank, proof.kvitNumber)
+    console.log('GET TRANSACTION', transaction);
+    
     if(transaction) { 
         const { timestamp, card, amount } = transaction
         data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp, auto: true }
     }
 
+    console.log('DATA', data);
+    
     proof.isChecking = false
     proof.lastCheck = !!data? 1 : -1
     await save(proof)
