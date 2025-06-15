@@ -17,7 +17,6 @@ const check = async (type, url, number) => {
         })
 
         const data = await response.json()
-        console.log('checkData:', data)        
 
         try {
             if(data) { logs.res = data }
@@ -30,7 +29,8 @@ const check = async (type, url, number) => {
         catch(error) {
             console.log('save log err', error)
         }
-
+        
+        console.log('checkData:', data)        
         return data
     } 
     catch (error) {   
@@ -53,7 +53,9 @@ const checkMono = async (number) => {
     console.log('monoIndex', monoIndex)
     console.log('monoUrl', url)
     
-    await check(Const.bankList.MONO, `${url}/check`, number) 
+    const data = await check(Const.bankList.MONO, `${url}/check`, number) 
+    console.log('CHECK MONO FUN DATA', data);
+    return data
 }
 
 const checkPrivat = async (number) => await check(Const.bankList.PRIVAT, `${config.get('privatUrl')}/check`, number)
