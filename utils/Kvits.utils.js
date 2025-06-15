@@ -41,8 +41,8 @@ const check = async (type, url, number) => {
 }
 
 const checkMono = async (number) => {
-    monoIndex = (monoIndex + 1) % urlsList.length
     const urlsList = config.get('checkGovUrl')
+    monoIndex = (monoIndex + 1) % urlsList.length
     const url = urlsList[monoIndex]
 
     console.log('monoIndex', monoIndex)

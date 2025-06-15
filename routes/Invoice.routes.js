@@ -115,9 +115,7 @@ router.post('/forse', Auth, isAdmin, Validate.get, Serialise.get,
 
 router.post('/change', Auth, isAdmin, Validate.change, Serialise.change,
     Interceptor(async (req, res) => {        
-        const { id, amount } = req.body
-        console.log(amount);
-        
+        const { id, amount } = req.body       
 
         const invoice = await Invoice.change(req.user, id, amount)
 

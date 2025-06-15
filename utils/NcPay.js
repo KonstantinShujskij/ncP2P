@@ -24,10 +24,8 @@ const invoiceCallback = (invoice, callback=()=>{}) => {
 const paymentCallback = (payment, callback=()=>{}) => {
     try {
         const url = config.get('NcPayUrl') + '/payment/ncp2p'
-        console.log(payment);
         
         const body = { id: payment?.refId, status: payment.status, amount: payment.amount }
-        console.log(body);
 
         console.log('Send to NcPay')
         console.log('url:', url)
