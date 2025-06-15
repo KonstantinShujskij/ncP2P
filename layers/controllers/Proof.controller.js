@@ -154,18 +154,16 @@ async function verify(id, userId=null) {
     const regexPrivat = /P24[A-Z0-9]{16}/
     if(regexPrivat.test(proof.kvitNumber)) { bank = Const.bankList.PRIVAT } 
 
-    console.log(bank)
-
     let data = null
 
     proof.bank = bank
     proof.isChecking = true
     await save(proof)
 
-    console.log('go cheking');
+    console.log('go cheking', bank)
+
     const transaction = await Kvits.checkByBank(bank, proof.kvitNumber)
     if(transaction) { 
-        console.log('take data')
         const { timestamp, card, amount } = transaction
         data = { kvitNumber: proof.kvitNumber, card, amount, date: timestamp, auto: true }
     }
@@ -178,8 +176,8 @@ async function verify(id, userId=null) {
 }
 
 async function complite(proof, transaction, userId=null) {
-    console.log('COMPLIT PROOF')
-    console.log(transaction)
+    console.log('FUNCTION COMPLITE PROOF')
+    console.log('Transaction Data:', transaction)
     
     if(!transaction || !transaction.amount) { return }
     if(transaction.auto && Math.abs(proof.invoiceAmount - transaction.amount) > 250) { return }
@@ -196,6 +194,10 @@ async function complite(proof, transaction, userId=null) {
         if(payment.card.substring(0, 6) !== transaction.card.substring(0, 6)) { return console.log('card 6 not match') }
         if(payment.card.substring(payment.card.length - 4, payment.card.length) !== transaction.card.substring(transaction.card.length - 4, transaction.card.length)) { return console.log('card 4 not match') }
         if(transaction.date) {
+            console.log('Tx date: ', transaction.date)
+            console.log('In date: ', proof.invoiceDate)
+            console.log('Dt date: ', proof.invoiceDate - transaction.date)
+            
             if(transaction.date - 60 * 1000 < proof.invoiceDate) { return console.log('date is not valid') }
         }
     }

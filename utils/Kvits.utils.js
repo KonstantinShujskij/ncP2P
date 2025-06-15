@@ -4,6 +4,7 @@ const Const = require('@core/Const')
 
 const config = require('config')
 
+let monoIndex = 0
 
 const check = async (type, url, number) => {
     const logs = { url, method: type, req: { number }, time: Date.now() }
@@ -16,7 +17,7 @@ const check = async (type, url, number) => {
         })
 
         const data = await response.json()
-        console.log(data)        
+        console.log('checkData:', data)        
 
         if(data) { logs.res = data }
 
@@ -28,7 +29,7 @@ const check = async (type, url, number) => {
         return data
     } 
     catch (error) {   
-        console.log(error)
+        console.log('Check Error:', error)
         
         logs.statusCode = 'Not have Responce' 
         logs.time = Date.now() - logs.time
@@ -39,7 +40,17 @@ const check = async (type, url, number) => {
     }
 }
 
-const checkMono = async (number) => await check(Const.bankList.MONO, `${config.get('checkGovUrl')}/check`, number)
+const checkMono = async (number) => {
+    monoIndex = (monoIndex + 1) % urlsList.length
+    const urlsList = config.get('checkGovUrl')
+    const url = urlsList[monoIndex]
+
+    console.log('monoIndex', monoIndex)
+    console.log('monoUrl', url)
+    
+    await check(Const.bankList.MONO, `${url}/check`, number) 
+}
+
 const checkPrivat = async (number) => await check(Const.bankList.PRIVAT, `${config.get('privatUrl')}/check`, number)
 
 const checkByBank = async (bank, number) => {
