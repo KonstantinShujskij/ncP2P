@@ -10,11 +10,21 @@ const check = async (type, url, number) => {
     const logs = { url, method: type, req: { number }, time: Date.now() }
 
     try {        
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => {
+            console.log('Kvits TimeOut')            
+            controller.abort()
+        }, 120000)
+
         const response = await fetch(url, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ number })
+            body: JSON.stringify({ number }),
+            signal: controller.signal
         })
+        
+        clearTimeout(timeoutId)
+        console.log('send fetch')            
 
         const data = await response.json()
 
