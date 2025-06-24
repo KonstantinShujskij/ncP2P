@@ -16,7 +16,10 @@ module.exports = {
     'routes/**/*.js',
     'layers/controllers/**/*.js',
     'layers/models/**/*.js',
-    'layers/filters/**/*.js'
+    'layers/filters/**/*.js',
+    'layers/format/**/*.js',
+    'layers/serialize/**/*.js',
+    'layers/validate/**/*.js'
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
@@ -48,7 +51,10 @@ module.exports = {
     '<rootDir>/routes',
     '<rootDir>/layers/controllers',
     '<rootDir>/layers/models',
-    '<rootDir>/layers/filters'
+    '<rootDir>/layers/filters',
+    '<rootDir>/layers/format',
+    '<rootDir>/layers/serialize',
+    '<rootDir>/layers/validate'
   ],
 
   // ---------------------------
@@ -61,8 +67,9 @@ module.exports = {
     '^@models/(.*)$':      '<rootDir>/layers/models/$1.js',
     '^@filters/(.*)$':     '<rootDir>/layers/filters/$1.js',
     '^@format/(.*)$':      '<rootDir>/layers/format/$1.js',
-    '^@validate/(.*)$':    '<rootDir>/layers/validate/$1.js',
     '^@serialize/(.*)$':   '<rootDir>/layers/serialize/$1.js',
+    '^@filter/(.*)$': '<rootDir>/layers/filters/$1.js',
+    '^@validate/(.*)$':    '<rootDir>/layers/validate/$1.js',
     '^@utils/(.*)$':       '<rootDir>/utils/$1.js'
   },
 
