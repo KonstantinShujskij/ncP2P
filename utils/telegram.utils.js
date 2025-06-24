@@ -64,17 +64,6 @@ function moreAmount(invoice, amount, telegram=config.get('adminGroupe')) {
     sendMessage(telegram, text)
 }
 
-function sendCode(telegram) {
-    const code = 100000 + parseInt(Math.random() * 900000)
-
-    sendMessage(telegram, `<code>${code}</code>`)
-
-    const secret = config.get('authSecret')
-    const token = jwt.sign({ telegram, code }, secret, { expiresIn: '5m' })
-
-    return token
-}
-
 function sendProofs(proofs, telegram) {    
     proofs.forEach((proof) => {        
         let text = ''
