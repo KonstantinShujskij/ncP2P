@@ -183,7 +183,6 @@ async function toValidOk(user, id) {
 async function toScam(id) {
     const invoice = await get(id)
     invoice.isScam = !invoice.isScam
-    invoice.status = Const.invoice.statusList.VALID
 
     const newInvoice = await save(invoice)
 
