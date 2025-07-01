@@ -38,6 +38,7 @@ async function createByNumber(invoiceId, kvitNumber) {
 
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
+    if(invoice.isScam) { throw Exception.notFind }
 
     const payment = await Payment.softGet(invoice.payment)
 
@@ -64,6 +65,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         conv: invoice.conv,
         confirm: invoice.confirm,
         ncpayConv: invoice.ncpayConv,
+        isRisk: invoice.isRisk,
 
         paymentAccessId: payment.accessId,
         payment: invoice.payment,

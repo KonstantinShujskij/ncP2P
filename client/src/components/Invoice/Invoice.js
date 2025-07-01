@@ -220,8 +220,8 @@ function Invoice({invoice, refresh}) {
                     {!!invoice?.client && invoice?.conv !== -1 && 
                         <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
                     }
-                    {!!invoice?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>Risk: True</div>}
-                    {!!invoice?.isScam && <div className={styles.conv} style={{color: "#ff6b6b" }}>SCAM: True</div>}
+                    {!!invoice?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>risk: true</div>}
+                    {!!invoice?.isScam && <div className={styles.conv} style={{color: "#ff6b6b" }}>SCAM: true</div>}
                 </div>
             </div>
             <div className={styles.excel}>
