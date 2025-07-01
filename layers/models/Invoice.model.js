@@ -25,6 +25,9 @@ const schema = new Schema({
     confirm: { type: Number, default: -1 },
     ncpayConv: { type: Object, default: null },
 
+    isRisk: {type: Boolean, default: false},
+    isScam: {type: Boolean, default: false},
+
     kvitNumber: { type: String, default: null },
     kvitFile: { type: String, default: null },
     payLink: { type: String, default: null },

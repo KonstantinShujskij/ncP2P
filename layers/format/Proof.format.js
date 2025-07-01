@@ -22,7 +22,9 @@ const admin = (proof) => ({
     kvitFile: proof.kvitFile,
     fileLink: proof.fileLink,
     type: proof.type,
-
+    isRisk: proof.isRisk,
+    isScam: proof.isScam,
+    
     lastCheck: proof.lastCheck,
     isChecking: proof.isChecking,
 

@@ -103,6 +103,16 @@ router.post('/validOk', Auth, Validate.get, Serialise.get,
     })
 )
 
+router.post('/scam', Auth, Validate.get, Serialise.get,
+    Interceptor(async (req, res) => {        
+        const { id } = req.body
+
+        const invoice = await Invoice.toScam(id)
+
+        res.status(200).json(Format.parnter(invoice))
+    })
+)
+
 router.post('/forse', Auth, isAdmin, Validate.get, Serialise.get,
     Interceptor(async (req, res) => {        
         const { id } = req.body

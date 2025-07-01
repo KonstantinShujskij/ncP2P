@@ -9,6 +9,7 @@ const create = [
     check('bank', 'invalidBank').optional().isString(),
     check('client', 'invalidValue').notEmpty().isString(),
     check('template', 'invalidValue').optional().isString(),
+    check('isRisk', 'invalidValue').notEmpty(),
 ]
 
 const pay = [

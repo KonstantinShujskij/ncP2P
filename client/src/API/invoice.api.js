@@ -28,6 +28,11 @@ export default function useInvoiceApi() {
         catch(error) { return null } 
     }
 
+    const scam = async (id) => {       
+        try { return await protectedRequest('api/invoice/scam', {id}) }
+        catch(error) { return null } 
+    }
+
     const change = async (id, amount) => {       
         try { return await protectedRequest('api/invoice/change', {id, amount}) }
         catch(error) { return null } 
@@ -50,6 +55,7 @@ export default function useInvoiceApi() {
         list,
         forse,
         change,
+        scam,
 
         getStatistics
     }

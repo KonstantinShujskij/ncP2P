@@ -41,6 +41,8 @@ const schema = new Schema({
     lastCheck: { type: Number, default: 0 },
     isChecking: { type: Boolean, default: false },
     type: { type: String, default: Const.payment.filter.types.DEFAULT },
+    isRisk: {type: Boolean, default: false},
+    isScam: {type: Boolean, default: false},
 
     createdAt: { type: Number },
     updatedAt: { type: Number },

@@ -31,6 +31,8 @@ const admin = (invoice) => ({
     kvit: invoice.kvitFile,
     kvitNumber: invoice.kvitNumber,
     payLink: invoice.payLink,
+    isRisk: invoice.isRisk,
+    isScam: invoice.isScam,
 
     createdAt: invoice.createdAt,
 })

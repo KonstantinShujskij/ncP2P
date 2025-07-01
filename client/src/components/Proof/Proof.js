@@ -186,8 +186,10 @@ function Proof({proof, refresh}) {
                     {!!proof?.client && !!proof?.ncpayConv?.later30 && 
                         <div className={styles.conv}>nLd: {(proof?.ncpayConv?.later30?.conversion).toFixed(2) } / <span className={styles.green}>{ proof?.ncpayConv?.later30?.confirmCount }</span></div>
                     }
-                    {!!proof?.client && proof?.ncpayConv?.trust && <div className={styles.conv}>trust: true</div>}
+                    {!!proof?.client && proof?.ncpayConv?.trust && <div className={styles.conv} style={{color: "#66cc66" }}>trust: true</div>}
                     {!!proof?.type && proof?.type === 'NCPAY' && <div className={styles.conv}>npay: True</div>}
+                    {!!proof?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>Risk: True</div>}
+                    {!!proof?.isScam && <div className={styles.conv} style={{color: "#ff6b6b" }}>SCAM: True</div>}
                 </div>
             </div>
             <div className={styles.excel}>

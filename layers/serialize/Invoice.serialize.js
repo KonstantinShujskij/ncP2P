@@ -11,6 +11,7 @@ const create = (req, _, next) => {
         bank: req.body.bank || null,
         client: req.body.client || null,
         ncpayConv: req.body.conv,
+        isRisk: req.body.isRisk || false,
         template: req.body.template || null
     }
 

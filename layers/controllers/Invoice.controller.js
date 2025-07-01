@@ -64,7 +64,7 @@ async function setSubstatus(invoice) {
 
 // ---------- MAIN ----------
 
-async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {      
+async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRisk }) {      
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
@@ -93,6 +93,7 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv }) {
         card: payment.card,
         conv, confirm,
         ncpayConv,
+        isRisk
     })     
 
     const hash = Jwt.generateLinkJwt(invoice._id)
@@ -169,6 +170,27 @@ async function toValidOk(user, id) {
         const proofs = await Proof.find({ invoice })
         proofs.forEach(async (proof) => {
             proof.toValidok = Date.now()
+            await proof.save()
+        })
+    }
+    catch(err) {
+        console.log(err)        
+    }
+
+    return newInvoice
+}
+
+async function toScam(id) {
+    const invoice = await get(id)
+    invoice.isScam = !invoice.isScam
+    invoice.status = Const.invoice.statusList.VALID
+
+    const newInvoice = await save(invoice)
+
+    try {
+        const proofs = await Proof.find({ invoice })
+        proofs.forEach(async (proof) => {
+            proof.isScam = invoice.isScam
             await proof.save()
         })
     }
@@ -416,6 +438,8 @@ module.exports = {
     
     toValid,
     toValidOk,
+    toScam,
+    
     forse,
     getStatistics,
 

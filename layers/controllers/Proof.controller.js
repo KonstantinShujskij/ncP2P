@@ -91,6 +91,7 @@ async function createByFile(invoiceId, kvitFile='') {
 
     const invoice = await Invoice.get(invoiceId)   
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
+    if(invoice.isScam) { throw Exception.notFind }
     
     let number = await getNumberByKvit(kvitFile) 
     if(number) { number = number.toUpperCase() }
@@ -123,6 +124,7 @@ async function createByFile(invoiceId, kvitFile='') {
         confirm: invoice.confirm,
         ncpayConv: invoice.ncpayConv,
         type: payment?.filter?.type || Const.payment.filter.types.DEFAULT,
+        isRisk: invoice.isRisk,
 
         paymentAccessId: payment.accessId,
         payment: invoice.payment,

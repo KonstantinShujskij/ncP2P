@@ -19,6 +19,7 @@ function Invoice({invoice, refresh}) {
     const [isValidWait, setIsValidWait] = useState(false)
     const [isValidOkWait, setIsValidOkWait] = useState(false)
     const [isChangeWait, setIsChangeWait] = useState(false)
+    const [isScamWait, setIsScamWait] = useState(false)
 
     const changeAmount = useInput()
 
@@ -33,6 +34,7 @@ function Invoice({invoice, refresh}) {
             setIsValidWait(false)
             setIsValidOkWait(false)
             setIsChangeWait(false)
+            setIsScamWait(false)
 
             return setIsRejectWait(true) 
         }
@@ -75,6 +77,7 @@ function Invoice({invoice, refresh}) {
         if(!isValidWait) { 
             setIsValidOkWait(false)
             setIsRejectWait(false) 
+            setIsScamWait(false)
 
             return setIsValidWait(true) 
         }
@@ -88,12 +91,27 @@ function Invoice({invoice, refresh}) {
         if(!isValidOkWait) { 
             setIsValidWait(false)
             setIsRejectWait(false) 
+            setIsScamWait(false)
 
             return setIsValidOkWait(true) 
         }
 
         await invoiceApi.validOk(invoice.id)
         setIsValidOkWait(false)
+        refresh()
+    }
+
+    const scamHandler = async () => {
+        if(!isScamWait) { 
+            setIsValidWait(false)
+            setIsRejectWait(false) 
+            setIsValidOkWait(false) 
+
+            return setIsScamWait(true) 
+        }
+
+        await invoiceApi.scam(invoice.id)
+        setIsScamWait(false)
         refresh()
     }
 
@@ -132,6 +150,16 @@ function Invoice({invoice, refresh}) {
             <div className={styles.excel}>  
                 <div className={styles.action}>
                     <div className={styles.buttons}>
+                        {(invoice.status !== "WAIT") && <>
+                            <button 
+                                className={`${styles.button} ${isScamWait? styles.open : null}`} 
+                                onClick={() => scamHandler()}
+                                data-type="decline"
+                            >
+                                {invoice?.isScam? "unscam" : "scam"}
+                            </button>
+                        </>}
+
                         {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
                             <button 
                                 className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
@@ -192,6 +220,8 @@ function Invoice({invoice, refresh}) {
                     {!!invoice?.client && invoice?.conv !== -1 && 
                         <div className={styles.conv}>{ (invoice?.conv).toFixed(2) } / <span className={styles.green}>{ invoice?.confirm }</span></div>
                     }
+                    {!!invoice?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>Risk: True</div>}
+                    {!!invoice?.isScam && <div className={styles.conv} style={{color: "#ff6b6b" }}>SCAM: True</div>}
                 </div>
             </div>
             <div className={styles.excel}>
