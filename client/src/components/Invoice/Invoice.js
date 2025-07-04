@@ -150,66 +150,67 @@ function Invoice({invoice, refresh}) {
             <div className={styles.excel}>  
                 <div className={styles.action}>
                     <div className={styles.buttons}>
-                        {(invoice.status !== "WAIT") && <>
-                            <button 
-                                className={`${styles.button} ${isScamWait? styles.open : null}`} 
-                                onClick={() => scamHandler()}
-                                data-type="decline"
-                            >
-                                {invoice?.isScam? "unscam" : "scam"}
-                            </button>
-                        </>}
-
-                        {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
-                            <button 
-                                className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
-                                onClick={() => validOkHandler()}
-                                data-type="accept"
-                            >
-                                {invoice.validOk? "To Valid" : "To Valid Ok"}
-                            </button>
-                        </>}
-
-                        {(invoice.status === "REJECT") && <>
-                            <button 
-                                className={`${styles.button} ${isValidWait? styles.open : null}`} 
-                                onClick={() => validHandler()}
-                                data-type="accept"
-                            >
-                                Valid
-                            </button>
-                        </>}
-
-                        {(invoice.status === "VALID") && <>
-                            <button 
-                                className={`${styles.button} ${isRejectWait? styles.open : null}`} 
-                                onClick={() => rejectHandler()}
-                                data-type="decline"
-                            >
-                                Reject
-                            </button>
-                        </>}
-
-                        {(invoice.status === "CONFIRM") && (access === 'SUPPORT' || access === 'ADMIN') && <div className={styles.col}>
-                            <Input input={changeAmount} placeholder='amount' className={styles.input}/>
-
+                        <div className={styles.col}>
                             <div className={styles.row}>
-                                <button 
-                                    className={`${styles.button} ${isRejectWait? styles.open : null}`} 
-                                    onClick={() => forseHandler()}
-                                    data-type="decline"
-                                >
-                                    Reject
-                                </button>
-                                <button 
-                                    className={`${styles.button} ${isChangeWait? styles.open : null}`} 
-                                    onClick={() => changeHandler()}
-                                    data-type="accept"
-                                >
-                                    Change
-                                </button>
+                                {(invoice.status === "CONFIRM") && (access === 'SUPPORT' || access === 'ADMIN') && (<>
+                                    <Input input={changeAmount} placeholder='amount' className={styles.input}/>
+                                </>)}
+                                {(invoice.status === "WAIT" || invoice.status === "VALID") && <>
+                                    <button 
+                                        className={`${styles.button} ${isValidOkWait? styles.open : null}`} 
+                                        onClick={() => validOkHandler()}
+                                        data-type="accept"
+                                    >
+                                        {invoice.validOk? "To Valid" : "To Valid Ok"}
+                                    </button>
+                                </>}
                             </div>
-                        </div>}
+                            
+                            <div className={styles.row}>
+                                {(invoice.status === "REJECT") && <>
+                                    <button 
+                                        className={`${styles.button} ${isValidWait? styles.open : null}`} 
+                                        onClick={() => validHandler()}
+                                        data-type="accept"
+                                    >
+                                        Valid
+                                    </button>
+                                </>}
+
+                                {(invoice.status !== "WAIT") && <>
+                                    <button 
+                                        className={`${styles.button} ${isScamWait? styles.open : null}`} 
+                                        onClick={() => scamHandler()}
+                                        data-type="decline"
+                                    >
+                                        {invoice?.isScam? "unscam" : "scam"}
+                                    </button>
+                                </>}
+
+                                {(invoice.status === "CONFIRM") && (access === 'SUPPORT' || access === 'ADMIN') && (<>
+                                    <button 
+                                        className={`${styles.button} ${isRejectWait? styles.open : null}`} 
+                                        onClick={() => forseHandler()}
+                                        data-type="decline"
+                                    >Reject</button>
+                                    <button 
+                                        className={`${styles.button} ${isChangeWait? styles.open : null}`} 
+                                        onClick={() => changeHandler()}
+                                        data-type="accept"
+                                    >Change</button>
+                                </>)}
+
+                                {(invoice.status === "VALID") && <>
+                                    <button 
+                                        className={`${styles.button} ${isRejectWait? styles.open : null}`} 
+                                        onClick={() => rejectHandler()}
+                                        data-type="decline"
+                                    >
+                                        Reject
+                                    </button>
+                                </>}
+                            </div>
+                        </div>
                     </div>
                 </div> 
             </div>

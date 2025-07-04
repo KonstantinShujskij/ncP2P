@@ -188,7 +188,7 @@ function Proof({proof, refresh}) {
                     }
                     {!!proof?.client && proof?.ncpayConv?.trust && <div className={styles.conv} style={{color: "#66cc66" }}>trust: true</div>}
                     {!!proof?.type && proof?.type === 'NCPAY' && <div className={styles.conv}>npay: True</div>}
-                    {!!proof?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>Risk: True</div>}
+                    {!!proof?.isRisk && <div className={styles.conv} style={{color: "#ff6b6b" }}>risk: True</div>}
                     {!!proof?.isScam && <div className={styles.conv} style={{color: "#ff6b6b" }}>SCAM: True</div>}
                 </div>
             </div>

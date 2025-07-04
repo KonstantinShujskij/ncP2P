@@ -17,6 +17,7 @@ module.exports = {
 
     cardBlocked: { status: 409, msg: 'Card is Blocked' },
     clientHasActive: { status: 409, msg: 'Client has Active' },
+    clientIsBlocked: { status: 409, msg: 'Client is Blocked' },
 
     notAuth: { status: 401, msg: 'Bad Auth' },
     notAccess: { status: 401, msg: 'Not Access' },
