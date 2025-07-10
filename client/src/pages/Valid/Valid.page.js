@@ -37,8 +37,10 @@ function Valid() {
     pagination.setCount(count)
     setProofs(list)
 
-    const startTime = Date.now() - 24 * 60 * 60 * 1000
-    const stopTime = Date.now()
+    const now = new Date()
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const startTime = startOfDay.getTime()
+    const stopTime = now.getTime()
 
     const proofData = await proofApi.getStatistics(startTime, stopTime, user)
     if(proofData?.avgWaitToFinal) { proofData.avgWaitToFinal = `${parseInt(proofData.avgWaitToFinal / (1000 * 60))} min ${parseInt(proofData.avgWaitToFinal / 1000) % 60} s` }
@@ -66,7 +68,7 @@ function Valid() {
         <div className={styles.top}>
           <div className={styles.row}>
             <div>
-              Count: {data?.finalCount || 0} / WaitProof: {data?.avgWaitToFinal || 0} ValidOkProof: {data?.avgValidOkToFinal || 0}
+              Count: {data?.finalCount || 0} | Wait: {data?.avgWaitToFinal || 0} | ValidOk: {data?.avgValidOkToFinal || 0}
             </div>
             <div className={`${styles.auto} ${auto? styles.open : null}`} onClick={autoHandler}>Auto</div>
           </div>
