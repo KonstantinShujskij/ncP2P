@@ -87,6 +87,7 @@ function Proof({proof, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.card}>
                     <div className={styles.item}>
+                        {proof?.paymentAccessName && <div>{proof?.paymentAccessName}</div>}
                         <Copy value={proof?.id} label={proof?.id? proof.id : 'SystemId'} />
                         <Copy value={proof?.payment} label={proof?.payment? proof.payment : 'PaymentId'} />
                         <Copy value={proof?.kvitNumber} label={proof?.kvitNumber} />

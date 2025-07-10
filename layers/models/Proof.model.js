@@ -4,6 +4,7 @@ const Const = require('@core/Const')
 
 const schema = new Schema({
     paymentAccessId: { type: Types.ObjectId, ref: 'Partner' },
+    paymentAccessName: { type: String, default: '' },
     user: { type: Types.ObjectId, ref: 'User' },
 
     invoice: { type: Types.ObjectId, ref: 'Invoice' },

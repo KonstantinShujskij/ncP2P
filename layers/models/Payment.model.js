@@ -5,6 +5,7 @@ const Const = require('@core/Const')
 const schema = new Schema({
     author: { type: String, default: '' },
     accessId: { type: Types.ObjectId, ref: 'Partner' },
+    accessName: { type: String, default: '' },
 
     refId: { type: String, default: '' },
     partnerId: { type: String, default: '' },

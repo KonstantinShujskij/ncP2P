@@ -5,7 +5,8 @@ const admin = (proof) => ({
     status: proof.status,
     payment: proof.payment,
     gpt: proof.gpt,
-    
+
+    paymentAccessName: proof.paymentAccessName,    
     invoiceSubstatus: proof.invoiceSubstatus,
 
     client: proof.client,

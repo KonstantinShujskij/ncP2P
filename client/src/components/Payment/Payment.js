@@ -159,6 +159,7 @@ function Payment({payment, refresh}) {
             <div className={styles.excel}>
                 <div className={styles.card}>
                     <Copy value={payment?.card} label={formatCardNumber(payment?.card)} />
+                    {payment?.accessName && <div className={styles.proofs}>{payment?.accessName}</div>}
                     <span className={styles.proofs} onClick={() => proofsHandler()}>Get Proofs to Telegram</span>
 
                     {!!payment?.tailId && <div className={styles.row}>

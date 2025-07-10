@@ -68,6 +68,7 @@ async function createByNumber(invoiceId, kvitNumber) {
         isRisk: invoice.isRisk,
 
         paymentAccessId: payment.accessId,
+        paymentAccessName: payment.accessName,
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,
@@ -129,6 +130,7 @@ async function createByFile(invoiceId, kvitFile='') {
         isRisk: invoice.isRisk,
 
         paymentAccessId: payment.accessId,
+        paymentAccessName: payment.accessName,
         payment: invoice.payment,
         paymentRefId: payment.refId,
         paymentPartnerId: payment.partnerId,

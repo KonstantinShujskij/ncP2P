@@ -46,6 +46,7 @@ async function create({ accessId, author }, { card, amount, refId, partnerId, co
     
     const payment = new Payment({ 
         author, accessId,
+        accessName: partner.name,
         refId, partnerId,
         card, amount, course,
         initialAmount: amount,
