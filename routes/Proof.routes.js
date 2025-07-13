@@ -100,7 +100,7 @@ router.post('/list', Auth, Validate.list, Serialise.list,
     })
 )
 
-router.post('/statistic', Auth, isMaker,
+router.post('/statistic', Auth,
     Interceptor(async (req, res) => {
         const { start, stop, userId } = req.body
 
