@@ -5,9 +5,15 @@ const Exception = require('@core/Exception')
 
 
 async function create(data={}) {
-    const log = new Log(data)    
-    
-    return await save(log) 
+    try {
+        const log = new Log(data)    
+        return await save(log) 
+    }
+    catch(err) {
+        console.log('======================== err in save log', err);
+        
+        return null
+    }
 }
 
 async function getAutoStatistic(user, timestart=0, timestop=Infinity) {  
