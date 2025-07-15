@@ -14,6 +14,7 @@ const Format = require('@format/Invoice.format')
 
 const Const = require('@core/Const')
 const config = require('config')
+const Exception = require('@core/Exception')
 
 const router = Router()
 
@@ -21,6 +22,10 @@ const router = Router()
 router.post('/create', access, partnerAccess, Validate.create, Serialise.create, 
     Interceptor(async (req, res) => {
         const invoice = await Invoice.create(req.body)
+        if(invoice?.errorTitle == "notFind") { 
+            if(req.logs) { req.logs.payload = invoice.payload }
+            throw Exception.notFind 
+        }
         
         const hash = Jwt.generateLinkJwt(invoice._id)
         

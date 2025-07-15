@@ -82,7 +82,15 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRis
     let payment = null
     if(Math.random() > Const.invoice.ncPayRandom) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
     if(!payment) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.DEFAULT, conv, confirm }) }
-    if(!payment) { throw Exception.notFind }
+    if(!payment) { 
+        const data = await Payment.getList({ status: Const.payment.statusList.ACTIVE })
+        const activePayments = data.list
+
+        return {
+            errorTitle: "notFind",
+            payload: activePayments.map(({_id, card, status, minLimit, maxLimit, current}) => ({ _id, card, status, minLimit, maxLimit, current }))
+        }
+    }
 
     const invoice = new Invoice({ 
         paymentAccessId: payment.accessId,

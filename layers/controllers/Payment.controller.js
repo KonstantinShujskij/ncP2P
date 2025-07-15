@@ -548,6 +548,7 @@ module.exports = {
     closeTail,
     pushTail,
 
+    getList,
     list,
 
     get,
