@@ -40,5 +40,5 @@ module.exports = {
     bankList: { MONO: 'mono', PRIVAT: 'privat' },
     access: { PARTNER: 'PARTNER', ADMIN: 'ADMIN' },
     userAccess: { ADMIN: 'ADMIN', MAKER: 'MAKER', SUPPORT: 'SUPPORT' },
-    expire: 15
+    expire: 10
 }
