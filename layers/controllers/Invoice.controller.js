@@ -68,9 +68,12 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRis
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
-    const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
+    // const activeInvoice = await Invoice.findOne({ client, status: Const.invoice.activeStatusList, validOk: false })
+    const activeInvoices = await Invoice.find({ client, status: Const.invoice.activeStatusList, validOk: false })
+    const activeCount = activeInvoices.length
+
     const blockInvoice = await Invoice.findOne({ client, isScam: true })
-    const isClientWait = client && !!(activeInvoice) 
+    const isClientWait = client && ((!ncpayConv?.trust && activeCount > 0) || (ncpayConv?.trust && activeCount > 2))
     const isClientBlock = client && !!(blockInvoice) 
 
     const testClients = ['test_client', '794_6311f3e40c3283cdb1d36a70', '881_680a4766a46c55d20a1decf9']
