@@ -229,7 +229,7 @@ async function complite(proof, transaction, userId=null) {
         console.log('||| Confirm Invoice: ', res)
 
         if(!res) {
-            sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount}`))
+            sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount}`)
         }
     }   
     catch(err) {
