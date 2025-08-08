@@ -229,7 +229,7 @@ async function close(id, amount) {
     const invoice = await get(id)
 
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
-    if(invoice.amount === amount) { return await confirm(id) }
+    if(parseInt(invoice.amount) === parseInt(amount)) { return await confirm(id) }
 
     const delta = amount - invoice.initialAmount
     const available = await Payment.getMaxAvailable(invoice.payment, invoice)

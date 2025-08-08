@@ -227,14 +227,15 @@ async function complite(proof, transaction, userId=null) {
     try {
         const res = !!await Invoice.close(proof.invoice, proof.amount)
         console.log('||| Confirm Invoice: ', res)
+        
 
         if(!res) {
-            sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount}`)
+            sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} ||| ${typeOf(proof.amount)}`)
         }
     }   
     catch(err) {
         console.log('||| Confirm Invoice Err: ', err)
-        sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} \nErr: ${JSON.stringify(err)}`)
+        sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} ||| ${typeOf(proof.amount)} \nErr: ${JSON.stringify(err)}`)
         throw err
     }
 
