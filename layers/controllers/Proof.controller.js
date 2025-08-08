@@ -12,6 +12,7 @@ const DropBox = require('@utils/DropBox')
 // const CheckGov = require('@utils/CheckGov')
 // const Privat = require('@utils/Privat')
 const Kvits = require('@utils/Kvits.utils')
+const { sendMessage } = require('@utils/telegram.utils')
 
 // ------ SUPPORT FUNCTION ------
 
@@ -223,7 +224,19 @@ async function complite(proof, transaction, userId=null) {
     
     const saveProof = await save(proof)
 
-    await Invoice.close(proof.invoice, proof.amount)
+    try {
+        const res = !!await Invoice.close(proof.invoice, proof.amount)
+        console.log('Confirm Invoice: ', res)
+
+        if(!res) {
+            sendMessage(7649856014, JSON.stringify(proof || 'PROOF'))
+        }
+    }   
+    catch(err) {
+        console.log('Confirm Invoice Err: ', err?.message)
+        sendMessage(7649856014, JSON.stringify(proof || 'PROOF'))
+        throw err
+    }
 
     return saveProof
 }
