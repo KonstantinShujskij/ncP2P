@@ -504,7 +504,7 @@ async function save(payment) {
 
 async function get(_id) {
     const payment = await Payment.findOne({ _id })
-    if(!payment) { throw Exception.notFind }
+    if(!payment) { throw Exception.notFindPayment }
     
     return payment
 }

@@ -1,4 +1,4 @@
-const { moreAmount } = require('@utils/telegram.utils')
+const { moreAmount, sendMessage } = require('@utils/telegram.utils')
 const NcPay = require('@utils/NcPay')
 
 const Invoice = require('@models/Invoice.model')
@@ -228,20 +228,32 @@ async function changeAmount(id, amount) {
 async function close(id, amount) {    
     const invoice = await get(id)
 
-    if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFind }
-    if(parseInt(invoice.amount) === parseInt(amount)) { return await confirm(id) }
+    if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFindConfirm }
+    if(parseInt(invoice.amount) === parseInt(amount)) { 
+        console.log(`amounts equal ||| ${invoice?._id}`)
+        sendMessage(7649856014, `amounts equal ||| invoiceId: ${invoice?._id}`)
+        
+        return await confirm(id) 
+    }
 
     const delta = amount - invoice.initialAmount
     const available = await Payment.getMaxAvailable(invoice.payment, invoice)
 
     if(delta <= available) { 
+        sendMessage(7649856014, `delta available ||| invoiceId: ${invoice?._id}`)
+
         await changeAmount(id, amount)
         return await confirm(id)
     }
 
-    console.log('SEND CUSTOM CALLBACK')
-    NcPay.invoiceCallback({_doc: {...invoice, amount: invoice.amount + available, status: Const.invoice.statusList.CONFIRM }})
-    moreAmount(invoice, amount)
+    try {
+        console.log('SEND CUSTOM CALLBACK')
+        NcPay.invoiceCallback({_doc: {...invoice, amount: invoice.amount + available, status: Const.invoice.statusList.CONFIRM }})
+        moreAmount(invoice, amount)
+    }
+    catch(err) {
+        console.log('|||--- ', err)        
+    }
     
     await changeAmount(id, amount)    
     return await confirm(id, true) 
@@ -412,7 +424,7 @@ async function getByUser(user, id) {
 
 async function getActive(_id) {
     const invoice = await Invoice.findOne({ _id, status: {$in: Const.invoice.activeStatusList} })
-    if(!invoice) { throw Exception.notFind }
+    if(!invoice) { throw Exception.notFindActive }
 
     return invoice
 }
@@ -421,7 +433,7 @@ async function getActiveByUser(user, id) {
     const invoice = await getActive(id)
 
     if(user.access === Const.userAccess.MAKER) {
-        if(!invoice.paymentAccessId.equals(user.accessId)) { throw Exception.notFind }
+        if(!invoice.paymentAccessId.equals(user.accessId)) { throw Exception.notFindActive }
     }
 
     return invoice

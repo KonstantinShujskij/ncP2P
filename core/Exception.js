@@ -11,6 +11,11 @@ module.exports = {
     
     isExist: { status: 409, msg: 'Already Exists' },
     notFind: { status: 404, msg: "Can't Find" },
+    notFindPayment: { status: 404, msg: "Can't Find Payment" },
+
+    notFindActive: { status: 404, msg: "Can't Find active" },
+    notFindConfirm: { status: 404, msg: "Can't Find confirm" },
+
     cantCloseInvoice: { status: 409, msg: 'Cant Close Final Invoice' },
     cantRefreshPayment: { status: 409, msg: 'Cant Reject Final Payment' },
     cantPushTail: { status: 409, msg: 'This payment have avtiv invoices or waiting for tail' },

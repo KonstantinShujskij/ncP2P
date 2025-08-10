@@ -230,12 +230,12 @@ async function complite(proof, transaction, userId=null) {
         
 
         if(!res) {
-            sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} ||| ${typeOf(proof.amount)}`)
+            sendMessage(7649856014, `No ress: invoiceId: ${proof.invoice} ${proof.amount}`)
         }
     }   
     catch(err) {
         console.log('||| Confirm Invoice Err: ', err)
-        sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} ||| ${typeOf(proof.amount)} \nErr: ${JSON.stringify(err)}`)
+        sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} \nErr: ${JSON.stringify(err)}`)
         throw err
     }
 
