@@ -230,19 +230,12 @@ async function close(id, amount) {
     const invoice = await get(id)
 
     if(invoice.status === Const.invoice.statusList.CONFIRM) { throw Exception.notFindConfirm }
-    if(parseInt(invoice.amount) === parseInt(amount)) { 
-        console.log(`amounts equal ||| ${invoice?._id}`)
-        sendMessage(7649856014, `amounts equal ||| invoiceId: ${invoice?._id}`)
-        
-        return await confirm(id) 
-    }
+    if(parseInt(invoice.amount) === parseInt(amount)) { return await confirm(id) }
 
     const delta = amount - invoice.initialAmount
     const available = await Payment.getMaxAvailable(invoice.payment, invoice)
 
     if(delta <= available) { 
-        sendMessage(7649856014, `delta available ||| invoiceId: ${invoice?._id}`)
-
         await changeAmount(id, amount)
         return await confirm(id)
     }

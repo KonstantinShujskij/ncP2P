@@ -222,20 +222,16 @@ async function complite(proof, transaction, userId=null) {
     
     if(candidat) { throw Exception.isExist }
     
+    const invoice = await Invoice.get(proof.invoice)
+    if(invoice.status === Const.invoice.statusList.REJECT) { throw Exception.iAmTeapot }
+
     const saveProof = await save(proof)
 
     try {
         const res = !!await Invoice.close(proof.invoice, proof.amount)
-        console.log('||| Confirm Invoice: ', res)
-        
-
-        if(!res) {
-            sendMessage(7649856014, `No ress: invoiceId: ${proof.invoice} ${proof.amount}`)
-        }
     }   
     catch(err) {
         console.log('||| Confirm Invoice Err: ', err)
-        sendMessage(7649856014, `invoiceId: ${proof.invoice} ${proof.amount} \nErr: ${JSON.stringify(err)}`)
         throw err
     }
 
