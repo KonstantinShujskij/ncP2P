@@ -10,6 +10,7 @@ const create = [
     check('client', 'invalidValue').notEmpty().isString(),
     check('template', 'invalidValue').optional().isString(),
     check('isRisk', 'invalidValue').notEmpty(),
+    check('isBn', 'invalidValue').notEmpty(),
 ]
 
 const pay = [

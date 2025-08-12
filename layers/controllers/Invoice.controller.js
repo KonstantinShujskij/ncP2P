@@ -64,7 +64,7 @@ async function setSubstatus(invoice) {
 
 // ---------- MAIN ----------
 
-async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRisk }) {      
+async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRisk, isBn }) {      
     const isExist = refId && !!(await Invoice.findOne({ refId })) 
     if(isExist) { throw Exception.isExist }
 
@@ -83,7 +83,8 @@ async function create({ amount, bank, refId, partnerId, client, ncpayConv, isRis
     const { conv, confirm } = await getConv(client)
     
     let payment = null
-    if(Math.random() > Const.invoice.ncPayRandom) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
+    //if(Math.random() > Const.invoice.ncPayRandom) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
+    if(isBn) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.NCPAY, conv, confirm }) }
     if(!payment) { payment = await Payment.choiceBest(amount, { type: Const.payment.filter.types.DEFAULT, conv, confirm }) }
     if(!payment) { 
         const data = await Payment.getList({ status: Const.payment.statusList.ACTIVE })
