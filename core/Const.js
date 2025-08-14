@@ -3,7 +3,7 @@ module.exports = {
     minPaymentLimit: 500,
     maxPaymentLimit: 200000,
     minInvoiceLimit: 500,
-    maxInvoiceLimit: 30000,
+    maxInvoiceLimit: 100000,
     minNcApiLimit: 500,
     smallLim: 1500,
     maxTail: 100000,
